@@ -25,8 +25,10 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.TabHost.TabSpec;
 
+import com.example.administrator.scrabble.R;
 import com.example.administrator.scrabble.game.config.GameConfig;
 import com.example.administrator.scrabble.game.config.GamePlayerType;
+import com.example.administrator.scrabble.game.util.IPCoder;
 import com.example.administrator.scrabble.game.util.MessageBox;
 
 
@@ -78,7 +80,7 @@ View.OnClickListener {
 
 	// Each of these is initialized to point to various GUI controls
 	TableLayout playerTable = null;
-	ArrayList<TableRow> tableRows = new ArrayList<TableRow>();
+	ArrayList<TableRow> tableRows = new ArrayList<>();
 
 	/*
 	 * ====================================================================

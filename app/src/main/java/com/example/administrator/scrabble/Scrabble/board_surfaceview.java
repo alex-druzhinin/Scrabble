@@ -9,6 +9,8 @@ import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.SurfaceView;
 
+import com.example.administrator.scrabble.R;
+
 
 /**
  * Created by webber18 on 9/20/2015.

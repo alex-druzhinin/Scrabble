@@ -7,6 +7,8 @@ import android.view.MenuItem;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.example.administrator.scrabble.R;
+
 /**
  * Displays the user interface in a demo-only state
  *
