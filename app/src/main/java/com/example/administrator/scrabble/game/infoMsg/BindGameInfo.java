@@ -1,6 +1,7 @@
-package edu.up.cs301.game.infoMsg;
+package com.example.administrator.scrabble.game.infoMsg;
 
-import edu.up.cs301.game.Game;
+
+import com.example.administrator.scrabble.game.Game;
 
 /**
  * A message from the game to a player that tells the player:

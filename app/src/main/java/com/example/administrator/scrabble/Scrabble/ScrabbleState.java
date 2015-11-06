@@ -1,9 +1,10 @@
-package edu.up.cs301.Scrabble;
+package com.example.administrator.scrabble.Scrabble;
+
+import com.example.administrator.scrabble.game.infoMsg.GameState;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import edu.up.cs301.game.infoMsg.GameState;
 
 /**
  * Created by Morgan on 10/28/2015.
@@ -11,7 +12,7 @@ import edu.up.cs301.game.infoMsg.GameState;
  * Contains all of the information pertaining to the current state of the game.
  *
  */
-public class ScrabbleState extends GameState{
+public class ScrabbleState extends GameState {
     /*
      * Endturn:
      *  - Check word - array of words

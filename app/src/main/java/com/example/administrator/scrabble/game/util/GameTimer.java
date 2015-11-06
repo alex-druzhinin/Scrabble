@@ -1,4 +1,4 @@
-package edu.up.cs301.game.util;
+package com.example.administrator.scrabble.game.util;
 
 /**
  * A GameTimer is an object that sends a GameTimerAction to a Game or a
@@ -41,8 +41,7 @@ public class GameTimer {
 	/**
 	 * Constructor for objects of class GameTimer
 	 * 
-	 * @param g the game to which GameTimerActions should be sent
-	 * @param interval the number of milliseconds between successive
+	 *
 	 *  GameTimerAction sends
 	 */
 	public GameTimer(Tickable target)

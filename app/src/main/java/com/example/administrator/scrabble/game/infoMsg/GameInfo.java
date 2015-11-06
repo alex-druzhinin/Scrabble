@@ -1,8 +1,9 @@
-package edu.up.cs301.game.infoMsg;
+package com.example.administrator.scrabble.game.infoMsg;
+
+import com.example.administrator.scrabble.game.Game;
 
 import java.io.Serializable;
 
-import edu.up.cs301.game.Game;
 
 /**
  * An informational message that is sent from the game to a player.  The

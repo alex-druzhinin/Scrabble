@@ -1,6 +1,7 @@
-package edu.up.cs301.game.actionMsg;
+package com.example.administrator.scrabble.game.actionMsg;
 
-import edu.up.cs301.game.GamePlayer;
+
+import com.example.administrator.scrabble.game.GamePlayer;
 
 /**
  * An action by which the player tells the game its name

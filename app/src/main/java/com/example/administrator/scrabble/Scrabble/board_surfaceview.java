@@ -1,4 +1,4 @@
-package com.example.administrator.scrabblegameinterface;
+package com.example.administrator.scrabble.Scrabble;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -9,7 +9,6 @@ import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.SurfaceView;
 
-import static android.graphics.Bitmap.*;
 
 /**
  * Created by webber18 on 9/20/2015.

@@ -1,22 +1,22 @@
-package edu.up.cs301.game;
-
-import edu.up.cs301.game.actionMsg.GameAction;
-import edu.up.cs301.game.actionMsg.GameOverAckAction;
-import edu.up.cs301.game.actionMsg.MyNameIsAction;
-import edu.up.cs301.game.actionMsg.ReadyAction;
-import edu.up.cs301.game.actionMsg.TimerAction;
-import edu.up.cs301.game.infoMsg.BindGameInfo;
-import edu.up.cs301.game.infoMsg.GameOverInfo;
-import edu.up.cs301.game.infoMsg.IllegalMoveInfo;
-import edu.up.cs301.game.infoMsg.NotYourTurnInfo;
-import edu.up.cs301.game.infoMsg.StartGameInfo;
-import edu.up.cs301.game.util.GameTimer;
-import edu.up.cs301.game.util.Tickable;
+package com.example.administrator.scrabble.game;
 
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
+
+import com.example.administrator.scrabble.game.actionMsg.GameAction;
+import com.example.administrator.scrabble.game.actionMsg.GameOverAckAction;
+import com.example.administrator.scrabble.game.actionMsg.MyNameIsAction;
+import com.example.administrator.scrabble.game.actionMsg.ReadyAction;
+import com.example.administrator.scrabble.game.actionMsg.TimerAction;
+import com.example.administrator.scrabble.game.infoMsg.BindGameInfo;
+import com.example.administrator.scrabble.game.infoMsg.GameOverInfo;
+import com.example.administrator.scrabble.game.infoMsg.IllegalMoveInfo;
+import com.example.administrator.scrabble.game.infoMsg.NotYourTurnInfo;
+import com.example.administrator.scrabble.game.infoMsg.StartGameInfo;
+import com.example.administrator.scrabble.game.util.GameTimer;
+import com.example.administrator.scrabble.game.util.Tickable;
 
 /**
  * A class that knows how to play the game. The data in this class represent the
@@ -344,8 +344,8 @@ public abstract class LocalGame implements Game, Tickable {
 	/**
 	 * sends a given action to the Game object  
 	 * 
-	 * @param the
-	 *            player requesting the action
+	 * @param action
+	 * 			the player requesting the action
 	 */
 	public final void sendAction(GameAction action) {
 		if (myHandler == null) return; // give up if no handler

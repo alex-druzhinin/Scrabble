@@ -1,4 +1,4 @@
-package com.example.administrator.scrabblegameinterface;
+package com.example.administrator.scrabble.Scrabble;
 
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;

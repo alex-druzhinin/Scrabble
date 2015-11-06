@@ -1,4 +1,4 @@
-package edu.up.cs301.game.util;
+package com.example.administrator.scrabble.game.util;
 
 import android.app.Activity;
 import android.app.AlertDialog;

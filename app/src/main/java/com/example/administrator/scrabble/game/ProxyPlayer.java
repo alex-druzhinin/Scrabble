@@ -1,10 +1,11 @@
-package edu.up.cs301.game;
+package com.example.administrator.scrabble.game;
 
-import edu.up.cs301.game.actionMsg.GameAction;
-import edu.up.cs301.game.infoMsg.BindGameInfo;
-import edu.up.cs301.game.infoMsg.GameInfo;
-import edu.up.cs301.game.util.NetworkObjectPasser;
 import android.util.Log;
+
+import com.example.administrator.scrabble.game.actionMsg.GameAction;
+import com.example.administrator.scrabble.game.infoMsg.BindGameInfo;
+import com.example.administrator.scrabble.game.infoMsg.GameInfo;
+import com.example.administrator.scrabble.game.util.NetworkObjectPasser;
 
 /**
  * A Player object that is used as a proxy for the real player that is on another

@@ -1,4 +1,4 @@
-package edu.up.cs301.Scrabble;
+package com.example.administrator.scrabble.Scrabble;
 
 import android.graphics.Bitmap;
 import android.graphics.Point;

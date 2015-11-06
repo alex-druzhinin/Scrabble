@@ -1,4 +1,4 @@
-package edu.up.cs301.game.config;
+package com.example.administrator.scrabble.game.config;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -11,9 +11,10 @@ import java.util.ArrayList;
 import android.content.Context;
 import android.util.Log;
 
-import edu.up.cs301.game.GameMainActivity;
-import edu.up.cs301.game.GamePlayer;
-import edu.up.cs301.game.ProxyPlayer;
+import com.example.administrator.scrabble.game.GameMainActivity;
+import com.example.administrator.scrabble.game.GamePlayer;
+import com.example.administrator.scrabble.game.ProxyPlayer;
+
 
 /**
  * GameConfig class
@@ -630,7 +631,7 @@ public class GameConfig {
 	/**
 	 * sets the remote player type
 	 * 
-	 * @param
+	 * @param idx
 	 * 		the index in the list of available types that
 	 * 		corresponds to the player type to which the
 	 * 		remote player is to be set

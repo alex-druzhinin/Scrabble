@@ -1,16 +1,4 @@
-package edu.up.cs301.game;
-
-import edu.up.cs301.game.actionMsg.GameOverAckAction;
-import edu.up.cs301.game.actionMsg.MyNameIsAction;
-import edu.up.cs301.game.actionMsg.ReadyAction;
-import edu.up.cs301.game.infoMsg.BindGameInfo;
-import edu.up.cs301.game.infoMsg.GameInfo;
-import edu.up.cs301.game.infoMsg.GameOverInfo;
-import edu.up.cs301.game.infoMsg.StartGameInfo;
-import edu.up.cs301.game.infoMsg.TimerInfo;
-import edu.up.cs301.game.util.GameTimer;
-import edu.up.cs301.game.util.MessageBox;
-import edu.up.cs301.game.util.Tickable;
+package com.example.administrator.scrabble.game;
 
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -18,6 +6,18 @@ import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+
+import com.example.administrator.scrabble.game.actionMsg.GameOverAckAction;
+import com.example.administrator.scrabble.game.actionMsg.MyNameIsAction;
+import com.example.administrator.scrabble.game.actionMsg.ReadyAction;
+import com.example.administrator.scrabble.game.infoMsg.BindGameInfo;
+import com.example.administrator.scrabble.game.infoMsg.GameInfo;
+import com.example.administrator.scrabble.game.infoMsg.GameOverInfo;
+import com.example.administrator.scrabble.game.infoMsg.StartGameInfo;
+import com.example.administrator.scrabble.game.infoMsg.TimerInfo;
+import com.example.administrator.scrabble.game.util.GameTimer;
+import com.example.administrator.scrabble.game.util.MessageBox;
+import com.example.administrator.scrabble.game.util.Tickable;
 
 /**
  * class GameHumanPlayer
@@ -192,7 +192,7 @@ public abstract class GameHumanPlayer implements GamePlayer, Tickable {
 	/**
 	 * Sends a 'state' object to the game's thread.
 	 * 
-	 * @param into
+	 * @param info
 	 * 		the information object to send
 	 */
 	public void sendInfo(GameInfo info) {

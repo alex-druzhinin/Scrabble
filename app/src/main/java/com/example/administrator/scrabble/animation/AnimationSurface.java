@@ -1,4 +1,4 @@
-package edu.up.cs301.animation;
+package com.example.administrator.scrabble.animation;
 
 import android.content.Context;
 import android.graphics.Canvas;

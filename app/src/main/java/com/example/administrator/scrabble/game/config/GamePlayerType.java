@@ -1,6 +1,7 @@
-package edu.up.cs301.game.config;
+package com.example.administrator.scrabble.game.config;
 
-import edu.up.cs301.game.GamePlayer;
+
+import com.example.administrator.scrabble.game.GamePlayer;
 
 /**
  * class GamePlayerType

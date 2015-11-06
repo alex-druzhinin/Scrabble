@@ -1,4 +1,4 @@
-package edu.up.cs301.game.infoMsg;
+package com.example.administrator.scrabble.game.infoMsg;
 
 /**
  * The a message from the game to a player that the move just attempted

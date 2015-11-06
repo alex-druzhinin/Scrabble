@@ -1,4 +1,4 @@
-package edu.up.cs301.game.util;
+package com.example.administrator.scrabble.game.util;
 
 /**
  * An inteface that defines an object that can respond to a GameTimer "tick".
