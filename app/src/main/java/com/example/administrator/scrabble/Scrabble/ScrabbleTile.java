@@ -29,7 +29,7 @@ public class ScrabbleTile {
     }
 
     /** Getters **/
-
+    public Point getLocation(){return this.location;}
 
     /** Setters **/
 

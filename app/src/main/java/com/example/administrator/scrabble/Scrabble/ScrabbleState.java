@@ -1,12 +1,11 @@
 package com.example.administrator.scrabble.Scrabble;
 
-import com.example.administrator.scrabble.game.GamePlayer;
-import com.example.administrator.scrabble.game.LocalGame;
+import android.graphics.Point;
+
 import com.example.administrator.scrabble.game.actionMsg.GameAction;
 import com.example.administrator.scrabble.game.infoMsg.GameState;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Random;
 
 
@@ -28,30 +27,26 @@ public class ScrabbleState extends GameState {
      */
 
     //Our random number generator
-    Random rand = new Random();
+    private Random rand = new Random();
 
     // The arrays that hold the tiles in the bag and on the board
-    ArrayList<ScrabbleTile> bagTiles;
-    ArrayList<ScrabbleTile> boardTiles;
+    private ArrayList<ScrabbleTile> bagTiles;
+    private ArrayList<ScrabbleTile> boardTiles;
 
     //holds alphabet
-    char[] alphabet = new char[26];
+    private char[] alphabet = new char[26];
 
     //letter frequency
-    int[] numEachTile = {9, 2, 2, 4, 12, 2, 3, 2, 9, 1, 1, 4, 2, 6, 8, 2, 1, 6, 4, 6, 4, 2, 2, 1, 2, 1};
+    private final int[] numEachTile = {9, 2, 2, 4, 12, 2, 3, 2, 9, 1, 1, 4, 2, 6, 8, 2, 1, 6, 4, 6, 4, 2, 2, 1, 2, 1};
 
     //values of each letter
-    final int[] TILE_VAL = {1, 3, 3, 2, 1, 4, 2, 4, 1, 8, 5, 1, 3, 1, 1, 3, 10, 1, 1, 1, 1, 4, 4, 8, 4, 10};
+    private final int[] TILE_VAL = {1, 3, 3, 2, 1, 4, 2, 4, 1, 8, 5, 1, 3, 1, 1, 3, 10, 1, 1, 1, 1, 4, 4, 8, 4, 10};
 
-
-    ScrabbleTile currentTile;
-
-    // We will also need some way to store each player's hand, should probably be mutable
-
-    // Should the dictionary of possible words be included in the game state?
+    //The scores of each player
+    private int[] playerScores = new int[4];
 
     // The index of the player who's turn it is
-    int currentPlayer;
+    private int currentPlayer;
 
     /**
      *  A constructor to create a new game.
@@ -73,8 +68,7 @@ public class ScrabbleState extends GameState {
             //repeat for multiple tiles with the same letter
             for(int duplicates = 0; duplicates < numEachTile.length; duplicates++) {
                 //create a tile and give the letter and value
-                currentTile = new ScrabbleTile(alphabet[letter], TILE_VAL[letter]);
-                bagTiles.add(currentTile); //add tile to tiles in the pool of unused tiles
+                bagTiles.add(new ScrabbleTile(alphabet[letter], TILE_VAL[letter])); //add tile to tiles in the pool of unused tiles
             }
         }
 
@@ -85,7 +79,7 @@ public class ScrabbleState extends GameState {
     /**
      * Rotate the current player who's turn it is to the next player
      */
-    private void changeTurn(/* Args Here */){
+    private void changeTurn(){
 
 
 
@@ -98,7 +92,26 @@ public class ScrabbleState extends GameState {
      */
     private void receiveAction(GameAction action){
 
+        if (action instanceof ExchangeTileAction){
+            //Going to call the exchange tile method
 
+
+        }
+        else if (action instanceof EndTurnAction){
+            //Check the word, tally all of the points and update them on the board
+            //gives the current player new tiles, change the current player
+
+
+
+        }
+        else if (action instanceof EndGameAction){
+            //Prompt all users that one player wants to end the game
+            //and ask them if they want to end as well, but remove that player
+            //regardless
+
+
+
+        }
 
     }
 
@@ -125,6 +138,37 @@ public class ScrabbleState extends GameState {
     }
 
     /**
+     * Exchanges tiles from a players hand
+     *
+     * @param tilesToExchange
+     *      the tiles we want to exchange
+     * @param playerHand
+     *      the players hand we are exchanging
+     * @return
+     *      the players hand after the tiles have been exchanged
+     */
+    public ArrayList<ScrabbleTile> exchangeTile(ArrayList<ScrabbleTile> tilesToExchange, ArrayList<ScrabbleTile> playerHand){
+
+        //Remove the tile from the players hand
+        //add the tile back into the bag
+        for (ScrabbleTile tile : tilesToExchange){
+            //remove tile from player hand and add to bag
+            playerHand.remove(tile);
+            bagTiles.add(tile);
+
+            //add a random tile to the players hand and remove it from the bag
+            int randIndex = rand.nextInt(bagTiles.size());
+            playerHand.add(bagTiles.get(randIndex));
+            bagTiles.remove(randIndex);
+        }
+
+
+        return playerHand;
+    }
+
+
+
+    /**
      * This method will be used to retrieve random tiles from the bag
      * when either the game ends or someone needs to exchange some tiles
      *
@@ -139,10 +183,10 @@ public class ScrabbleState extends GameState {
      */
     public ScrabbleTile[] drawTiles(int numTiles){
 
-        //No one should ever draw more than 7 at one time
+       /* //No one should ever draw more than 7 at one time
         if (numTiles > 7){
             return null;
-        }
+        }*/
 
         //We can't do anything if there are no tiles left in the bag
         if (isBagEmpty()){
@@ -174,17 +218,84 @@ public class ScrabbleState extends GameState {
 
     }
 
-    public boolean isBagEmpty(){
+    /**
+     * Checks if the tiles we want to add to the board form words
+     * with the tiles already placed down
+     *
+     * @param tilesToAdd
+     *      the tiles we want to add to the board, but we aren't sure
+     *      if they form words when they are passed in
+     * @return
+     *
+     */
+    private boolean checkIsWord(ArrayList<ScrabbleTile> tilesToAdd){
 
-        //If any value in the bag is greater than 0, then bag is not empy
-        for (int i : this.numEachTile){
-            if (i >= 0){
-                return false;
-            }
-        }
 
-        //No tiles are available, so bag is empty
+
         return true;
+    }
+
+    /**
+     *
+     *
+     * @param tile
+     * @return
+     */
+   private boolean findAdjacentTile(ScrabbleTile tile){
+
+
+    return true;
+   }
+
+   private void orderWord(ArrayList<ScrabbleTile> tile) {
+
+   }
+
+
+   private void checkColumn(int x, int y) {
+       ArrayList<ScrabbleTile> tilesInColumn = new ArrayList<>();
+
+       for(ScrabbleTile tile: boardTiles) {
+
+           if(tile.location.x == x) {
+               tilesInColumn.add(tile);
+           }
+       }
+
+   }
+
+   private boolean getOrientation(ArrayList<ScrabbleTile> placedTiles) {
+
+       return true;
+   }
+
+   private ScrabbleTile isTileThere(int x, int y){
+
+       Point tileLocation;
+       //For each tile in the board, check if it's coordinates are the ones we are
+       //looking for
+       for (ScrabbleTile tile : boardTiles){
+           tileLocation = tile.location;
+
+           if (tileLocation.x == x && tileLocation.y == y){
+               //This is the tile we're looking for
+               return tile;
+           }
+       }
+
+       //If we get to this point then there are no tiles on the board with
+       //the given coordinates
+       return null;
+   }
+
+
+    /**
+     * Helper method to let us know if the bag is empty
+     *
+     * @return true if the bag has no tiles in it, false otherwise
+     */
+    public boolean isBagEmpty(){
+        return bagTiles.isEmpty();
     }
 
 
