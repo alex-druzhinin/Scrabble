@@ -67,6 +67,7 @@ public class ScrabbleState extends GameState {
         //get letters in alphabet
         for(int letter = 97; letter <= 122; letter++) {
             alphabet[alphabetLetter] = (char) letter;
+            alphabetLetter++;
         }
 
         //execute for each letter in the alphabet
@@ -177,21 +178,16 @@ public class ScrabbleState extends GameState {
      *  1) Run through numEachTile and remember which tiles are available,
      *      then grab a tile from that pool.
      *
-     * @param numTiles
-     *      The number of tiles we wish to draw
+     * @param playerHand
+     *      The hand we want to draw tiles into
      * @return
      *      An array containing the tiles drawn or null if no tiles remain
      */
-    public ScrabbleTile[] drawTiles(int numTiles){
-
-       /* //No one should ever draw more than 7 at one time
-        if (numTiles > 7){
-            return null;
-        }*/
+    public boolean drawTiles(ArrayList<ScrabbleTile> playerHand){
 
         //We can't do anything if there are no tiles left in the bag
         if (isBagEmpty()){
-            return null;
+            return false;
         }
 
         //Create our return array and empty it
@@ -201,21 +197,16 @@ public class ScrabbleState extends GameState {
         }
 
         //Grab some random tiles and add them to our array
-        int nextTile = rand.nextInt(26); // 0 -> 25;
-        for (int i = 0; i < numTiles; i++){
-            //If we are out of this tile, choose another one
-            //THIS IS A BAD METHOD, COULD TAKE A VERY LONG TIME
-            while (numEachTile[nextTile] == 0){
-                nextTile = rand.nextInt(26); // 0 -> 25
-            }
+        int randIndex = 0;
 
-            //This tile exists in the bag, so choose it and add to return array
-            char newTile = (char) (nextTile + 97);
-            tilesDrawn[i] = new ScrabbleTile(newTile, TILE_VAL[nextTile]);
-            numEachTile[nextTile]--;
+        for (int handSize = playerHand.size(); handSize < 8; handSize++){
+            //Choose our tile
+            randIndex = rand.nextInt(bagTiles.size());
+            playerHand.add(bagTiles.get(randIndex));
+            bagTiles.remove(randIndex);
         }
 
-        return tilesDrawn;
+        return true;
 
     }
 
