@@ -42,7 +42,7 @@ public class ScrabbleStateTest {
     @Test
     public void testDrawTiles() throws Exception {
         ScrabbleState state = new ScrabbleState();
-        state.drawTiles()
+
     }
 
     @Test

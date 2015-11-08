@@ -157,20 +157,26 @@ public class ScrabbleState extends GameState {
      */
     public ArrayList<ScrabbleTile> exchangeTile(ArrayList<ScrabbleTile> tilesToExchange, ArrayList<ScrabbleTile> playerHand){
 
-        //Remove the tile from the players hand
-        //add the tile back into the bag
-        for (ScrabbleTile tile : tilesToExchange){
-            //remove tile from player hand and add to bag
-            playerHand.remove(tile);
-            bagTiles.add(tile);
+        if (! isBagEmpty()) {
+            //Remove the tile from the players hand
+            //add the tile back into the bag
+            for (ScrabbleTile tile : tilesToExchange) {
+                //Break our of our loop if we've emptied the bag
+                if (isBagEmpty()){
+                    break;
+                }
 
-            //add a random tile to the players hand and remove it from the bag
-            int randIndex = rand.nextInt(bagTiles.size());
-            playerHand.add(bagTiles.get(randIndex));
-            bagTiles.remove(randIndex);
+                //remove tile from player hand and add to bag
+                playerHand.remove(tile);
+                bagTiles.add(tile);
+
+                //add a random tile to the players hand and remove it from the bag
+                int randIndex = rand.nextInt(bagTiles.size());
+                playerHand.add(bagTiles.get(randIndex));
+                bagTiles.remove(randIndex);
+            }
+
         }
-
-
         return playerHand;
     }
 
