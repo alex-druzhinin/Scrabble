@@ -45,6 +45,12 @@ public class ScrabbleState extends GameState {
     //The scores of each player
     private int[] playerScores = new int[4];
 
+    //"hands" of players/ tiles in a players hand
+    private int[] player1Hand = new int[7];
+    private int[] player2Hand = new int[7];
+    private int[] player3Hand = new int[7];
+    private int[] player4Hand = new int[7];
+
     // The index of the player who's turn it is
     private int currentPlayer;
 
