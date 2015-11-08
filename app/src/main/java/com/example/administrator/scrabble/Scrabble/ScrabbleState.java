@@ -1,6 +1,7 @@
 package com.example.administrator.scrabble.Scrabble;
 
 import android.graphics.Point;
+import android.view.View;
 
 import com.example.administrator.scrabble.game.actionMsg.GameAction;
 import com.example.administrator.scrabble.game.infoMsg.GameState;
@@ -46,10 +47,10 @@ public class ScrabbleState extends GameState {
     private int[] playerScores = new int[4];
 
     //"hands" of players/tiles in a players hand
-    private int[] player1Hand = new int[7];
-    private int[] player2Hand = new int[7];
-    private int[] player3Hand = new int[7];
-    private int[] player4Hand = new int[7];
+    private ArrayList<ScrabbleTile> player1Hand = new ArrayList<>();
+    private ArrayList<ScrabbleTile> player2Hand = new ArrayList<>();
+    private ArrayList<ScrabbleTile> player3Hand = new ArrayList<>();
+    private ArrayList<ScrabbleTile> player4Hand = new ArrayList<>();
 
     // The index of the player who's turn it is
     private int currentPlayer;
@@ -62,6 +63,11 @@ public class ScrabbleState extends GameState {
      *      4) **Anything else?**
      */
     public ScrabbleState(){
+
+        //initialize arraylists for tiles
+        bagTiles = new ArrayList<>();
+        boardTiles = new ArrayList<>();
+
         int alphabetLetter = 0; //index for alphabet array
 
         //get letters in alphabet
@@ -73,7 +79,7 @@ public class ScrabbleState extends GameState {
         //execute for each letter in the alphabet
         for(int letter = 0; letter < alphabet.length; letter++) {
             //repeat for multiple tiles with the same letter
-            for(int duplicates = 0; duplicates < numEachTile.length; duplicates++) {
+            for(int duplicates = 0; duplicates < numEachTile[letter]; duplicates++) {
                 //create a tile and give the letter and value
                 bagTiles.add(new ScrabbleTile(alphabet[letter], TILE_VAL[letter])); //add tile to tiles in the pool of unused tiles
             }
