@@ -211,7 +211,7 @@ public class ScrabbleState extends GameState {
         //Grab some random tiles and add them to our array
         int randIndex = 0;
 
-        for (int handSize = playerHand.size(); handSize < 8; handSize++){
+        for (int handSize = playerHand.size(); handSize < 7; handSize++){
             //Choose our tile
             randIndex = rand.nextInt(bagTiles.size());
             playerHand.add(bagTiles.get(randIndex));
@@ -220,6 +220,14 @@ public class ScrabbleState extends GameState {
 
         return true;
 
+    }
+
+    /**
+     * emptyBag         This is a method to empty the bag to test functionality of other methods.
+     *                  Will be deleted before deploying
+     */
+    public void emptyBag() {
+        bagTiles.clear();
     }
 
     /**

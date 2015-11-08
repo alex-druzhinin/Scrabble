@@ -28,6 +28,12 @@ public class ScrabbleTile {
 
     }
 
+    //get method for letter
+    public char getLetter() { return letter; }
+
+    //get method for value
+    public int getValue() { return value; }
+
     /** Getters **/
     public Point getLocation(){return this.location;}
 

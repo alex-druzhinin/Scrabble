@@ -42,12 +42,23 @@ public class ScrabbleStateTest {
     @Test
     public void testDrawTiles() throws Exception {
         ScrabbleState state = new ScrabbleState();
+        ArrayList<ScrabbleTile> hand = new ArrayList<>();
+        assertTrue(state.drawTiles(hand));
+        assertNotEquals(0, hand.size());
 
+        //print off tile letters that were added to the hand
+        for(ScrabbleTile tile: hand) {
+            System.out.println("Tiles in hand " + tile.getLetter());
+        }
     }
 
     @Test
     public void testIsBagEmpty() throws Exception {
+        ScrabbleState state = new ScrabbleState();
+        assertFalse(state.isBagEmpty());
 
+        state.emptyBag();
+        assertTrue(state.isBagEmpty());
     }
 
     @Test
