@@ -78,18 +78,13 @@ public class ScrabbleState extends GameState {
             }
         }
 
-        //Determine current player (curreentPlayer = 0 -> players.length)
-
     }
 
     /**
      * Rotate the current player who's turn it is to the next player
      */
-    private void changeTurn(){
-
-
-
-
+    private void setCurrentPlayer(int theNextPlayer){
+        this.currentPlayer = theNextPlayer;
     }
 
     /**
@@ -101,21 +96,21 @@ public class ScrabbleState extends GameState {
         if (action instanceof ExchangeTileAction){
             //Going to call the exchange tile method
 
+            //Depending on the player, swap out their hands
+
 
         }
         else if (action instanceof EndTurnAction){
             //Check the word, tally all of the points and update them on the board
             //gives the current player new tiles, change the current player
 
-
+            //Depending on the player, end their turn and tally their points
 
         }
         else if (action instanceof EndGameAction){
             //Prompt all users that one player wants to end the game
             //and ask them if they want to end as well, but remove that player
             //regardless
-
-
 
         }
 
