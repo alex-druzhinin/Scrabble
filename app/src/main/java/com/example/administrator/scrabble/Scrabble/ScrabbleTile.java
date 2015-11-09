@@ -4,7 +4,8 @@ import android.graphics.Bitmap;
 import android.graphics.Point;
 
 /**
- * Created by webber18 on 11/1/2015.
+ * Authors: Alexa Carr, Morgan Webber, Nalani (Megan Chun)
+ * Last Modified: 11/8/2015
  */
 public class ScrabbleTile {
 

@@ -7,7 +7,8 @@ import com.example.administrator.scrabble.game.LocalGame;
 import com.example.administrator.scrabble.game.actionMsg.GameAction;
 
 /**
- * Created by chunm18 on 11/8/2015.
+ * Authors: Alexa Carr, Morgan Webber, Nalani (Megan Chun)
+ * Last Modified: 11/8/2015
  */
 public class ScrabbleLocalGame extends LocalGame{
     ScrabbleState masterState;

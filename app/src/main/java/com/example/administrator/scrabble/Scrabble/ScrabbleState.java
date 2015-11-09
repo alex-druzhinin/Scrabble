@@ -11,7 +11,8 @@ import java.util.Random;
 
 
 /**
- * Created by Morgan on 10/28/2015.
+ * Authors: Alexa Carr, Morgan Webber, Nalani (Megan Chun)
+ * Last Modified: 11/8/2015
  *
  * Contains all of the information pertaining to the current state of the game.
  *

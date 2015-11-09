@@ -13,14 +13,10 @@ import com.example.administrator.scrabble.R;
 
 
 /**
- * Created by webber18 on 9/20/2015.
  * Displays the scrabble board on the android device
  *
- * @author Morgan Webber
- * @author Megan Chun (Nalani)
- * @author Alexa Carr
- *
- * @version 9/20/2015
+ * Authors: Alexa Carr, Morgan Webber, Nalani (Megan Chun)
+ * Last Modified: 11/8/2015
  */
 public class board_surfaceview extends SurfaceView {
     public board_surfaceview(Context context, AttributeSet attrs) {

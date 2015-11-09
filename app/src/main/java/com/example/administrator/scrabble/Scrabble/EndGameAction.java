@@ -4,7 +4,8 @@ import com.example.administrator.scrabble.game.GamePlayer;
 import com.example.administrator.scrabble.game.actionMsg.GameAction;
 
 /**
- * Created by webber18 on 11/7/2015.
+ * Authors: Alexa Carr, Morgan Webber, Nalani (Megan Chun)
+ * Last Modified: 11/8/2015
  *
  * Represents the action when a player wants to end the game
  */

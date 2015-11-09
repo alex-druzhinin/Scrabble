@@ -12,11 +12,8 @@ import com.example.administrator.scrabble.R;
 /**
  * Displays the user interface in a demo-only state
  *
- * @author Morgan Webber
- * @author Megan Chun (Nalani)
- * @author Alexa Carr
- *
- * @version 9/20/2015
+ * Authors: Alexa Carr, Morgan Webber, Nalani (Megan Chun)
+ * Last Modified: 11/8/2015
  */
 public class midgameScreenshot extends ActionBarActivity {
 
