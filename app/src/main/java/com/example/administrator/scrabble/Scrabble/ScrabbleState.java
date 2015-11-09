@@ -130,7 +130,7 @@ public class ScrabbleState extends GameState {
      * @param word the word we want to tally
      * @return the value of the word, or 0 if the word was empty
      */
-    private int tallyWordScore(String word){
+    public int tallyWordScore(String word){
 
         int wordScore = 0;
 
@@ -144,6 +144,19 @@ public class ScrabbleState extends GameState {
 
         return wordScore;
     }
+
+    /**
+     * addBoardTiles                Add tiles to board after player ended turn and word has been
+     *                              verified.
+     * @param tilesToAdd            ArrayList of tiles the player wants to add to board.
+     */
+    public void addBoardTiles(ArrayList<ScrabbleTile> tilesToAdd) {
+        for(ScrabbleTile tile: tilesToAdd) {
+            boardTiles.add(tile);
+        }
+    }
+
+    public ArrayList<ScrabbleTile> getBoardTiles() { return boardTiles; }
 
     /**
      * Exchanges tiles from a players hand

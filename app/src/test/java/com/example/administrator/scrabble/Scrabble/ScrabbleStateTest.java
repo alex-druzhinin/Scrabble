@@ -62,22 +62,28 @@ public class ScrabbleStateTest {
     }
 
     @Test
-    public void testReceiveAction() throws Exception {
-
-    }
-
-    @Test
-    public void testSetCurrentPlayer() throws Exception {
-
-    }
-
-    @Test
     public void testTallyWordScore() throws Exception {
-
+        ScrabbleState state = new ScrabbleState();
+        assertEquals(9, state.tallyWordScore("meow"));
+        assertEquals(87, state.tallyWordScore("abcdefghijklmnopqrstuvwxyz"));
     }
 
     @Test
     public void testIsTileThere() throws Exception {
 
+    }
+
+    @Test
+    public void testAddBoardTiles() throws Exception {
+        ScrabbleState state = new ScrabbleState();
+
+        ArrayList<ScrabbleTile> addTiles = new ArrayList<>();
+        ScrabbleTile tile1 = new ScrabbleTile('A', 1); //tile for bag
+        ScrabbleTile tile2 = new ScrabbleTile('B', 3); //tile for bag
+        addTiles.add(tile1);
+        addTiles.add(tile2);
+        state.addBoardTiles(addTiles);
+
+        assertTrue(state.getBoardTiles().contains(tile1));
     }
 }
