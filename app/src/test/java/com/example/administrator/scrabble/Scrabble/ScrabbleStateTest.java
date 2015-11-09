@@ -69,11 +69,6 @@ public class ScrabbleStateTest {
     }
 
     @Test
-    public void testIsTileThere() throws Exception {
-
-    }
-
-    @Test
     public void testAddBoardTiles() throws Exception {
         ScrabbleState state = new ScrabbleState();
 

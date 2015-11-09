@@ -44,13 +44,13 @@ public class ScrabbleState extends GameState {
     private final int[] TILE_VAL = {1, 3, 3, 2, 1, 4, 2, 4, 1, 8, 5, 1, 3, 1, 1, 3, 10, 1, 1, 1, 1, 4, 4, 8, 4, 10};
 
     //The scores of each player
-    private int[] playerScores = new int[4];
+    private int[] playerScores;
 
     //"hands" of players/tiles in a players hand
-    private ArrayList<ScrabbleTile> player1Hand = new ArrayList<>();
-    private ArrayList<ScrabbleTile> player2Hand = new ArrayList<>();
-    private ArrayList<ScrabbleTile> player3Hand = new ArrayList<>();
-    private ArrayList<ScrabbleTile> player4Hand = new ArrayList<>();
+    private ArrayList<ScrabbleTile> player1Hand;
+    private ArrayList<ScrabbleTile> player2Hand;
+    private ArrayList<ScrabbleTile> player3Hand;
+    private ArrayList<ScrabbleTile> player4Hand;
 
     // The index of the player who's turn it is
     private int currentPlayer;
@@ -63,6 +63,14 @@ public class ScrabbleState extends GameState {
      *      4) **Anything else?**
      */
     public ScrabbleState(){
+        //initialize player hands
+        player1Hand = new ArrayList<>();
+        player2Hand = new ArrayList<>();
+        player3Hand = new ArrayList<>();
+        player4Hand = new ArrayList<>();
+
+        //initialize player scores
+        playerScores = new int[4];
 
         //initialize arraylists for tiles
         bagTiles = new ArrayList<>();
@@ -86,6 +94,62 @@ public class ScrabbleState extends GameState {
         }
 
     }
+
+    /**
+     * ScrabbleState                Copies previous game state into a new game state.
+     * @param currentState
+     */
+    public ScrabbleState(ScrabbleState currentState) {
+
+        //initialize arraylists for tiles in bag and on board
+        this.bagTiles = currentState.getBagTiles();
+        this.boardTiles = currentState.getBoardTiles();
+
+        //initialize player scores
+        this.playerScores = currentState.getPlayerScores();
+
+        //initialize player hands
+        this.player1Hand = currentState.getPlayer1Hand();
+        this.player2Hand = currentState.getPlayer2Hand();
+        this.player3Hand = currentState.getPlayer3Hand();
+        this.player4Hand = currentState.getPlayer4Hand();
+
+        //initialize current player
+        this.currentPlayer = currentState.getCurrentPlayer();
+    }
+
+    //get player scores
+    public int[] getPlayerScores() {
+        return playerScores;
+    }
+
+    //get tiles in first player's hand
+    public ArrayList<ScrabbleTile> getPlayer1Hand() {
+        return player1Hand;
+    }
+
+    //get tiles in second player's hand
+    public ArrayList<ScrabbleTile> getPlayer2Hand() {
+        return player2Hand;
+    }
+
+    //get tiles in third player's hand
+    public ArrayList<ScrabbleTile> getPlayer3Hand() {
+        return player3Hand;
+    }
+
+    //get tiles in fourth player's hand
+    public ArrayList<ScrabbleTile> getPlayer4Hand() {
+        return player4Hand;
+    }
+
+    //get index of current player
+    public int getCurrentPlayer() {
+        return currentPlayer;
+    }
+
+    //get tiles left in bag
+    public ArrayList<ScrabbleTile> getBagTiles() { return bagTiles; }
 
     /**
      * Rotate the current player who's turn it is to the next player
@@ -244,77 +308,6 @@ public class ScrabbleState extends GameState {
     }
 
     /**
-     * Checks if the tiles we want to add to the board form words
-     * with the tiles already placed down
-     *
-     * @param tilesToAdd
-     *      the tiles we want to add to the board, but we aren't sure
-     *      if they form words when they are passed in
-     * @return
-     *
-     */
-    private boolean checkIsWord(ArrayList<ScrabbleTile> tilesToAdd){
-
-
-
-        return true;
-    }
-
-    /**
-     *
-     *
-     * @param tile
-     * @return
-     */
-   private boolean findAdjacentTile(ScrabbleTile tile){
-
-
-    return true;
-   }
-
-   private void orderWord(ArrayList<ScrabbleTile> tile) {
-
-   }
-
-
-   private void checkColumn(int x, int y) {
-       ArrayList<ScrabbleTile> tilesInColumn = new ArrayList<>();
-
-       for(ScrabbleTile tile: boardTiles) {
-
-           if(tile.location.x == x) {
-               tilesInColumn.add(tile);
-           }
-       }
-
-   }
-
-   private boolean getOrientation(ArrayList<ScrabbleTile> placedTiles) {
-
-       return true;
-   }
-
-   private ScrabbleTile isTileThere(int x, int y){
-
-       Point tileLocation;
-       //For each tile in the board, check if it's coordinates are the ones we are
-       //looking for
-       for (ScrabbleTile tile : boardTiles){
-           tileLocation = tile.location;
-
-           if (tileLocation.x == x && tileLocation.y == y){
-               //This is the tile we're looking for
-               return tile;
-           }
-       }
-
-       //If we get to this point then there are no tiles on the board with
-       //the given coordinates
-       return null;
-   }
-
-
-    /**
      * Helper method to let us know if the bag is empty
      *
      * @return true if the bag has no tiles in it, false otherwise
@@ -322,6 +315,4 @@ public class ScrabbleState extends GameState {
     public boolean isBagEmpty(){
         return bagTiles.isEmpty();
     }
-
-
 }
