@@ -81,4 +81,16 @@ public class ScrabbleStateTest {
 
         assertTrue(state.getBoardTiles().contains(tile1));
     }
+
+    @Test
+    public void testScrabbleStateCopy() throws Exception {
+        //create game state
+        ScrabbleState previousState = new ScrabbleState();
+
+        //create game state by copying previously made game state
+        ScrabbleState newState = new ScrabbleState(previousState);
+
+        //check if copied state is not null
+        assertNotNull(newState);
+    }
 }
