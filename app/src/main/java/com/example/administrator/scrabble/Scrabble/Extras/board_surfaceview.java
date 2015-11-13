@@ -1,4 +1,4 @@
-package com.example.administrator.scrabble.Scrabble;
+package com.example.administrator.scrabble.Scrabble.Extras;
 
 import android.content.Context;
 import android.graphics.Bitmap;

@@ -110,10 +110,10 @@ public class ScrabbleState extends GameState {
         this.playerScores = currentState.getPlayerScores();
 
         //initialize player hands
-        this.player1Hand = currentState.getPlayer1Hand();
-        this.player2Hand = currentState.getPlayer2Hand();
-        this.player3Hand = currentState.getPlayer3Hand();
-        this.player4Hand = currentState.getPlayer4Hand();
+        this.player1Hand = currentState.getPlayerHand(0);
+        this.player2Hand = currentState.getPlayerHand(1);
+        this.player3Hand = currentState.getPlayerHand(2);
+        this.player4Hand = currentState.getPlayerHand(3);
 
         //initialize current player
         this.currentPlayer = currentState.getCurrentPlayer();
@@ -124,24 +124,28 @@ public class ScrabbleState extends GameState {
         return playerScores;
     }
 
-    //get tiles in first player's hand
-    public ArrayList<ScrabbleTile> getPlayer1Hand() {
-        return player1Hand;
-    }
+    /**
+     * Returns the a players hand in the game
+     * @param playerId
+     *      The player whose hand we want
+     * @return
+     *      The hand of the player we wanted as an ArrayList<ScrabbleTile>
+     */
+    public ArrayList<ScrabbleTile> getPlayerHand(int playerId){
 
-    //get tiles in second player's hand
-    public ArrayList<ScrabbleTile> getPlayer2Hand() {
-        return player2Hand;
-    }
+        switch (playerId){
+            case 0:
+                return player1Hand;
+            case 1:
+                return player2Hand;
+            case 2:
+                return player3Hand;
+            case 3:
+                return player4Hand;
+            default:
+                return null;
+        }
 
-    //get tiles in third player's hand
-    public ArrayList<ScrabbleTile> getPlayer3Hand() {
-        return player3Hand;
-    }
-
-    //get tiles in fourth player's hand
-    public ArrayList<ScrabbleTile> getPlayer4Hand() {
-        return player4Hand;
     }
 
     //get index of current player
