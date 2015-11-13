@@ -2,7 +2,6 @@ package com.example.administrator.scrabble.Scrabble;
 
 import org.junit.Test;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import static org.junit.Assert.*;
@@ -19,7 +18,7 @@ public class ScrabbleStateTest {
     }
 
     @Test
-    public void testExchangeTile() throws Exception {
+    public void testExchangeTiles() throws Exception {
         ScrabbleState state = new ScrabbleState(); //create game state
 
         ArrayList<ScrabbleTile> exchange = new ArrayList<>(); //create array list for tiles to exchange
@@ -33,7 +32,7 @@ public class ScrabbleStateTest {
         playerHand.add(tile1);
         playerHand.add(tile2);
         playerHand.add(tile3);
-        playerHand = state.exchangeTile(exchange, playerHand);
+        playerHand = state.exchangeTiles(exchange, playerHand);
         assertFalse(playerHand.contains(tile1));
         assertFalse(playerHand.contains(tile2));
         assertTrue(playerHand.contains(tile3));

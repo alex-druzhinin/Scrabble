@@ -97,8 +97,9 @@ public class ScrabbleState extends GameState {
     }
 
     /**
-     * ScrabbleState                Copies previous game state into a new game state.
+     * Copy Constructor: Copies previous game state into a new game state.
      * @param currentState
+     *      The ScrabbleState we are wanting to copy
      */
     public ScrabbleState(ScrabbleState currentState) {
 
@@ -119,10 +120,7 @@ public class ScrabbleState extends GameState {
         this.currentPlayer = currentState.getCurrentPlayer();
     }
 
-    //get player scores
-    public int[] getPlayerScores() {
-        return playerScores;
-    }
+    
 
     /**
      * Returns the a players hand in the game
@@ -237,7 +235,7 @@ public class ScrabbleState extends GameState {
      * @return
      *      the players hand after the tiles have been exchanged
      */
-    public ArrayList<ScrabbleTile> exchangeTile(ArrayList<ScrabbleTile> tilesToExchange, ArrayList<ScrabbleTile> playerHand){
+    public ArrayList<ScrabbleTile> exchangeTiles(ArrayList<ScrabbleTile> tilesToExchange, ArrayList<ScrabbleTile> playerHand){
 
         if (! isBagEmpty()) {
             //Remove the tile from the players hand
@@ -275,7 +273,7 @@ public class ScrabbleState extends GameState {
      * @param playerHand
      *      The hand we want to draw tiles into
      * @return
-     *      An array containing the tiles drawn or null if no tiles remain
+     *      True if we completed our action or false if the bag is empty
      */
     public boolean drawTiles(ArrayList<ScrabbleTile> playerHand){
 
@@ -296,8 +294,14 @@ public class ScrabbleState extends GameState {
         for (int handSize = playerHand.size(); handSize < 7; handSize++){
             //Choose our tile
             randIndex = rand.nextInt(bagTiles.size());
+            //Add the tile into the hand and remove it from the bag
             playerHand.add(bagTiles.get(randIndex));
             bagTiles.remove(randIndex);
+            
+            //if we run out of tiles, exit the loop
+            if (bagTiles.size() == 0){
+                break;
+            }
         }
 
         return true;
@@ -319,5 +323,16 @@ public class ScrabbleState extends GameState {
      */
     public boolean isBagEmpty(){
         return bagTiles.isEmpty();
+    }
+    
+    //----- Getters -----//
+
+    /**
+     * @return
+     *      An integer array containing all of the player scores for the game. If a player's score
+     *      is -1, then this player is not active.
+     */
+    public int[] getPlayerScores() {
+        return playerScores;
     }
 }

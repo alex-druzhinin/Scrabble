@@ -2,6 +2,7 @@ package com.example.administrator.scrabble.Scrabble;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Point;
 
 import java.util.ArrayList;
 
@@ -16,7 +17,7 @@ public class ScrabbleBoard {
     private ArrayList<ScrabbleTile> boardTiles;
 
     //The size of the tiles in pixels, used for drawing each bitmap
-    private final int tileSize = 75;
+    private final int TILE_SIZE = 75;
 
     //The bonus indicators to mark which bonus a tile has
     public static final int NO_BONUS = 0;
@@ -102,6 +103,20 @@ public class ScrabbleBoard {
      *      True if there is a tile on the board at this (x,y) location, false otherwise.
      */
     private boolean isTileThere(int x, int y){
+        Point tileLocation;
+        //For each tile in the board, check if it's coordinates are the ones we are
+        //looking for
+        for (ScrabbleTile tile : boardTiles){
+            tileLocation = tile.getLocation();
+
+            if (tileLocation.x == x && tileLocation.y == y){
+                //This is the tile we're looking for
+                return true;
+            }
+        }
+
+        //If we get to this point then there are no tiles on the board with
+        //the given coordinates
         return false;
     }
 
@@ -112,7 +127,6 @@ public class ScrabbleBoard {
      *      The canvas we want to draw on
      */
     public void drawBoard(Canvas canvas){
-
 
     }
 
@@ -129,8 +143,18 @@ public class ScrabbleBoard {
     }
 
     // ----- Getters ----- //
+
+    /**
+     * @return
+     *      The tiles that are currently on the board
+     */
     public ArrayList<ScrabbleTile> getBoardTiles() { return boardTiles; }
-    public int getTileSize() { return tileSize; }
+
+    /**
+     * @return
+     *      The size of the tiles in pixels
+     */
+    public int getTileSize() { return TILE_SIZE; }
 
 
 
