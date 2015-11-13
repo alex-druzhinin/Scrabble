@@ -7,7 +7,11 @@ import android.graphics.Point;
 import java.util.ArrayList;
 
 /**
- * Created by webber18 on 11/13/2015.
+ * @author Alexa Carr, Morgan Webber, Nalani (Megan Chun)
+ * @version 11/13/2015
+ *
+ * Represents the board that each player will play on. All methods and attributes
+ * pertaining to the board are included in this class.
  */
 public class ScrabbleBoard {
 

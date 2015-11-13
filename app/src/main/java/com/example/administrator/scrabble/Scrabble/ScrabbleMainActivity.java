@@ -5,7 +5,11 @@ import com.example.administrator.scrabble.game.LocalGame;
 import com.example.administrator.scrabble.game.config.GameConfig;
 
 /**
- * Created by webber18 on 11/13/2015.
+ * @author Alexa Carr, Morgan Webber, Nalani (Megan Chun)
+ * @version 11/13/2015
+ *
+ * The main activity that sets up the Scrabble game with all the players and connections
+ * neccessary
  */
 public class ScrabbleMainActivity extends GameMainActivity{
 

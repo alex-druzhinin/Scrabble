@@ -11,11 +11,10 @@ import java.util.Random;
 
 
 /**
- * Authors: Alexa Carr, Morgan Webber, Nalani (Megan Chun)
- * Last Modified: 11/8/2015
+ * @author Alexa Carr, Morgan Webber, Nalani (Megan Chun)
+ * @version 11/13/2015
  *
- * Contains all of the information pertaining to the current state of the game.
- *
+ * Contains all of the information and methods pertaining to the current state of the game.
  */
 public class ScrabbleState extends GameState {
     /*

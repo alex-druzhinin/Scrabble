@@ -7,7 +7,10 @@ import com.example.administrator.scrabble.game.infoMsg.GameInfo;
 import java.util.ArrayList;
 
 /**
- * Created by webber18 on 11/13/2015.
+ * @author Alexa Carr, Morgan Webber, Nalani (Megan Chun)
+ * @version 11/13/2015
+ *
+ * Represents the AI for our game. This player may be either hard or easy.
  */
 public class ScrabbleComputerPlayer extends GameComputerPlayer {
 

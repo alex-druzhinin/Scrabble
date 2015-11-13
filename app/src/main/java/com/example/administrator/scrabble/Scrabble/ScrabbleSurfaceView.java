@@ -4,7 +4,10 @@ import android.content.Context;
 import android.view.SurfaceView;
 
 /**
- * Created by webber18 on 11/13/2015.
+ * @author Alexa Carr, Morgan Webber, Nalani (Megan Chun)
+ * @version 11/13/2015
+ *
+ * The surface view that will be drawn on during the runtime of the game.
  */
 public class ScrabbleSurfaceView extends SurfaceView {
 

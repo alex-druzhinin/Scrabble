@@ -14,7 +14,10 @@ import com.example.administrator.scrabble.game.infoMsg.GameInfo;
 import java.util.ArrayList;
 
 /**
- * Created by webber18 on 11/13/2015.
+ * @author Alexa Carr, Morgan Webber, Nalani (Megan Chun)
+ * @version 11/13/2015
+ *
+ * Represents the Human players playing the game.
  */
 public class ScrabbleHumanPlayer extends GameHumanPlayer implements SurfaceView.OnClickListener, SurfaceView.OnDragListener {
 

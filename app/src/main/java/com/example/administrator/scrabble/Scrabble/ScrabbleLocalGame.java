@@ -7,8 +7,10 @@ import com.example.administrator.scrabble.game.LocalGame;
 import com.example.administrator.scrabble.game.actionMsg.GameAction;
 
 /**
- * Authors: Alexa Carr, Morgan Webber, Nalani (Megan Chun)
- * Last Modified: 11/8/2015
+ * @author Alexa Carr, Morgan Webber, Nalani (Megan Chun)
+ * @version 11/13/2015
+ *
+ * Represents the local game for each player
  */
 public class ScrabbleLocalGame extends LocalGame{
 
