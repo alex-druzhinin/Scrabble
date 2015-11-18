@@ -18,7 +18,8 @@ public class ScrabbleTile {
     //The location of the tile on the grid
     //  x: 0-14
     //  y: 0-14
-    private Point location;
+    private int x;
+    private int y;
 
     //Whether or not the tile is on the board
     private boolean onBoard;
@@ -46,7 +47,8 @@ public class ScrabbleTile {
 
         this.letter = initLetter;
         this.value = initValue;
-        location = new Point();
+        this.x = 0;
+        this.y = 0;
         onBoard = false;
 
     }
@@ -75,9 +77,10 @@ public class ScrabbleTile {
      *      A Point containing the location of the tile on a
      *      15x15 grid
      */
-    public Point getLocation() {
-        return location;
+    public int getXLocation() {
+        return this.x;
     }
+    public int getYLocation() { return this.y; }
 
     /**
      * @return
@@ -143,11 +146,12 @@ public class ScrabbleTile {
 
     /**
      * Sets the tile's location to a new location
-     * @param location
+     * @param x
      *      The point that the tile is now located at
      */
-    public void setLocation(Point location) {
-        this.location = location;
+    public void setLocation(int x, int y) {
+        this.x = x;
+        this.y = y;
     }
 
     /**
