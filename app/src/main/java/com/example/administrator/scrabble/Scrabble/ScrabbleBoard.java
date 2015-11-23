@@ -20,6 +20,9 @@ public class ScrabbleBoard {
     //The tiles that are currently placed on the board
     private ArrayList<ScrabbleTile> boardTiles;
 
+    //holds the tiles that make up a horizontal word
+    ArrayList<ScrabbleTile> wordTiles;
+
     //The size of the tiles in pixels, used for drawing each bitmap
     private final int TILE_SIZE = 75;
 
@@ -102,8 +105,42 @@ public class ScrabbleBoard {
      * @return
      *      Any words that the new tile would create in the horizontal direction
      */
-    private ArrayList<String> findHorizontalWords(ScrabbleTile tile){
+    private String findHorizontalWords(ScrabbleTile tile){
+        int existsLeft = 1; //count for tiles to left of given tile
+        int existsRight = 1; //count for tiles to right of given tile
+        wordTiles = new ArrayList<>(); //holds tiles in same row as given tile
+
+        //check how many tiles are to the left of the given tile
+        while(isTileThere(tile.getXLocation()-existsLeft, tile.getYLocation()) ) { ++existsLeft; }
+
+        //check how many tile are to the right of the given tile
+        while(isTileThere(tile.getXLocation()+existsRight, tile.getYLocation())) { ++existsRight; }
+
+        //get all tiles on board next to given tile that's in the same row as the given tile
+        for(ScrabbleTile boardTile: boardTiles) {
+            //check if board tile is in same row and is next to the given tile
+            if(boardTile.getYLocation() == tile.getYLocation() &&
+                    boardTile.getXLocation() > tile.getXLocation()-existsLeft &&
+                    boardTile.getXLocation() < tile.getXLocation()+existsRight) {
+                wordTiles.add(boardTile); //add tile
+
+            }
+        }
+
+        //call quick sort for wordTiles
+        sortHorizontalWord(tile.getXLocation()-existsLeft+1, tile.getXLocation());
+
         return null;
+    }
+
+    private void sortHorizontalWord(int left, int right) {
+        if(left == right) { return; }
+
+        int pivot = right;
+        //p = eval l, r, p
+
+        sortHorizontalWord(left, pivot-1);
+        sortHorizontalWord(pivot+1, right);
     }
 
     /**
