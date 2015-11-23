@@ -55,7 +55,7 @@ public class ScrabbleBoard {
      * Constructor
      */
     public ScrabbleBoard(){
-
+        boardTiles = new ArrayList<>();
 
     }
 
@@ -80,6 +80,9 @@ public class ScrabbleBoard {
  *          The words that the prospectiveTiles create with the existing tiles on the board
      */
     public ArrayList<String> getWords(ArrayList<ScrabbleTile> prospectiveTiles){
+
+
+
         return null;
     }
 
@@ -92,8 +95,46 @@ public class ScrabbleBoard {
      * @return
      *      Any words that the new tile would create in the vertical direction
      */
-    private ArrayList<String> findVerticalWords(ScrabbleTile tile){
-        return null;
+    public String findVerticalWords(ScrabbleTile tile){
+
+        String word = "";
+
+        //Move up until we can't anymore
+        int currX = tile.getXLocation();
+        int currY = tile.getYLocation();
+        while (isTileThere(tile.getXLocation(), tile.getYLocation() - 1)){
+            currY -= 1;
+        }
+
+        //Grab all of the tiles with the same y coordinate as our tile
+        ArrayList<ScrabbleTile> wordTiles = new ArrayList<>();
+        for (ScrabbleTile vertTile : boardTiles){
+            if (vertTile.getXLocation() == tile.getXLocation()){
+                wordTiles.add(vertTile);
+            }
+        }
+
+        //Store all of the tiles that are touching our tile in order of y-coordinate in order
+        ScrabbleTile temp = new ScrabbleTile(' ', 0);
+        while (isTileThere(currX, currY)){
+            //Find the tile at this location
+            for (ScrabbleTile tempTile : wordTiles){
+                if (tempTile.getXLocation() == currX && tempTile.getYLocation() == currY){
+                    temp = tempTile;
+                    break;
+                }
+            }
+
+            //Add it to our word
+            word += temp.getLetter();
+
+            //Move our location
+            currY++;
+
+        }
+
+        //Return our new word
+        return word;
     }
 
     /**
@@ -105,34 +146,43 @@ public class ScrabbleBoard {
      * @return
      *      Any words that the new tile would create in the horizontal direction
      */
-    private String findHorizontalWords(ScrabbleTile tile){
+    private String findHorizontalWords(ScrabbleTile tile) {
         int existsLeft = 1; //count for tiles to left of given tile
         int existsRight = 1; //count for tiles to right of given tile
         wordTiles = new ArrayList<>(); //holds tiles in same row as given tile
 
         //check how many tiles are to the left of the given tile
-        while(isTileThere(tile.getXLocation()-existsLeft, tile.getYLocation()) ) { ++existsLeft; }
+        while (isTileThere(tile.getXLocation() - existsLeft, tile.getYLocation())) {
+            ++existsLeft;
+        }
 
         //check how many tile are to the right of the given tile
-        while(isTileThere(tile.getXLocation()+existsRight, tile.getYLocation())) { ++existsRight; }
+        while (isTileThere(tile.getXLocation() + existsRight, tile.getYLocation())) {
+            ++existsRight;
+        }
 
         //get all tiles on board next to given tile that's in the same row as the given tile
-        for(ScrabbleTile boardTile: boardTiles) {
+        for (ScrabbleTile boardTile : boardTiles) {
             //check if board tile is in same row and is next to the given tile
-            if(boardTile.getYLocation() == tile.getYLocation() &&
-                    boardTile.getXLocation() > tile.getXLocation()-existsLeft &&
-                    boardTile.getXLocation() < tile.getXLocation()+existsRight) {
+            if (boardTile.getYLocation() == tile.getYLocation() &&
+                    boardTile.getXLocation() > tile.getXLocation() - existsLeft &&
+                    boardTile.getXLocation() < tile.getXLocation() + existsRight) {
                 wordTiles.add(boardTile); //add tile
 
             }
         }
 
         //call quick sort for wordTiles
-        sortHorizontalWord(tile.getXLocation()-existsLeft+1, tile.getXLocation());
+        sortHorizontalWord(tile.getXLocation() - existsLeft + 1, tile.getXLocation());
 
         return null;
     }
 
+    /**
+     * Helper method for horizontal sort
+     * @param left
+     * @param right
+     */
     private void sortHorizontalWord(int left, int right) {
         if(left == right) { return; }
 
@@ -153,7 +203,7 @@ public class ScrabbleBoard {
      * @return
      *      True if there is a tile on the board at this (x,y) location, false otherwise.
      */
-    private boolean isTileThere(int x, int y){
+    public boolean isTileThere(int x, int y){
         Point tileLocation = new Point();
         //For each tile in the board, check if it's coordinates are the ones we are
         //looking for
