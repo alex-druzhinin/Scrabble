@@ -23,6 +23,8 @@ public class ScrabbleBoard {
     //holds the tiles that make up a horizontal word
     ArrayList<ScrabbleTile> wordTiles;
 
+    ScrabbleTile temp;
+
     //The size of the tiles in pixels, used for drawing each bitmap
     private final int TILE_SIZE = 75;
 
@@ -56,7 +58,8 @@ public class ScrabbleBoard {
      */
     public ScrabbleBoard(){
         boardTiles = new ArrayList<>();
-
+        wordTiles = new ArrayList<>();
+        temp = new ScrabbleTile(' ', 0);
     }
 
     /**
@@ -107,7 +110,6 @@ public class ScrabbleBoard {
         }
 
         //Grab all of the tiles with the same y coordinate as our tile
-        ArrayList<ScrabbleTile> wordTiles = new ArrayList<>();
         for (ScrabbleTile vertTile : boardTiles){
             if (vertTile.getXLocation() == tile.getXLocation()){
                 wordTiles.add(vertTile);
@@ -115,7 +117,6 @@ public class ScrabbleBoard {
         }
 
         //Store all of the tiles that are touching our tile in order of y-coordinate in order
-        ScrabbleTile temp = new ScrabbleTile(' ', 0);
         while (isTileThere(currX, currY)){
             //Find the tile at this location
             for (ScrabbleTile tempTile : wordTiles){
@@ -133,6 +134,8 @@ public class ScrabbleBoard {
 
         }
 
+        wordTiles.clear();
+
         //Return our new word
         return word;
     }
@@ -147,9 +150,9 @@ public class ScrabbleBoard {
      *      Any words that the new tile would create in the horizontal direction
      */
     private String findHorizontalWords(ScrabbleTile tile) {
+        String word = "";
         int existsLeft = 1; //count for tiles to left of given tile
         int existsRight = 1; //count for tiles to right of given tile
-        wordTiles = new ArrayList<>(); //holds tiles in same row as given tile
 
         //check how many tiles are to the left of the given tile
         while (isTileThere(tile.getXLocation() - existsLeft, tile.getYLocation())) {
@@ -161,36 +164,63 @@ public class ScrabbleBoard {
             ++existsRight;
         }
 
+        int currXLeft = tile.getXLocation()-existsLeft;
+        int currXRight = tile.getXLocation()+existsRight;
+        int currY = tile.getYLocation();
+
         //get all tiles on board next to given tile that's in the same row as the given tile
         for (ScrabbleTile boardTile : boardTiles) {
             //check if board tile is in same row and is next to the given tile
-            if (boardTile.getYLocation() == tile.getYLocation() &&
-                    boardTile.getXLocation() > tile.getXLocation() - existsLeft &&
-                    boardTile.getXLocation() < tile.getXLocation() + existsRight) {
+            if (boardTile.getYLocation() == currY &&
+                    boardTile.getXLocation() > currXLeft &&
+                    boardTile.getXLocation() < currXRight) {
                 wordTiles.add(boardTile); //add tile
-
             }
         }
 
-        //call quick sort for wordTiles
-        sortHorizontalWord(tile.getXLocation() - existsLeft + 1, tile.getXLocation());
+        ++currXLeft;
 
-        return null;
-    }
+        //check all tiles to left of given tile
+        while(isTileThere(currXLeft, tile.getYLocation())) {
+            //Find the tile at this location
+            for (ScrabbleTile tempTile : wordTiles){
+                if (tempTile.getXLocation() == currXLeft){
+                    temp = tempTile;
+                    break;
+                }
+            }
 
-    /**
-     * Helper method for horizontal sort
-     * @param left
-     * @param right
-     */
-    private void sortHorizontalWord(int left, int right) {
-        if(left == right) { return; }
+            word += temp.getLetter(); //Add letter to word
 
-        int pivot = right;
-        //p = eval l, r, p
+            currXLeft++; //Move our location
 
-        sortHorizontalWord(left, pivot-1);
-        sortHorizontalWord(pivot+1, right);
+            //if back at given tile
+            if(currXLeft == tile.getXLocation()) {
+                word += tile.getLetter(); //add letter of given tile
+                break; //stop searching tiles to left of given tile
+            }
+        }
+
+        --currXRight;
+
+        //check tiles to right of given tile
+        while(isTileThere(currXRight, currY)) {
+            //Find the tile at this location
+            for (ScrabbleTile tempTile : wordTiles){
+                if (tempTile.getXLocation() == currXRight){
+                    temp = tempTile;
+                    break;
+                }
+            }
+
+            word += temp.getLetter(); //Add it to our word
+
+            currXRight--; //Move our location
+        }
+
+        wordTiles.clear(); //empty arrayList holding tiles for a word
+
+        return word; //Return new horizontal word
     }
 
     /**
