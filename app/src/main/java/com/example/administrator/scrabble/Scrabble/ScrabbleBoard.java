@@ -21,7 +21,7 @@ import java.util.ArrayList;
  * Represents the board that each player will play on. All methods and attributes
  * pertaining to the board are included in this class.
  */
-public class ScrabbleBoard{
+public class ScrabbleBoard {
 
     // ----- Instance Variables ----- //
 
@@ -175,18 +175,17 @@ public class ScrabbleBoard{
      * @return
      *      Any words that the new tile would create in the horizontal direction
      */
-    private String findHorizontalWords(ScrabbleTile tile) {
+    public String findHorizontalWords(ScrabbleTile tile) {
         String word = "";
         int existsLeft = 1; //count for tiles to left of given tile
         int existsRight = 1; //count for tiles to right of given tile
-        wordTiles = new ArrayList<>(); //holds tiles in same row as given tile
 
         //check how many tiles are to the left of the given tile
         while (isTileThere(tile.getXLocation() - existsLeft, tile.getYLocation())) {
             ++existsLeft;
         }
 
-        //check how many tile are to the right of the given tile
+        //check how many tiles are to the right of the given tile
         while (isTileThere(tile.getXLocation() + existsRight, tile.getYLocation())) {
             ++existsRight;
         }
@@ -195,7 +194,7 @@ public class ScrabbleBoard{
         int currXRight = tile.getXLocation()+existsRight;
         int currY = tile.getYLocation();
 
-        //get all tiles on board next to given tile that's in the same row as the given tile
+        //get all tiles on board next to left of given tile that's in the same row as the given tile
         for (ScrabbleTile boardTile : boardTiles) {
             //check if board tile is in same row and is next to the given tile
             if (boardTile.getYLocation() == currY &&
@@ -205,13 +204,13 @@ public class ScrabbleBoard{
             }
         }
 
-        ++currXLeft;
+        ++currXLeft; //go to leftmost tile x position
 
         //check all tiles to left of given tile
-        while(isTileThere(currXLeft, tile.getYLocation())) {
+        while(isTileThere(currXLeft, currY)) {
             //Find the tile at this location
-            for (ScrabbleTile tempTile : wordTiles){
-                if (tempTile.getXLocation() == currXLeft){
+            for (ScrabbleTile tempTile : wordTiles) {
+                if (tempTile.getXLocation() == currXLeft) {
                     temp = tempTile;
                     break;
                 }
@@ -219,30 +218,7 @@ public class ScrabbleBoard{
 
             word += temp.getLetter(); //Add letter to word
 
-            currXLeft++; //Move our location
-
-            //if back at given tile
-            if(currXLeft == tile.getXLocation()) {
-                word += tile.getLetter(); //add letter of given tile
-                break; //stop searching tiles to left of given tile
-            }
-        }
-
-        --currXRight;
-
-        //check tiles to right of given tile
-        while(isTileThere(currXRight, currY)) {
-            //Find the tile at this location
-            for (ScrabbleTile tempTile : wordTiles){
-                if (tempTile.getXLocation() == currXRight){
-                    temp = tempTile;
-                    break;
-                }
-            }
-
-            word += temp.getLetter(); //Add it to our word
-
-            currXRight--; //Move our location
+            currXLeft++; //Move to next location
         }
 
         wordTiles.clear(); //empty arrayList holding tiles for a word

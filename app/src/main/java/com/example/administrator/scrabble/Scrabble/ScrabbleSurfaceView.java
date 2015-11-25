@@ -14,7 +14,7 @@ import java.util.jar.Attributes;
  *
  * The surface view that will be drawn on during the runtime of the game.
  */
-public class ScrabbleSurfaceView extends AnimationSurface{
+public class ScrabbleSurfaceView extends AnimationSurface {
 
     /**
      * Default Ctor, just sets up the SurfaceView

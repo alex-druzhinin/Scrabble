@@ -18,9 +18,9 @@ public class ScrabbleComputerPlayer extends GameComputerPlayer {
 
     //The current board, will be used to scan for possible words
     public ScrabbleBoard board;
-
-    //Our switch for whether or not the AI is difficult
-    Boolean isDifficult;
+    protected ArrayList<ScrabbleTile> hand;
+    protected ScrabbleState currentState;
+    protected String word;
 
     //The minimum amount of time (ms) the AI waits to perform an action
     final int MIN_TIME = 5000;
@@ -30,14 +30,41 @@ public class ScrabbleComputerPlayer extends GameComputerPlayer {
      *
      * @param name the player's name (e.g., "John")
      */
-    public ScrabbleComputerPlayer(String name, Boolean initDifficult) {
+    public ScrabbleComputerPlayer(String name) {
         super(name);
-        this.isDifficult = initDifficult;
     }
 
     @Override
     protected void receiveInfo(GameInfo info) {
 
+    }
+
+    //Check letters in hand to make the best word possible
+    protected String findWord(ArrayList<ScrabbleTile> hand) {
+        char[] lettersToUse = boardLettersToUse(); //get letters on board to use
+
+        //use hand and letters to use to find best word by points
+
+        //check numletters above and below to see if word fits
+
+        return ""; //return word
+    }
+
+    //Get all the letters on the board that the computer could use to make words
+    protected char[] boardLettersToUse() {
+        char[] use = null;
+
+        return use;
+    }
+
+    //get maximum letters that can be placed above letter on board
+    protected int maxLettersAbove() {
+        return 0;
+    }
+
+    //get maximum letters that can be placed below letter on board
+    protected int maxLettersBelow() {
+        return 0;
     }
 
     /**
@@ -52,10 +79,6 @@ public class ScrabbleComputerPlayer extends GameComputerPlayer {
     public ArrayList<ScrabbleTile> getWord(){
         return null;
     }
-
-
-
-
 
 
     // ----- Game Actions ----- //
@@ -88,6 +111,6 @@ public class ScrabbleComputerPlayer extends GameComputerPlayer {
      *      An EndTurnAction containing this player
      */
     public GameAction endTurn(){
-        return new EndTurnAction(this);
+        return new EndTurnAction(this, word);
     }
 }

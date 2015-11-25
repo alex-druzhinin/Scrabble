@@ -167,10 +167,8 @@ public class ScrabbleState extends GameState {
     private void receiveAction(GameAction action){
 
         if (action instanceof ExchangeTileAction){
-            //Going to call the exchange tile method
-
+            //exchangeTiles( **tilesToExchange**, getPlayerHand(getCurrentPlayer()));
             //Depending on the player, swap out their hands
-
 
         }
         else if (action instanceof EndTurnAction){
@@ -236,27 +234,22 @@ public class ScrabbleState extends GameState {
      */
     public ArrayList<ScrabbleTile> exchangeTiles(ArrayList<ScrabbleTile> tilesToExchange, ArrayList<ScrabbleTile> playerHand){
 
-        if (! isBagEmpty()) {
+        if (! isBagEmpty()) { //check for tiles in the bag
             //Remove the tile from the players hand
             //add the tile back into the bag
             for (ScrabbleTile tile : tilesToExchange) {
-                //Break our of our loop if we've emptied the bag
-                if (isBagEmpty()){
-                    break;
-                }
+                if (isBagEmpty()){ break; } //Break our of our loop if we've emptied the bag
 
-                //remove tile from player hand and add to bag
-                playerHand.remove(tile);
-                bagTiles.add(tile);
+                playerHand.remove(tile); //remove tile from player hand
+                bagTiles.add(tile); //add tile to bag
 
                 //add a random tile to the players hand and remove it from the bag
                 int randIndex = rand.nextInt(bagTiles.size());
                 playerHand.add(bagTiles.get(randIndex));
                 bagTiles.remove(randIndex);
             }
-
         }
-        return playerHand;
+        return playerHand; //player's new hand with exchanged tiles
     }
 
 

@@ -23,9 +23,13 @@ public class ScrabbleLocalGame extends LocalGame{
         masterState = new ScrabbleState();
     }
 
+    /**
+     * Sends the updated state to the player
+     * @param p
+     */
     @Override
     protected void sendUpdatedStateTo(GamePlayer p) {
-
+        p.sendInfo(masterState);
     }
 
     /**

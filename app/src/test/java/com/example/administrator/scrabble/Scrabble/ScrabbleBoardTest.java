@@ -78,4 +78,23 @@ public class ScrabbleBoardTest extends TestCase {
         assertEquals("abc", word);
 
     }
+
+    public void testFindHorizontalWords() throws Exception {
+        ScrabbleBoard board = new ScrabbleBoard();
+        ArrayList<ScrabbleTile> newBoardTiles = new ArrayList<>();
+        ScrabbleTile tempTile1 = new ScrabbleTile('d', 1);
+        ScrabbleTile tempTile2 = new ScrabbleTile('o', 1);
+        ScrabbleTile tempTile3 = new ScrabbleTile('g', 1);
+        tempTile1.setLocation(5,4);
+        tempTile2.setLocation(6,4);
+        tempTile3.setLocation(7,4);
+        newBoardTiles.add(tempTile1);
+        newBoardTiles.add(tempTile2);
+        newBoardTiles.add(tempTile3);
+        board.setBoard(newBoardTiles);
+
+        String word = board.findHorizontalWords(tempTile2);
+
+        assertEquals("dog", word);
+    }
 }

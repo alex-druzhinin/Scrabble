@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.example.administrator.scrabble.game.GameHumanPlayer;
 import com.example.administrator.scrabble.game.GameMainActivity;
+import com.example.administrator.scrabble.game.GamePlayer;
 import com.example.administrator.scrabble.game.actionMsg.GameAction;
 import com.example.administrator.scrabble.game.infoMsg.GameInfo;
 
@@ -24,14 +25,15 @@ public class ScrabbleHumanPlayer extends GameHumanPlayer implements SurfaceView.
     // ----- Instance variables ----- //
 
     //The buttons used to submit game actions
-    Button endTurnButton,
+    Button  endTurnButton,
             redoButton;
 
     //The SurfaceView we'll be drawing on
     ScrabbleSurfaceView screenView;
 
-    //The array that will hold each of the player's score views
-    ArrayList<TextView> playerScoreViews;
+    ArrayList<TextView> playerScoreViews; //each player's score views
+    ArrayList<ScrabbleTile> tilesToExchange; //tiles a player wants to exchange
+    String word;
 
     //A "lock" for other actions, used to indicate that the player is currently
     //exchanging tiles
@@ -45,6 +47,8 @@ public class ScrabbleHumanPlayer extends GameHumanPlayer implements SurfaceView.
      */
     public ScrabbleHumanPlayer(String name) {
         super(name);
+        playerScoreViews = new ArrayList<>();
+        tilesToExchange = new ArrayList<>();
     }
 
     @Override
@@ -84,6 +88,8 @@ public class ScrabbleHumanPlayer extends GameHumanPlayer implements SurfaceView.
     public void onClick(View v) {
 
     }
+
+    public ArrayList<ScrabbleTile> getTilesToExchange() { return tilesToExchange; }
 
     /**
      * Called when the user drags anywhere on the screeen. If the initial tap was on
@@ -132,7 +138,7 @@ public class ScrabbleHumanPlayer extends GameHumanPlayer implements SurfaceView.
      *      An EndTurnAction containing this player
      */
     public GameAction endTurn(){
-        return new EndTurnAction(this);
+        return new EndTurnAction(this, word);
     }
 
 
