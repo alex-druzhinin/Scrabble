@@ -1,5 +1,6 @@
 package com.example.administrator.scrabble.Scrabble;
 
+import android.content.Context;
 import android.graphics.Point;
 
 import junit.framework.TestCase;

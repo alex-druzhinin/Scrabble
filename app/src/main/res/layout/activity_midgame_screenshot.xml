@@ -114,7 +114,7 @@
             android:layout_width="fill_parent"
             android:layout_height="fill_parent">
 
-            <com.example.administrator.scrabble.Scrabble.Extras.board_surfaceview
+            <com.example.administrator.scrabble.Scrabble.ScrabbleSurfaceView
                 android:layout_width="570dp"
                 android:layout_height="574dp"
                 android:id="@+id/board_surfaceview"

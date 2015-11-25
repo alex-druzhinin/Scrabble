@@ -1,5 +1,7 @@
 package com.example.administrator.scrabble.Scrabble;
 
+import android.content.Context;
+
 import com.example.administrator.scrabble.game.GameMainActivity;
 import com.example.administrator.scrabble.game.LocalGame;
 import com.example.administrator.scrabble.game.config.GameConfig;
