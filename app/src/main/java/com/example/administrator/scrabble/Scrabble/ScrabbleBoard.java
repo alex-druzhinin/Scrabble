@@ -110,9 +110,42 @@ public class ScrabbleBoard {
      */
     public ArrayList<String> getWords(ArrayList<ScrabbleTile> prospectiveTiles){
 
+        //Our return array, storing the words this move made
+        ArrayList<String> wordsMade = new ArrayList<>();
+
+        //For each tile that the user placed down, grab all of the words that tile makes
+        String vertWord, horizWord = "";
+        for (ScrabbleTile tile : prospectiveTiles){
+            vertWord = findVerticalWords(tile);
+            horizWord = findHorizontalWords(tile);
+
+            //If these words don't exist, add them to the
+            if (! wordsMade.contains(vertWord)){
+                wordsMade.add(vertWord);
+            }
+            if (! wordsMade.contains(horizWord)){
+                wordsMade.add(horizWord);
+            }
+        }
+
+        //Purge our list of any "" words
+        boolean[] badWords = new boolean[wordsMade.size()];
+        //Mark each word we need to remove
+        for (String word : wordsMade){
+            if (word.equals("")){
+                badWords[wordsMade.indexOf(word)] = true;
+            }
+        }
+        //Remove each word as per badWords array
+        for (int i = 0; i < badWords.length; i++){
+            if (badWords[i]){
+                wordsMade.remove(i);
+            }
+        }
 
 
-        return null;
+        //List should now only contains words that were made, but still includes 1 letter words
+        return wordsMade;
     }
 
     /**
@@ -131,7 +164,7 @@ public class ScrabbleBoard {
         //Move up until we can't anymore
         int currX = tile.getXLocation();
         int currY = tile.getYLocation();
-        while (isTileThere(tile.getXLocation(), tile.getYLocation() - 1)){
+        while (isTileThere(tile.getXLocation(), currY - 1)){
             currY -= 1;
         }
 
@@ -237,14 +270,17 @@ public class ScrabbleBoard {
      *      True if there is a tile on the board at this (x,y) location, false otherwise.
      */
     public boolean isTileThere(int x, int y){
-        Point tileLocation = new Point();
+        int tempTileX;
+        int tempTileY;
         //For each tile in the board, check if it's coordinates are the ones we are
         //looking for
         for (ScrabbleTile tile : boardTiles){
-            tileLocation.x = tile.getXLocation();
-            tileLocation.y = tile.getYLocation();
+            //Store the current tile's location
+            tempTileX = tile.getXLocation();
+            tempTileY = tile.getYLocation();
 
-            if (tileLocation.x == x && tileLocation.y == y){
+            //Compare it to our location in question
+            if (tempTileX == x && tempTileY == y){
                 //This is the tile we're looking for
                 return true;
             }

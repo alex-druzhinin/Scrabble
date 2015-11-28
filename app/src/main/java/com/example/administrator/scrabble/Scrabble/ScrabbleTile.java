@@ -58,6 +58,12 @@ public class ScrabbleTile {
         this.tileImage = initTileImage;
     }
 
+    public ScrabbleTile(char initLetter, int initValue, int initX, int initY){
+        this(initLetter, initValue);
+        this.x = initX;
+        this.y = initY;
+    }
+
 
     // ----- Getters ----- //
 

@@ -14,6 +14,39 @@ public class ScrabbleBoardTest extends TestCase {
 
     public void testGetWords() throws Exception {
 
+        ScrabbleBoard testBoard = new ScrabbleBoard();
+        ArrayList<ScrabbleTile> tempBoardTiles = new ArrayList<>();
+        ArrayList<ScrabbleTile> prospectiveWord = new ArrayList<>();
+
+        //Generate a temp board
+        tempBoardTiles.add(new ScrabbleTile('a', 0, 0, 0));
+        tempBoardTiles.add(new ScrabbleTile('b', 0, 0, 1));
+        tempBoardTiles.add(new ScrabbleTile('c', 0, 0, 2));
+        tempBoardTiles.add(new ScrabbleTile('d', 0, 0, 3));
+        testBoard.setBoard(tempBoardTiles);
+
+        //Test some words against it
+        prospectiveWord.add(new ScrabbleTile('1', 0, 0, 4));
+        prospectiveWord.add(new ScrabbleTile('2', 0, 1, 4));
+        for (ScrabbleTile tile : prospectiveWord){
+            tempBoardTiles.add(tile);
+        }
+        testBoard.setBoard(tempBoardTiles);
+        ArrayList<String> wordsMade = testBoard.getWords(prospectiveWord); //should contain "a12"
+        System.out.println("Words made after placing first tiles:");
+        for (String word : wordsMade){
+            System.out.println(word);
+        }
+
+        assertTrue(wordsMade.contains("abcd1"));
+        assertTrue(wordsMade.contains("12"));
+        
+
+
+
+
+
+
     }
 
     public void testCheckBonus() throws Exception {
@@ -73,9 +106,9 @@ public class ScrabbleBoardTest extends TestCase {
         newBoardTiles.add(tempTile3);
         board.setBoard(newBoardTiles);
 
-        String word = board.findVerticalWords(tempTile1);
+        String word = board.findVerticalWords(new ScrabbleTile('d',5,0,3));
 
-        assertEquals("abc", word);
+        assertEquals("abcd", word);
 
     }
 
@@ -93,7 +126,7 @@ public class ScrabbleBoardTest extends TestCase {
         newBoardTiles.add(tempTile3);
         board.setBoard(newBoardTiles);
 
-        String word = board.findHorizontalWords(tempTile2);
+        String word = board.findHorizontalWords(tempTile1);
 
         assertEquals("dog", word);
     }
