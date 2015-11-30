@@ -1,11 +1,14 @@
 package com.example.administrator.scrabble.Scrabble;
 
+import android.graphics.Canvas;
 import android.view.DragEvent;
+import android.view.MotionEvent;
 import android.view.SurfaceView;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.administrator.scrabble.animation.Animator;
 import com.example.administrator.scrabble.game.GameHumanPlayer;
 import com.example.administrator.scrabble.game.GameMainActivity;
 import com.example.administrator.scrabble.game.GamePlayer;
@@ -20,7 +23,7 @@ import java.util.ArrayList;
  *
  * Represents the Human players playing the game.
  */
-public class ScrabbleHumanPlayer extends GameHumanPlayer implements SurfaceView.OnClickListener, SurfaceView.OnDragListener {
+public class ScrabbleHumanPlayer extends GameHumanPlayer implements Animator {
 
     // ----- Instance variables ----- //
 
@@ -76,37 +79,8 @@ public class ScrabbleHumanPlayer extends GameHumanPlayer implements SurfaceView.
 
     // ----- Events ----- //
 
-
-    /**
-     * Called when the user pressed anywhere on the screen. If the player is exchanging and
-     *  they press on a tile, that tile is marked to be exchange.
-     *
-     * @param v
-     *      The view that was tapped on
-     */
-    @Override
-    public void onClick(View v) {
-
-    }
-
     public ArrayList<ScrabbleTile> getTilesToExchange() { return tilesToExchange; }
 
-    /**
-     * Called when the user drags anywhere on the screeen. If the initial tap was on
-     * a scrabble tile, then the scrabble tile will follow the finger's movements.
-     *
-     * @param v
-     *      The view that is being dragged on
-     * @param event
-     *      The DragEvent that occured when the user dragged
-     * @return
-     *      True if the drag event was handled successfully, or false if the drag event was
-     *      not handled.
-     */
-    @Override
-    public boolean onDrag(View v, DragEvent event) {
-        return false;
-    }
 
     // ----- Game Actions ----- //
 
@@ -142,4 +116,33 @@ public class ScrabbleHumanPlayer extends GameHumanPlayer implements SurfaceView.
     }
 
 
+    @Override
+    public int interval() {
+        return 0;
+    }
+
+    @Override
+    public int backgroundColor() {
+        return 0;
+    }
+
+    @Override
+    public boolean doPause() {
+        return false;
+    }
+
+    @Override
+    public boolean doQuit() {
+        return false;
+    }
+
+    @Override
+    public void tick(Canvas canvas) {
+
+    }
+
+    @Override
+    public void onTouch(MotionEvent event) {
+
+    }
 }
