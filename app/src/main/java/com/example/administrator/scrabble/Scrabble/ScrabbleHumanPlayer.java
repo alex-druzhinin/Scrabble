@@ -41,6 +41,7 @@ public class ScrabbleHumanPlayer extends GameHumanPlayer implements Animator {
     //A "lock" for other actions, used to indicate that the player is currently
     //exchanging tiles
     Boolean isExchanging;
+    Boolean hasExchanged;
 
     /**
      * constructor
@@ -114,6 +115,15 @@ public class ScrabbleHumanPlayer extends GameHumanPlayer implements Animator {
     public GameAction endTurn(){
         return new EndTurnAction(this, word);
     }
+
+    public Boolean getHasExchanged() {
+        return hasExchanged;
+    }
+
+    public void setHasExchanged(Boolean hasExchanged) {
+        this.hasExchanged = hasExchanged;
+    }
+
 
 
     @Override

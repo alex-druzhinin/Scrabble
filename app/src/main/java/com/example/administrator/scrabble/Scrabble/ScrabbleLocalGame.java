@@ -6,6 +6,8 @@ import com.example.administrator.scrabble.game.GamePlayer;
 import com.example.administrator.scrabble.game.LocalGame;
 import com.example.administrator.scrabble.game.actionMsg.GameAction;
 
+import java.util.ArrayList;
+
 /**
  * @author Alexa Carr, Morgan Webber, Nalani (Megan Chun)
  * @version 11/13/2015
@@ -20,6 +22,7 @@ public class ScrabbleLocalGame extends LocalGame{
      * Constructor
      */
     public ScrabbleLocalGame(){
+        super();
         masterState = new ScrabbleState();
     }
 
@@ -29,7 +32,8 @@ public class ScrabbleLocalGame extends LocalGame{
      */
     @Override
     protected void sendUpdatedStateTo(GamePlayer p) {
-        p.sendInfo(masterState);
+        //Send a copied version of the state to the player
+        p.sendInfo(new ScrabbleState(masterState));
     }
 
     /**
@@ -76,8 +80,56 @@ public class ScrabbleLocalGame extends LocalGame{
 
     }
 
+
+    /**
+     * Makes a move for the current player
+     *
+     * @param action
+     * 			The move that the player has sent to the game
+     * @return
+     *          True/False based on whether or not the move was legal
+     */
     @Override
     protected boolean makeMove(GameAction action) {
+        ////////////////////////////////////////////
+        // Depending on the action received, we will make move for the player
+        ////////////////////////////////////////////
+
+        if (action instanceof ExchangeTileAction){
+            ExchangeTileAction exchangeAction = (ExchangeTileAction) action;
+            //Get the tiles we need to exchange
+            ArrayList<ScrabbleTile> tilesToExchange = exchangeAction.getTilesToExchange();
+
+            //Get the player id of the action
+            int playerId = getPlayerIdx(exchangeAction.getPlayer());
+
+            //Exchange their tiles out
+            masterState.exchangeTiles(tilesToExchange, playerId);
+
+            //Set the flag that says our player has exchanged for this turn
+            ScrabbleHumanPlayer player = (ScrabbleHumanPlayer) action.getPlayer();
+            player.setHasExchanged(true);
+
+        }
+        else if (action instanceof EndTurnAction){
+
+            
+
+
+
+        }
+        else if (action instanceof EndGameAction){
+
+
+
+
+
+        }
+
+
+
+
+
         return false;
     }
 

@@ -145,6 +145,32 @@ public class ScrabbleState extends GameState {
 
     }
 
+    /**
+     * Sets a players hand
+     *
+     * @param playerId
+     *          The id of the player we want to modify
+     * @param newHand
+     *          The new hand of the player
+     *
+     */
+    public void setPlayerHand(int playerId, ArrayList<ScrabbleTile> newHand){
+
+        switch (playerId){
+            case 0:
+                player1Hand = newHand;
+            case 1:
+                player2Hand = newHand;
+            case 2:
+                player3Hand = newHand;
+            case 3:
+                player4Hand = newHand;
+            default:
+                return;
+        }
+
+    }
+
     //get index of current player
     public int getCurrentPlayer() {
         return currentPlayer;
@@ -159,34 +185,6 @@ public class ScrabbleState extends GameState {
     private void setCurrentPlayer(int theNextPlayer){
         this.currentPlayer = theNextPlayer;
     }
-
-    /**
-     * Receive actions from the players and performs accordingly
-     *
-     */
-    private void receiveAction(GameAction action){
-
-        if (action instanceof ExchangeTileAction){
-            //exchangeTiles( **tilesToExchange**, getPlayerHand(getCurrentPlayer()));
-            //Depending on the player, swap out their hands
-
-        }
-        else if (action instanceof EndTurnAction){
-            //Check the word, tally all of the points and update them on the board
-            //gives the current player new tiles, change the current player
-
-            //Depending on the player, end their turn and tally their points
-
-        }
-        else if (action instanceof EndGameAction){
-            //Prompt all users that one player wants to end the game
-            //and ask them if they want to end as well, but remove that player
-            //regardless
-
-        }
-
-    }
-
 
     /**
      * Tallies the score for a given word
@@ -233,14 +231,19 @@ public class ScrabbleState extends GameState {
      *
      * @param tilesToExchange
      *      the tiles we want to exchange
-     * @param playerHand
-     *      the players hand we are exchanging
+     * @param playerId
+     *      the id of the player we want to modify
+     *
      * @return
      *      the players hand after the tiles have been exchanged
      */
-    public ArrayList<ScrabbleTile> exchangeTiles(ArrayList<ScrabbleTile> tilesToExchange, ArrayList<ScrabbleTile> playerHand){
+    public void exchangeTiles(ArrayList<ScrabbleTile> tilesToExchange, int playerId){
 
         if (! isBagEmpty()) { //check for tiles in the bag
+
+            //Grab the player's hand we want to modify
+            ArrayList<ScrabbleTile> playerHand = getPlayerHand(playerId);
+
             //Remove the tile from the players hand
             //add the tile back into the bag
             for (ScrabbleTile tile : tilesToExchange) {
@@ -254,8 +257,15 @@ public class ScrabbleState extends GameState {
                 playerHand.add(bagTiles.get(randIndex));
                 bagTiles.remove(randIndex);
             }
+
+            //Set our player's new hand
+            setPlayerHand(playerId, playerHand);
         }
-        return playerHand; //player's new hand with exchanged tiles
+
+
+
+
+
     }
 
 
