@@ -43,14 +43,6 @@ public class ScrabbleBoard {
     public static final int TRIPLE_LETTER = 3;
     public static final int TRIPLE_WORD = 4;
 
-    // The Bitmaps representing basic board squares for drawing the board
-    private Bitmap tripleWordSqr,
-                    tripleLetterSqr,
-                    doubleWordSqr,
-                    doubleLetterSqr,
-                    centerSqr,
-                    normalSqr;
-
     //The Paint used to color the board
     private Paint boardPaint;
 
@@ -73,20 +65,6 @@ public class ScrabbleBoard {
         wordTiles = new ArrayList<>();
         temp = new ScrabbleTile(' ', 0);
     }
-
-    public ScrabbleBoard(Context context){
-        this();
-
-        normalSqr = BitmapFactory.decodeResource(context.getResources(), R.drawable.boardtile);
-        doubleWordSqr = BitmapFactory.decodeResource(context.getResources(), R.drawable.boardtile_dw);
-        tripleWordSqr = BitmapFactory.decodeResource(context.getResources(), R.drawable.boardtile_tw);
-        doubleLetterSqr = BitmapFactory.decodeResource(context.getResources(), R.drawable.boardtile_dl);
-        tripleLetterSqr = BitmapFactory.decodeResource(context.getResources(), R.drawable.boardtile_tl);
-        centerSqr = BitmapFactory.decodeResource(context.getResources(), R.drawable.boardtile_start);
-        boardPaint.setColor(Color.WHITE);
-    }
-
-
 
     /**
      * Sets the board equal to the new, updated board
@@ -299,50 +277,7 @@ public class ScrabbleBoard {
      */
     protected void drawBoard(Canvas c){
 
-        /**Draw the Board**/
-        //Create our board like a 2D Array
-        for (int row = 0; row < 15; row++){
-            int xPos = 10 + (row * 75); //x_position for each tile
 
-            for (int col = 0; col < 15; col++){
-                int yPos = 10 + col * 75; //y_position for each tile
-
-                //Draw each square depending on where it is on the board
-                if (row == 7 && col == 7){
-                    //Starting Square
-                    c.drawBitmap(centerSqr, xPos, yPos, boardPaint);
-                }
-                else if ((row == 0 || row == 7 || row == 14) && (col == 0 || col == 7 || col == 14)){
-                    //Triple Word Squares
-                    c.drawBitmap(tripleWordSqr, xPos, yPos, boardPaint);
-                }
-                else if(((row == 0 || row == 14) && (col == 3 || col == 11)) || ((row == 2 || row == 12) && (col == 6 || col == 8)) || ((row == 3 || row == 11) && (col == 0 || col == 7 || col == 14)) ||
-                        ((row == 6 || row == 8) && (col == 2 || col == 6 || col == 8 || col == 12)) || (row == 7 && (col == 3 || col == 11)))
-                {
-                    //Double Letter Squares
-                    c.drawBitmap(doubleLetterSqr, xPos, yPos, boardPaint);
-                }
-                else if(((row == col || row == 14 - col) && ((row > 0 && row < 5) || row > 9 && row < 14) )){
-                    //Double Word Squares
-                    c.drawBitmap(doubleWordSqr, xPos, yPos,boardPaint);
-                }
-                else if(((row == 5 || row == 9) && (col == 1 || col == 5 || col == 9 || col == 13)) ||
-                        (row == 1 || row == 13) && (col == 5 || col == 9)){
-                    //Triple Letter Squares
-                    c.drawBitmap(tripleLetterSqr, xPos, yPos, boardPaint);
-                }
-                else{
-                    //Generic Squares
-                    c.drawBitmap(normalSqr, xPos, yPos ,boardPaint);
-                }
-            }
-
-        }
-
-        /** Draw tiles on top of board **/
-        for (ScrabbleTile tile : boardTiles){
-            c.drawBitmap(tile.getTileImage(), (tile.getXLocation()*75) + 10, (tile.getYLocation()*75) + 10, boardPaint);
-        }
 
     }
 

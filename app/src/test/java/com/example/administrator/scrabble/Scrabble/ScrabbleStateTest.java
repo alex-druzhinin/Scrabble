@@ -27,15 +27,19 @@ public class ScrabbleStateTest {
         exchange.add(tile1); //add tiles to bag
         exchange.add(tile2); //add tiles to bag
 
+        int playerId = 0;
         ArrayList<ScrabbleTile> playerHand = new ArrayList<>();
         ScrabbleTile tile3 = new ScrabbleTile('C', 2);
         playerHand.add(tile1);
         playerHand.add(tile2);
         playerHand.add(tile3);
-        playerHand = state.exchangeTiles(exchange, playerHand);
+        state.setPlayerHand(playerId, playerHand);
+        state.exchangeTiles(exchange, playerId);
+        playerHand = state.getPlayerHand(playerId);
         assertFalse(playerHand.contains(tile1));
         assertFalse(playerHand.contains(tile2));
         assertTrue(playerHand.contains(tile3));
+
     }
 
     @Test

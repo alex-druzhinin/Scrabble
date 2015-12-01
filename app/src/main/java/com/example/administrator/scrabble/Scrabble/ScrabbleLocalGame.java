@@ -112,8 +112,23 @@ public class ScrabbleLocalGame extends LocalGame{
 
         }
         else if (action instanceof EndTurnAction){
+            /**
+             * This is where we need to check if the word the player wants to submit is correct
+             * or not...
+             * We need to:
+             *  1) Grab the tiles the player wants to submit
+             *      a) If they don't want to submit tiles, prompt them ensuring this
+             *  2) Place them on a temporary board
+             *  3) Determine the words the player would be creating from that temp board
+             *  4) Query our database for the words created
+             *      a) If the words they create aren't in the database, prompt them
+             *          and do not allow them to end their turn.
+             *  5) Tally up the points for each word placed and add it to the player's score
+             *  6) Set the temp board as the new board in the masterstate
+             *  7) Give this player more tiles
+             *  8) Rotate the current player
+             */
 
-            
 
 
 

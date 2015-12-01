@@ -4,7 +4,6 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.Window;
 import android.view.WindowManager;
 
 import com.example.administrator.scrabble.R;
@@ -23,7 +22,7 @@ public class midgameScreenshot extends ActionBarActivity {
 
         //scales elements to fit screen
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        setContentView(R.layout.activity_midgame_screenshot);
+        setContentView(R.layout.active_game);
     }
 
     @Override
