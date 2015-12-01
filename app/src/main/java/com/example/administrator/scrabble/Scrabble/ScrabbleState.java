@@ -32,7 +32,7 @@ public class ScrabbleState extends GameState {
 
     // The arrays that hold the tiles in the bag and on the board
     private ArrayList<ScrabbleTile> bagTiles;
-    private ArrayList<ScrabbleTile> boardTiles;
+    private ScrabbleBoard scrabbleBoard;
 
     //holds alphabet
     private char[] alphabet = new char[26];
@@ -74,7 +74,7 @@ public class ScrabbleState extends GameState {
 
         //initialize arraylists for tiles
         bagTiles = new ArrayList<>();
-        boardTiles = new ArrayList<>();
+        scrabbleBoard = new ScrabbleBoard();
 
         int alphabetLetter = 0; //index for alphabet array
 
@@ -102,9 +102,9 @@ public class ScrabbleState extends GameState {
      */
     public ScrabbleState(ScrabbleState currentState) {
 
-        //initialize arraylists for tiles in bag and on board
+        //initialize array lists for tiles in bag and on board
         this.bagTiles = currentState.getBagTiles();
-        this.boardTiles = currentState.getBoardTiles();
+        this.scrabbleBoard.setBoard(currentState.getBoardTiles());
 
         //initialize player scores
         this.playerScores = currentState.getPlayerScores();
@@ -215,12 +215,18 @@ public class ScrabbleState extends GameState {
      * @param tilesToAdd            ArrayList of tiles the player wants to add to board.
      */
     public void addBoardTiles(ArrayList<ScrabbleTile> tilesToAdd) {
+
+        //Add our tiles to the board
+        ArrayList<ScrabbleTile> boardTiles = scrabbleBoard.getBoardTiles();
         for(ScrabbleTile tile: tilesToAdd) {
             boardTiles.add(tile);
         }
+
+        //Set the new board tiles
+        scrabbleBoard.setBoard(boardTiles);
     }
 
-    public ArrayList<ScrabbleTile> getBoardTiles() { return boardTiles; }
+    public ArrayList<ScrabbleTile> getBoardTiles() { return scrabbleBoard.getBoardTiles(); }
 
     /**
      * Exchanges tiles from a players hand
