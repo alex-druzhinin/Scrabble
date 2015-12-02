@@ -101,6 +101,8 @@ public class ScrabbleState extends GameState {
      *      The ScrabbleState we are wanting to copy
      */
     public ScrabbleState(ScrabbleState currentState) {
+        //Call our default ctor
+        this();
 
         //initialize array lists for tiles in bag and on board
         this.bagTiles = currentState.getBagTiles();
