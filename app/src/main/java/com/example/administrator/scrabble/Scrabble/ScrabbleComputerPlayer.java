@@ -28,7 +28,7 @@ public class ScrabbleComputerPlayer extends GameComputerPlayer {
     protected int maxBelow;
     protected int maxLeft;
     protected int maxRight;
-    ScrabbleTile target;
+    protected ScrabbleTile target;
     protected int availableSpaces;
     protected int targetIndex;
     protected int wordLength;
@@ -102,7 +102,7 @@ public class ScrabbleComputerPlayer extends GameComputerPlayer {
         //for loop check board tiles
         for(ScrabbleTile boardTile: boardTiles) {
             target = boardTile; //make target the boardTile
-            checkSurroundingTarget();
+            checkSurroundingTarget(); //checks for tiles surrounging target tile
 
             //ifs to see if can place word: use max methods
             //add l&r, t&b
@@ -121,43 +121,29 @@ public class ScrabbleComputerPlayer extends GameComputerPlayer {
 
             //determine maxes in either vertical direction
             if (!surrounding[0] && !surrounding[3] && !surrounding[5]) {
-                this.maxLettersAbove();
+                this.maxLettersAbove(); //find the max number of valid spaces above target
             }
 
             if (!surrounding[2] && !surrounding[4] && !surrounding[7]) {
-                this.maxLettersBelow();
+                this.maxLettersBelow(); //find the max number of valid spaces below target
             }
+
+            if (maxAbove > 7) { maxAbove = 7; }
 
             availableSpaces = maxAbove + maxBelow; //get total spaces for vertical word
 
-            Random r = new Random();
+            getWordLength(); //get length of word
 
-            //determine length:
-            if (hard == true) {
-                if (availableSpaces >= thresholdLength)
-                    wordLength = r.nextInt(availableSpaces - thresholdLength) + thresholdLength;
-                //random num between 3 and availableSpaces
-            }
-            else {
-                if (availableSpaces > thresholdLength) availableSpaces = thresholdLength;
-                //if (availableSpaces < 2) break;
-                //go to checking horizontally;
-                if (availableSpaces > 1)
-                    wordLength = r.nextInt(availableSpaces - 1) + 1;
+            //determine targetIndex of vertical word:
+            if (maxAbove == 0 && maxBelow != 0) {
+                targetIndex = 0; //target board tile is first in word
+            } else if (maxBelow == 0 && maxAbove != 0) {
+                targetIndex = wordLength-1; //target board tile is last in word
+            } else if ((maxAbove != 0) && (maxBelow != 0)) {
+                targetIndex = maxAbove; //use all the valid spaces above the target in the word
             }
 
-
-            //determine targetIndex:
-            if (maxAbove == 0) {
-                targetIndex = 0;
-            } else if (maxBelow == 0) {
-                targetIndex = wordLength;
-            } else if ((maxAbove != 0) && (maxBelow != 0))
-            targetIndex = maxAbove-target.getYLocation();
-
-            if(getWord(targetIndex, wordLength))
-                break;
-
+            if(getWord(targetIndex, wordLength)) break; //have word so do not need to keep looking
 
             //determine maxes in either horizontal direction
             if (!surrounding[0] && !surrounding[1] && !surrounding[2]) {
@@ -166,35 +152,22 @@ public class ScrabbleComputerPlayer extends GameComputerPlayer {
             if (!surrounding[5] && !surrounding[6] && !surrounding[7]) {
                 this.maxLettersRight();
             }
-            availableSpaces = maxLeft + maxRight;
 
+            if(maxLeft > thresholdLength) maxLeft = thresholdLength; //limit maximum spaces to left
 
-            //determine length:
-            if (hard == true) {
-                if (availableSpaces < thresholdLength) break;
-                    //go to checking horizontally
+            availableSpaces = maxLeft + maxRight; //get total spaces available for a word
 
-                else if (availableSpaces >= thresholdLength)
-                    wordLength = r.nextInt(availableSpaces - thresholdLength) + thresholdLength;
-                //random num between 3 and availableSpaces
-            } else if (hard == false) {
-                if (availableSpaces > thresholdLength) availableSpaces = thresholdLength;
-                if (availableSpaces < 2) break;
-                //go to checking horizontally;
-                if (availableSpaces > 1)
-                    wordLength = r.nextInt(availableSpaces - 1) + 1;
-            }
-
+            getWordLength(); //get length of word
 
             //determine targetIndex:
-            if (maxAbove == 0) {
-                targetIndex = 0;
-            } else if (maxBelow == 0) {
-                targetIndex = wordLength;
-            } else if (maxAbove != 0 && maxBelow != 0)
-                targetIndex = r.nextInt(wordLength);
+            if (maxLeft == 0) {
+                targetIndex = 0; //make target board tile the first letter
+            } else if (maxRight == 0) {
+                targetIndex = wordLength-1; //make target board tile the last letter
+            } else if (maxLeft != 0 && maxRight != 0)
+                targetIndex = maxLeft; //use all open spaces to left of target on board up to max value
 
-            getWord(targetIndex, wordLength);
+            if(getWord(targetIndex, wordLength)) break;
         }
 
         //random letter length for word
@@ -203,6 +176,25 @@ public class ScrabbleComputerPlayer extends GameComputerPlayer {
         //call method to get word
 
         //method to tally score, add word to board, and take tiles from bag
+    }
+
+    protected void getWordLength() {
+        Random r = new Random();
+
+        //determine length:
+        if (hard == true) {
+            if (availableSpaces >= thresholdLength) {
+                //random word length greater than 3
+                wordLength = r.nextInt(availableSpaces - thresholdLength) + thresholdLength;
+            }
+        }
+        else {
+            if (availableSpaces > thresholdLength) availableSpaces = thresholdLength;
+            //go to checking horizontally;
+            if (availableSpaces > 1)
+                //random word length between or including 2 and 4
+                wordLength = r.nextInt(availableSpaces - 2) + 2;
+        }
     }
 
     /**
