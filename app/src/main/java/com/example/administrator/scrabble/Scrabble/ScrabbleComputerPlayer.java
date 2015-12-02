@@ -91,10 +91,11 @@ public class ScrabbleComputerPlayer extends GameComputerPlayer {
         }
     }
 
-    protected void getWord(int targetIndex, int length) {
+    protected boolean getWord(int targetIndex, int length) {
         //go through dictionary and find word with parameters
         //check if all letters are in bag and if not then keep looking
         //set equal to 'word'
+        return false;
     }
 
     protected void findPlace() {
@@ -102,21 +103,21 @@ public class ScrabbleComputerPlayer extends GameComputerPlayer {
         for(ScrabbleTile boardTile: boardTiles) {
             target = boardTile; //make target the boardTile
             checkSurroundingTarget();
-        }
-        //ifs to see if can place word: use max methods
-        //add l&r, t&b
 
-        //if there is at least one tile on either diagonal,
-        //current tile cannot be used as anchor
-        if ((surrounding[0] && surrounding[7]) || (surrounding[2] && surrounding[5])) {
-            //move to next tile
-        }
-        //if there is at least one tile adjacent in hor direction
-        // AND one tile adjacent in vert direction
-        //this tile cannot be used as anchor
-        if ((surrounding[3] || surrounding[4]) && (surrounding[1] || surrounding[6])) {
-            //move to next tile
-        }
+            //ifs to see if can place word: use max methods
+            //add l&r, t&b
+
+            //if there is at least one tile on either diagonal,
+            //current tile cannot be used as anchor
+            if ((surrounding[0] && surrounding[7]) || (surrounding[2] && surrounding[5])) {
+                //move to next tile
+            }
+            //if there is at least one tile adjacent in hor direction
+            // AND one tile adjacent in vert direction
+            //this tile cannot be used as anchor
+            if ((surrounding[3] || surrounding[4]) && (surrounding[1] || surrounding[6])) {
+                //move to next tile
+            }
 
 
 
@@ -139,90 +140,81 @@ public class ScrabbleComputerPlayer extends GameComputerPlayer {
         }
         */
 
-        //determine maxes in either vertical direction
-        if (!surrounding[0] && !surrounding[3] && !surrounding[5]) {
-            this.maxLettersAbove();
-        }
-        if (!surrounding[2] && !surrounding[4] && !surrounding[7]) {
-            this.maxLettersBelow();
-        }
-        availableSpaces = maxAbove + maxBelow;
+            //determine maxes in either vertical direction
+            if (!surrounding[0] && !surrounding[3] && !surrounding[5]) {
+                this.maxLettersAbove();
+            }
+            if (!surrounding[2] && !surrounding[4] && !surrounding[7]) {
+                this.maxLettersBelow();
+            }
+            availableSpaces = maxAbove + maxBelow;
 
-        Random r = new Random();
+            Random r = new Random();
 
 
-        //determine length:
-        if (hard == true) {
-            if (availableSpaces >= thresholdLength)
-                wordLength = r.nextInt(availableSpaces - thresholdLength) + thresholdLength;
+            //determine length:
+            if (hard == true) {
+                if (availableSpaces >= thresholdLength)
+                    wordLength = r.nextInt(availableSpaces - thresholdLength) + thresholdLength;
                 //random num between 3 and availableSpaces
-        }
-        else {
-            if (availableSpaces > thresholdLength) availableSpaces = thresholdLength;
-            //if (availableSpaces < 2) break;
+            } else {
+                if (availableSpaces > thresholdLength) availableSpaces = thresholdLength;
+                //if (availableSpaces < 2) break;
                 //go to checking horizontally;
-            if (availableSpaces > 1)
-                wordLength = r.nextInt(availableSpaces - 1) + 1;
-        }
+                if (availableSpaces > 1)
+                    wordLength = r.nextInt(availableSpaces - 1) + 1;
+            }
 
 
-
-        //determine targetIndex:
-        if (maxAbove == 0){
-            targetIndex = 0;
-        }
-        else if (maxBelow == 0) {
-            targetIndex = wordLength;
-        }
-        else ((maxAbove != 0) && (maxBelow != 0))
+            //determine targetIndex:
+            if (maxAbove == 0) {
+                targetIndex = 0;
+            } else if (maxBelow == 0) {
+                targetIndex = wordLength;
+            } else if ((maxAbove != 0) && (maxBelow != 0))
             targetIndex = r.nextInt(wordLength);
 
-        getWord(targetIndex, wordLength);
-        break;
+            if(getWord(targetIndex, wordLength))
+                break;
 
 
+            //determine maxes in either horizontal direction
+            if (!surrounding[0] && !surrounding[1] && !surrounding[2]) {
+                maxLettersLeft();
+            }
+            if (!surrounding[5] && !surrounding[6] && !surrounding[7]) {
+                this.maxLettersRight();
+            }
+            availableSpaces = maxLeft + maxRight;
 
-        //determine maxes in either horizontal direction
-        if (!surrounding[0] && !surrounding[1] && !surrounding[2]) {
-            this.maxLettersLeft();
+
+            //determine length:
+            if (hard == true) {
+                if (availableSpaces < thresholdLength) break;
+                    //go to checking horizontally
+
+                else if (availableSpaces >= thresholdLength)
+                    wordLength = r.nextInt(availableSpaces - thresholdLength) + thresholdLength;
+                //random num between 3 and availableSpaces
+            } else if (hard == false) {
+                if (availableSpaces > thresholdLength) availableSpaces = thresholdLength;
+                if (availableSpaces < 2) break;
+                //go to checking horizontally;
+                if (availableSpaces > 1)
+                    wordLength = r.nextInt(availableSpaces - 1) + 1;
+            }
+
+
+            //determine targetIndex:
+            if (maxAbove == 0) {
+                targetIndex = 0;
+            } else if (maxBelow == 0) {
+                targetIndex = wordLength;
+            } else if (maxAbove != 0 && maxBelow != 0)
+                targetIndex = r.nextInt(wordLength);
+
+            getWord(targetIndex, wordLength);
         }
-        if (!surrounding[5] && !surrounding[6] && !surrounding[7]) {
-            this.maxLettersRight();
-        }
-        availableSpaces = maxLeft + maxRight;
-
-
-
-        //determine length:
-        if (hard == true) {
-            if (availableSpaces < thresholdLength) break;
-                //go to checking horizontally
-
-            else if (availableSpaces >= thresholdLength)
-                wordLength = r.nextInt(availableSpaces - thresholdLength) + thresholdLength;
-            //random num between 3 and availableSpaces
-        }
-        else if (hard == false){
-            if (availableSpaces > thresholdLength) availableSpaces = thresholdLength;
-            if (availableSpaces < 2) break;
-            //go to checking horizontally;
-            if (availableSpaces > 1)
-                wordLength = r.nextInt(availableSpaces - 1) + 1;
-        }
-
-
-
-        //determine targetIndex:
-        if (maxAbove == 0){
-            targetIndex = 0;
-        }
-        else if (maxBelow == 0) {
-            targetIndex = wordLength;
-        }
-        else (maxAbove != 0 && maxBelow != 0)
-        targetIndex = r.nextInt(wordLength);
-
-        getWord(targetIndex, wordLength);
 
         //random letter length for word
         //random letter index of target tile on board
