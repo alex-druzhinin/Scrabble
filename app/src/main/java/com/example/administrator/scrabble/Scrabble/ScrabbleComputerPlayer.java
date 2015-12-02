@@ -170,12 +170,19 @@ public class ScrabbleComputerPlayer extends GameComputerPlayer {
             if(getWord(targetIndex, wordLength)) break;
         }
 
-        //random letter length for word
-        //random letter index of target tile on board
+        //get tiles
+        ArrayList<ScrabbleTile> bagTiles = currentState.getBagTiles();
 
-        //call method to get word
-
-        //method to tally score, add word to board, and take tiles from bag
+        //remove tiles in word from bag
+        for(int i = 0; i < wordLength; i++) {
+            //search through all tiles in the bag
+            for (ScrabbleTile bagTile : bagTiles) {
+                if(bagTile.getLetter() == word.charAt(i)) {
+                    bagTiles.remove(bagTile);
+                    break; //break out of inner loop
+                }
+            }
+        }
     }
 
     protected void getWordLength() {
