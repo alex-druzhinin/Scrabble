@@ -9,6 +9,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
+import android.util.Log;
 import android.view.DragEvent;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
@@ -70,10 +71,14 @@ public class ScrabbleHumanPlayer extends GameHumanPlayer implements Animator {
             centerSqr,
             normalSqr,
             endTurnButton,
-            handTileBorderMoving;
+            handTileBorderMoving,
+            redoButton;
 
     //The paint we'll be using to draw on our canvas
     Paint boardPaint;
+
+    //The current tile marked ready to move
+    int tileTouched;
 
     private Bitmap[] alphabetImages;
 
@@ -96,6 +101,9 @@ public class ScrabbleHumanPlayer extends GameHumanPlayer implements Animator {
 
         //Initialize our alphabet array
         alphabetImages = new Bitmap[26];
+
+        //Tell our player that no tiles have been touched
+        tileTouched = -1;
     }
 
     @Override
@@ -154,7 +162,7 @@ public class ScrabbleHumanPlayer extends GameHumanPlayer implements Animator {
         centerSqr = BitmapFactory.decodeResource(context.getResources(), R.drawable.boardtile_start, opts);
         endTurnButton = BitmapFactory.decodeResource(context.getResources(), R.drawable.endturnbutton);
         handTileBorderMoving = BitmapFactory.decodeResource(context.getResources(), R.drawable.handtileborder_moving);
-
+        redoButton = BitmapFactory.decodeResource(context.getResources(), R.drawable.redobutton);
         //Give our tiles their images
         alphabetImages[0] = BitmapFactory.decodeResource(context.getResources(), R.drawable.scrabbletile_a);
         alphabetImages[1] = BitmapFactory.decodeResource(context.getResources(), R.drawable.scrabbletile_b);
@@ -275,39 +283,33 @@ public class ScrabbleHumanPlayer extends GameHumanPlayer implements Animator {
 
         /**Draw the Board**/
         //Create our board like a 2D Array
-        for (int row = 0; row < 15; row++){
+        for (int row = 0; row < 15; row++) {
             int xPos = 450 + (row * 75); //x_position for each tile
 
-            for (int col = 0; col < 15; col++){
+            for (int col = 0; col < 15; col++) {
                 int yPos = 10 + col * 75; //y_position for each tile
 
                 //Draw each square depending on where it is on the board
-                if (row == 7 && col == 7){
+                if (row == 7 && col == 7) {
                     //Starting Square
                     canvas.drawBitmap(centerSqr, xPos, yPos, boardPaint);
-                }
-                else if ((row == 0 || row == 7 || row == 14) && (col == 0 || col == 7 || col == 14)){
+                } else if ((row == 0 || row == 7 || row == 14) && (col == 0 || col == 7 || col == 14)) {
                     //Triple Word Squares
                     canvas.drawBitmap(tripleWordSqr, xPos, yPos, boardPaint);
-                }
-                else if(((row == 0 || row == 14) && (col == 3 || col == 11)) || ((row == 2 || row == 12) && (col == 6 || col == 8)) || ((row == 3 || row == 11) && (col == 0 || col == 7 || col == 14)) ||
-                        ((row == 6 || row == 8) && (col == 2 || col == 6 || col == 8 || col == 12)) || (row == 7 && (col == 3 || col == 11)))
-                {
+                } else if (((row == 0 || row == 14) && (col == 3 || col == 11)) || ((row == 2 || row == 12) && (col == 6 || col == 8)) || ((row == 3 || row == 11) && (col == 0 || col == 7 || col == 14)) ||
+                        ((row == 6 || row == 8) && (col == 2 || col == 6 || col == 8 || col == 12)) || (row == 7 && (col == 3 || col == 11))) {
                     //Double Letter Squares
                     canvas.drawBitmap(doubleLetterSqr, xPos, yPos, boardPaint);
-                }
-                else if(((row == col || row == 14 - col) && ((row > 0 && row < 5) || row > 9 && row < 14) )){
+                } else if (((row == col || row == 14 - col) && ((row > 0 && row < 5) || row > 9 && row < 14))) {
                     //Double Word Squares
-                    canvas.drawBitmap(doubleWordSqr, xPos, yPos,boardPaint);
-                }
-                else if(((row == 5 || row == 9) && (col == 1 || col == 5 || col == 9 || col == 13)) ||
-                        (row == 1 || row == 13) && (col == 5 || col == 9)){
+                    canvas.drawBitmap(doubleWordSqr, xPos, yPos, boardPaint);
+                } else if (((row == 5 || row == 9) && (col == 1 || col == 5 || col == 9 || col == 13)) ||
+                        (row == 1 || row == 13) && (col == 5 || col == 9)) {
                     //Triple Letter Squares
                     canvas.drawBitmap(tripleLetterSqr, xPos, yPos, boardPaint);
-                }
-                else{
+                } else {
                     //Generic Squares
-                    canvas.drawBitmap(normalSqr, xPos, yPos ,boardPaint);
+                    canvas.drawBitmap(normalSqr, xPos, yPos, boardPaint);
                 }
             }
 
@@ -316,26 +318,29 @@ public class ScrabbleHumanPlayer extends GameHumanPlayer implements Animator {
         /** Draw tiles on top of board **/
         //If we have a game state, let's draw the tiles on top of the board
         if (gameState != null) {
+
             ArrayList<ScrabbleTile> boardTiles = gameState.getBoardTiles();
             for (ScrabbleTile tile : boardTiles) {
                 canvas.drawBitmap(tile.getTileImage(), (tile.getXLocation() * 75) + 10, (tile.getYLocation() * 75) + 10, boardPaint);
             }
+
         }
 
-        /**Draw our end turn button**/
+        /**Draw our end turn and redo buttons**/
         canvas.drawBitmap(endTurnButton, 1600, 350, boardPaint);
+        canvas.drawBitmap(redoButton, 1600, 50, boardPaint);
 
         /**Draw our hand**/
-        if (gameState != null){
+        if (gameState != null) {
             ArrayList<ScrabbleTile> ourHand = gameState.getPlayerHand(0);
             int i = 0;
-            for (ScrabbleTile handTile : ourHand){
+            for (ScrabbleTile handTile : ourHand) {
                 //Get the char of the tile
                 char tileChar = handTile.getLetter();
                 int charIdx = tileChar - 97; //convert to index
 
                 //Draw a border indicating the tile is ready to move
-                if (handTile.isReadyToMove()){
+                if (handTile.isReadyToMove()) {
                     canvas.drawBitmap(handTileBorderMoving, 195, (100 * i) + 150 + (i * 25) - 5, boardPaint);
 
                 }
@@ -346,6 +351,8 @@ public class ScrabbleHumanPlayer extends GameHumanPlayer implements Animator {
             }
 
         }
+
+
 
 
     }
@@ -369,23 +376,63 @@ public class ScrabbleHumanPlayer extends GameHumanPlayer implements Animator {
         else if(eventX > 200 && eventX < 300 && eventY > 200 && eventY < 1300){
             /** We touched a hand tile **/
             //Find out which tile we touched
-            int tileTouched = (int) ((eventY - 150) / 120); // should be 0->8
-            if (tileTouched > 7){
-                tileTouched = 7;
+            tileTouched = (int) ((eventY - 150) / 120); // should be 0->6
+            if (tileTouched > 6){
+                tileTouched = 6;
             }
             if (tileTouched < 0){
                 tileTouched = 0;
             }
 
             ArrayList<ScrabbleTile> ourHand = gameState.getPlayerHand(0);
+            //Unmark every tile that might be marked
+            for (ScrabbleTile tile : ourHand){
+                if (tile.isReadyToMove()){
+                    tile.setReadyToMove(false);
+                }
+            }
+
             //Tell the tile that it's moving
             ourHand.get(tileTouched).setReadyToMove(! ourHand.get(tileTouched).isReadyToMove());
+            try {
+                Thread.sleep(50);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            gameState.setPlayerHand(0, ourHand);
+        }
+        else if (eventX >= 450 && eventX <= 1575 && eventY >= 10 && eventY <= 1100){
+            /** We touched a spot on the board **/
+            //Find the (x,y) on the board that we touched, each tile is ~80px wide
+            int tileX = (int) ((eventX - 450) / 75);
+            int tileY = (int) ((eventY - 10) / 75);
+            //Sleep so we don't pick up multiple touches
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            gameState.setPlayerHand(0, ourHand);
+            //Log.i("Location: ", "(" + tileX + ", " + tileY + ")");
+
+            //Set the board x,y of the tile selected if one is selected
+            Boolean isTileReadyToMove = false;
+            ArrayList<ScrabbleTile> ourHand = gameState.getPlayerHand(0);
+            for (ScrabbleTile tile : ourHand){
+                if (tile.isReadyToMove()){
+                    isTileReadyToMove = true;
+                    break;
+                }
+            }
+
+            if (isTileReadyToMove){
+                if (tileTouched != -1){ //we've marked a tile ready to move
+                    //Put the tile on the board and update it's location
+                    ourHand.get(tileTouched).setLocation(tileX, tileY);
+                    ourHand.get(tileTouched).setOnBoard(true);
+                }
+            }
+
 
         }
 
