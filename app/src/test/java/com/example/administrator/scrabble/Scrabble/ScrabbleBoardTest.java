@@ -13,7 +13,6 @@ import java.util.ArrayList;
 public class ScrabbleBoardTest extends TestCase {
 
     public void testGetWords() throws Exception {
-
         ScrabbleBoard testBoard = new ScrabbleBoard();
         ArrayList<ScrabbleTile> tempBoardTiles = new ArrayList<>();
         ArrayList<ScrabbleTile> prospectiveWord = new ArrayList<>();
@@ -40,12 +39,6 @@ public class ScrabbleBoardTest extends TestCase {
 
         assertTrue(wordsMade.contains("abcd1"));
         assertTrue(wordsMade.contains("12"));
-        
-
-
-
-
-
 
     }
 
@@ -130,4 +123,10 @@ public class ScrabbleBoardTest extends TestCase {
 
         assertEquals("dog", word);
     }
+
+    public void testCheckWord() throws Exception {
+        ScrabbleBoard board = new ScrabbleBoard();
+        assertTrue(board.checkWord("abase"));
+    }
+
 }

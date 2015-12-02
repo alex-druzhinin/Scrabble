@@ -1,5 +1,6 @@
 package com.example.administrator.scrabble.Scrabble;
 
+import android.app.Application;
 import android.content.Context;
 
 import com.example.administrator.scrabble.game.GameMainActivity;
@@ -17,7 +18,7 @@ import java.util.ArrayList;
  * The main activity that sets up the Scrabble game with all the players and connections
  * neccessary
  */
-public class ScrabbleMainActivity extends GameMainActivity{
+public class ScrabbleMainActivity extends GameMainActivity {
 
     private final int PORT_NUM = 1337;
 

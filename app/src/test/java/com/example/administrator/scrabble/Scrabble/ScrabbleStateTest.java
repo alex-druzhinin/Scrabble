@@ -96,4 +96,5 @@ public class ScrabbleStateTest {
         //check if copied state is not null
         assertNotNull(newState);
     }
+
 }

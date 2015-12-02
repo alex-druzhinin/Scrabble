@@ -1,5 +1,6 @@
 package com.example.administrator.scrabble.Scrabble;
 
+import android.content.Context;
 import android.graphics.Point;
 
 import com.example.administrator.scrabble.game.GamePlayer;
@@ -93,7 +94,7 @@ public class ScrabbleLocalGame extends LocalGame{
     protected boolean makeMove(GameAction action) {
         ////////////////////////////////////////////
         // Depending on the action received, we will make move for the player
-        ////////////////////////////////////////////
+        ///////////////////////////////////////////
 
         if (action instanceof ExchangeTileAction){
             ExchangeTileAction exchangeAction = (ExchangeTileAction) action;

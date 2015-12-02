@@ -1,11 +1,16 @@
 package com.example.administrator.scrabble.Scrabble;
 
+import android.content.Context;
 import android.graphics.Point;
 import android.view.View;
 
 import com.example.administrator.scrabble.game.actionMsg.GameAction;
 import com.example.administrator.scrabble.game.infoMsg.GameState;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -63,6 +68,7 @@ public class ScrabbleState extends GameState {
      *      4) **Anything else?**
      */
     public ScrabbleState(){
+
         //initialize player hands
         player1Hand = new ArrayList<>();
         player2Hand = new ArrayList<>();
@@ -74,7 +80,7 @@ public class ScrabbleState extends GameState {
 
         //initialize arraylists for tiles
         bagTiles = new ArrayList<>();
-        scrabbleBoard = new ScrabbleBoard();
+        //scrabbleBoard = new ScrabbleBoard();
 
         int alphabetLetter = 0; //index for alphabet array
 
@@ -118,8 +124,6 @@ public class ScrabbleState extends GameState {
         //initialize current player
         this.currentPlayer = currentState.getCurrentPlayer();
     }
-
-    
 
     /**
      * Returns the a players hand in the game
@@ -332,6 +336,8 @@ public class ScrabbleState extends GameState {
     public boolean isBagEmpty(){
         return bagTiles.isEmpty();
     }
+
+
     
     //----- Getters -----//
 

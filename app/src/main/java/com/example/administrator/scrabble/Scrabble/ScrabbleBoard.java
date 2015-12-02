@@ -1,6 +1,8 @@
 package com.example.administrator.scrabble.Scrabble;
 
 import android.content.Context;
+import android.content.res.AssetFileDescriptor;
+import android.content.res.AssetManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -12,7 +14,13 @@ import android.view.SurfaceView;
 
 import com.example.administrator.scrabble.R;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 /**
  * @author Alexa Carr, Morgan Webber, Nalani (Megan Chun)
@@ -55,6 +63,7 @@ public class ScrabbleBoard {
     int[][] doubleLetter = {{3,0}, {0,3}, {11, 0}, {0,11}, {6,2}, {8,2}, {7,3}, {2,6}, {2,8}, {3,7},
             {6,6}, {8,8}, {8,5}, {5,8}, {14,3}, {3,14}, {14, 11}, {11, 14}, {12,6}, {11,7}, {12,8},
             {6,12}, {7,11}, {8,12}};
+
 
     /**
      * Constructors
@@ -327,6 +336,49 @@ public class ScrabbleBoard {
      *      The tiles that are currently on the board
      */
     public ArrayList<ScrabbleTile> getBoardTiles() { return boardTiles; }
+
+    /**
+     * checkWord            Checks if a given word is a scrabble word.
+     * @param word
+     * @return              True if word is a scrabble word. False if not.
+     */
+    public boolean checkWord(String word) {
+        try { //context.getAssets().getLocales()[0])
+            BufferedReader br = new BufferedReader(new FileReader(Resources.getSystem().getAssets().getLocales()[0]));
+            String line = br.readLine();
+
+            while (line != null) {
+                if(word.equalsIgnoreCase(line)) {
+                    br.close();
+                    return true;
+                }
+            }
+
+            br.close();
+        }
+        catch (FileNotFoundException fnfe) {
+            System.out.print("Dictionary not found");
+        }
+        catch (IOException e) {
+            System.out.print("IO exception");
+        }
+
+
+        /*//allows dictionary to be searched
+        Scanner scanner = new Scanner("scrabbleDict.txt");
+
+        //go through the scrabble dictionary
+        while (scanner.hasNextLine()) {
+            System.out.println(scanner.nextLine());
+            //check if word is a scrabble word
+            if(word.equalsIgnoreCase(scanner.nextLine())) {
+                return true; //if word is in scrabble dictionary
+            }
+        }
+
+        scanner.close(); //close scanner*/
+        return false; //if word is not in scrabble dictionary
+    }
 
     /**
      * @return
