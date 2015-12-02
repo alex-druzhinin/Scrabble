@@ -12,6 +12,10 @@ import android.view.SurfaceView;
 
 import com.example.administrator.scrabble.R;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -318,6 +322,49 @@ public class ScrabbleBoard {
 
         //If we get here then the tile isn't on a bonus tile
         return NO_BONUS;
+    }
+    
+    /**
+     * checkWord            Checks if a given word is a scrabble word.
+     * @param word
+     * @return              True if word is a scrabble word. False if not.
+     */
+    public boolean checkWord(String word) {
+        try { //context.getAssets().getLocales()[0])
+            BufferedReader br = new BufferedReader(new FileReader(Resources.getSystem().getAssets().getLocales()[0]));
+            String line = br.readLine();
+
+            while (line != null) {
+                if(word.equalsIgnoreCase(line)) {
+                    br.close();
+                    return true;
+                }
+            }
+
+            br.close();
+        }
+        catch (FileNotFoundException fnfe) {
+            System.out.print("Dictionary not found");
+        }
+        catch (IOException e) {
+            System.out.print("IO exception");
+        }
+
+
+        /*//allows dictionary to be searched
+        Scanner scanner = new Scanner("scrabbleDict.txt");
+
+        //go through the scrabble dictionary
+        while (scanner.hasNextLine()) {
+            System.out.println(scanner.nextLine());
+            //check if word is a scrabble word
+            if(word.equalsIgnoreCase(scanner.nextLine())) {
+                return true; //if word is in scrabble dictionary
+            }
+        }
+
+        scanner.close(); //close scanner*/
+        return false; //if word is not in scrabble dictionary
     }
 
     // ----- Getters ----- //
