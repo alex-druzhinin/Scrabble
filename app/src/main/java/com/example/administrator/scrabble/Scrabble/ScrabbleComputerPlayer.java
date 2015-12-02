@@ -110,54 +110,35 @@ public class ScrabbleComputerPlayer extends GameComputerPlayer {
             //if there is at least one tile on either diagonal,
             //current tile cannot be used as anchor
             if ((surrounding[0] && surrounding[7]) || (surrounding[2] && surrounding[5])) {
-                //move to next tile
+                continue; //move to next board tile to see if it can be used
             }
             //if there is at least one tile adjacent in hor direction
             // AND one tile adjacent in vert direction
             //this tile cannot be used as anchor
             if ((surrounding[3] || surrounding[4]) && (surrounding[1] || surrounding[6])) {
-                //move to next tile
+                continue; //move to next board tile to see if it can be used
             }
-
-
-
-        /*
-        //check if word can only go downward
-        if ((surrounding[0] || surrounding[5]) && (!(surrounding[2] || surrounding[4] || surrounding[7]))){
-            this.maxLettersBelow();
-            targetIndex = 0;
-        }
-
-        //check if word can go upward
-        if (surrounding[2] || surrounding[7]) {
-            this.maxLettersAbove();
-            //targetIndex = end of chosen word length
-        }
-
-        //check if word can go up and down
-        if (!(surrounding[0] || surrounding[2] || surrounding[6] || surrounding[4])){
-
-        }
-        */
 
             //determine maxes in either vertical direction
             if (!surrounding[0] && !surrounding[3] && !surrounding[5]) {
                 this.maxLettersAbove();
             }
+
             if (!surrounding[2] && !surrounding[4] && !surrounding[7]) {
                 this.maxLettersBelow();
             }
-            availableSpaces = maxAbove + maxBelow;
+
+            availableSpaces = maxAbove + maxBelow; //get total spaces for vertical word
 
             Random r = new Random();
-
 
             //determine length:
             if (hard == true) {
                 if (availableSpaces >= thresholdLength)
                     wordLength = r.nextInt(availableSpaces - thresholdLength) + thresholdLength;
                 //random num between 3 and availableSpaces
-            } else {
+            }
+            else {
                 if (availableSpaces > thresholdLength) availableSpaces = thresholdLength;
                 //if (availableSpaces < 2) break;
                 //go to checking horizontally;
@@ -172,7 +153,7 @@ public class ScrabbleComputerPlayer extends GameComputerPlayer {
             } else if (maxBelow == 0) {
                 targetIndex = wordLength;
             } else if ((maxAbove != 0) && (maxBelow != 0))
-            targetIndex = r.nextInt(wordLength);
+            targetIndex = maxAbove-target.getYLocation();
 
             if(getWord(targetIndex, wordLength))
                 break;
