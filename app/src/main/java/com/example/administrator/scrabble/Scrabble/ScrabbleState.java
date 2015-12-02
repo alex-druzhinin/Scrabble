@@ -93,6 +93,10 @@ public class ScrabbleState extends GameState {
             }
         }
 
+        //Give our players some tiles
+        this.drawTiles(player1Hand);
+        this.drawTiles(player2Hand);
+
     }
 
     /**
@@ -123,55 +127,7 @@ public class ScrabbleState extends GameState {
 
     
 
-    /**
-     * Returns the a players hand in the game
-     * @param playerId
-     *      The player whose hand we want
-     * @return
-     *      The hand of the player we wanted as an ArrayList<ScrabbleTile>
-     */
-    public ArrayList<ScrabbleTile> getPlayerHand(int playerId){
 
-        switch (playerId){
-            case 0:
-                return player1Hand;
-            case 1:
-                return player2Hand;
-            case 2:
-                return player3Hand;
-            case 3:
-                return player4Hand;
-            default:
-                return null;
-        }
-
-    }
-
-    /**
-     * Sets a players hand
-     *
-     * @param playerId
-     *          The id of the player we want to modify
-     * @param newHand
-     *          The new hand of the player
-     *
-     */
-    public void setPlayerHand(int playerId, ArrayList<ScrabbleTile> newHand){
-
-        switch (playerId){
-            case 0:
-                player1Hand = newHand;
-            case 1:
-                player2Hand = newHand;
-            case 2:
-                player3Hand = newHand;
-            case 3:
-                player4Hand = newHand;
-            default:
-                return;
-        }
-
-    }
 
     public boolean isTileThere(int x, int y) {
         return scrabbleBoard.isTileThere(x, y);
@@ -268,10 +224,6 @@ public class ScrabbleState extends GameState {
             setPlayerHand(playerId, playerHand);
         }
 
-
-
-
-
     }
 
 
@@ -323,6 +275,25 @@ public class ScrabbleState extends GameState {
     }
 
     /**
+     * Marks a tile ready to be moved in the player hand
+     * @param playerHand
+     * @param tile
+     * @param readyToMove
+     */
+    public void markTileReadyToMove(int playerHand, int tile, boolean readyToMove){
+        //Grab our player's hand
+        ArrayList<ScrabbleTile> newPlayerHand = getPlayerHand(playerHand);
+
+        //Mark the tile ready to move
+        newPlayerHand.get(tile).setReadyToMove(readyToMove);
+
+        //Set the new player's hand back
+        setPlayerHand(playerHand, newPlayerHand);
+
+    }
+
+
+    /**
      * emptyBag         This is a method to empty the bag to test functionality of other methods.
      *                  Will be deleted before deploying
      */
@@ -348,5 +319,55 @@ public class ScrabbleState extends GameState {
      */
     public int[] getPlayerScores() {
         return playerScores;
+    }
+
+    /**
+     * Returns the a players hand in the game
+     * @param playerId
+     *      The player whose hand we want
+     * @return
+     *      The hand of the player we wanted as an ArrayList<ScrabbleTile>
+     */
+    public ArrayList<ScrabbleTile> getPlayerHand(int playerId){
+
+        switch (playerId){
+            case 0:
+                return player1Hand;
+            case 1:
+                return player2Hand;
+            case 2:
+                return player3Hand;
+            case 3:
+                return player4Hand;
+            default:
+                return null;
+        }
+
+    }
+
+    /**
+     * Sets a players hand
+     *
+     * @param playerId
+     *          The id of the player we want to modify
+     * @param newHand
+     *          The new hand of the player
+     *
+     */
+    public void setPlayerHand(int playerId, ArrayList<ScrabbleTile> newHand){
+
+        switch (playerId){
+            case 0:
+                player1Hand = newHand;
+            case 1:
+                player2Hand = newHand;
+            case 2:
+                player3Hand = newHand;
+            case 3:
+                player4Hand = newHand;
+            default:
+                return;
+        }
+
     }
 }

@@ -1,6 +1,7 @@
 package com.example.administrator.scrabble.Scrabble;
 
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.Point;
 
 /**
@@ -36,6 +37,10 @@ public class ScrabbleTile {
     private boolean hasBeenExchanged;
     private boolean toBeExchanged;
 
+    //Used to tell whether or not the tile is marked to be moved onto the board
+    private boolean readyToMove;
+    public static int readyToMoveColor;
+
     /**
      *  Constructor
      * @param initLetter
@@ -50,6 +55,8 @@ public class ScrabbleTile {
         this.x = 0;
         this.y = 0;
         onBoard = false;
+        readyToMove = false;
+        readyToMoveColor = Color.rgb(114, 114, 114);
 
     }
 
@@ -202,4 +209,23 @@ public class ScrabbleTile {
     public void setToBeExchanged(boolean toBeExchanged) {
         this.toBeExchanged = toBeExchanged;
     }
+
+    /**
+     * Tells us whether or not this tile is ready to move
+     * @return
+     *      True if the tile has been marked to move, false otherwise
+     */
+    public boolean isReadyToMove() {
+        return readyToMove;
+    }
+
+    /**
+     * Sets whether or not this tile is ready to move
+     * @param readyToMove
+     *      True if we want the tile to be marked ready to move, false otherwise
+     */
+    public void setReadyToMove(boolean readyToMove) {
+        this.readyToMove = readyToMove;
+    }
+
 }

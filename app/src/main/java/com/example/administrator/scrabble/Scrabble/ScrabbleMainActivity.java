@@ -1,7 +1,14 @@
 package com.example.administrator.scrabble.Scrabble;
 
+import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.view.View;
+import android.widget.ImageView;
 
+import com.example.administrator.scrabble.R;
 import com.example.administrator.scrabble.game.GameMainActivity;
 import com.example.administrator.scrabble.game.GamePlayer;
 import com.example.administrator.scrabble.game.LocalGame;
@@ -17,6 +24,7 @@ import java.util.ArrayList;
  * The main activity that sets up the Scrabble game with all the players and connections
  * neccessary
  */
+@TargetApi(21)
 public class ScrabbleMainActivity extends GameMainActivity{
 
     private final int PORT_NUM = 1337;
@@ -36,14 +44,14 @@ public class ScrabbleMainActivity extends GameMainActivity{
         //The easy AI
         availTypes.add(new GamePlayerType("Computer (Engineer)") {
             public GamePlayer createPlayer(String name) {
-                return new ScrabbleComputerPlayerEasy(name);
+                return new ScrabbleComputerPlayer(name, false);
             }
         });
 
         //The hard AI
         availTypes.add(new GamePlayerType("Computer (English Major)") {
             public GamePlayer createPlayer(String name) {
-                return new ScrabbleComputerPlayerHard(name);
+                return new ScrabbleComputerPlayer(name, true);
             }
         });
 
@@ -54,6 +62,7 @@ public class ScrabbleMainActivity extends GameMainActivity{
         defaultConfig.addPlayer("Human", 0);
         defaultConfig.addPlayer("Computer", 1);
 
+
         return defaultConfig;
 
     }
@@ -62,4 +71,17 @@ public class ScrabbleMainActivity extends GameMainActivity{
     public LocalGame createLocalGame() {
         return new ScrabbleLocalGame();
     }
+
+    public void onTileInHandTouch(View v){
+
+        //If our color is tinted, untint it
+        if (v.getBackgroundTintMode() == PorterDuff.Mode.MULTIPLY){
+            v.setBackgroundTintMode(PorterDuff.Mode.SCREEN);
+        }
+        else{
+            v.setBackgroundTintMode(PorterDuff.Mode.MULTIPLY);
+        }
+
+    }
+
 }

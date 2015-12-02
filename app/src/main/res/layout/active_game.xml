@@ -16,7 +16,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Player 1: 50"
+            android:text="Player 1: 0"
             android:id="@+id/player1Score"
             android:textSize="25dp"
             android:background="#ff3aafff"
@@ -27,7 +27,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceMedium"
-            android:text="Player 2: 150"
+            android:text="Player 2: 0"
             android:id="@+id/player2Score"
             android:textSize="25dp"
             android:background="#ff21b480"
@@ -53,73 +53,17 @@
         android:layout_height="1000dp"
         android:layout_weight="69.34">
 
-        <Space
-            android:layout_width="40dp"
-            android:layout_height="fill_parent" />
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@android:drawable/picture_frame"
-            android:paddingTop="60dp"
-            android:paddingBottom="60dp"
-            android:layout_gravity="center"
-            android:backgroundTint="#ffb09152">
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/playerTile1"
-                android:background="@drawable/scrabbletile_c" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/playerTile2"
-                android:background="@drawable/scrabbletile_d" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/playerTile3"
-                android:background="@drawable/scrabbletile_i" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/playerTile4"
-                android:background="@drawable/scrabbletile_h" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/playerTile5"
-                android:background="@drawable/scrabbletile_s" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/playerTile6"
-                android:background="@drawable/scrabbletile_m" />
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/playerTile7"
-                android:background="@drawable/scrabbletile_t" />
-        </LinearLayout>
-
         <FrameLayout
-            android:layout_width="fill_parent"
+            android:layout_width="wrap_content"
             android:layout_height="fill_parent">
 
             <com.example.administrator.scrabble.Scrabble.ScrabbleSurfaceView
-                android:layout_width="570dp"
+                android:layout_width="903dp"
                 android:layout_height="574dp"
                 android:id="@+id/board_surfaceview"
                 android:layout_gravity="center"
-                android:background="#00ffffff" />
+                android:backgroundTint="#fff8f8f8" />
+
         </FrameLayout>
 
     </LinearLayout>

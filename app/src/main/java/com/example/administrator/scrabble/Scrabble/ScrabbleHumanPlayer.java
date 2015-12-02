@@ -1,5 +1,6 @@
 package com.example.administrator.scrabble.Scrabble;
 
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -7,6 +8,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.PorterDuff;
 import android.view.DragEvent;
 import android.view.MotionEvent;
 import android.view.SurfaceView;
@@ -31,13 +33,13 @@ import java.util.ArrayList;
  *
  * Represents the Human players playing the game.
  */
+@TargetApi(21)
 public class ScrabbleHumanPlayer extends GameHumanPlayer implements Animator {
 
     // ----- Instance variables ----- //
 
     //The buttons used to submit game actions
-    Button  endTurnButton,
-            redoButton;
+
 
     //The current state of the game as we know it
     ScrabbleState gameState;
@@ -66,10 +68,15 @@ public class ScrabbleHumanPlayer extends GameHumanPlayer implements Animator {
             doubleWordSqr,
             doubleLetterSqr,
             centerSqr,
-            normalSqr;
+            normalSqr,
+            endTurnButton,
+            handTileBorderMoving;
 
     //The paint we'll be using to draw on our canvas
     Paint boardPaint;
+
+    private Bitmap[] alphabetImages;
+
 
     /**
      * constructor
@@ -86,6 +93,9 @@ public class ScrabbleHumanPlayer extends GameHumanPlayer implements Animator {
 
         //Initialize our paint so we can draw
         boardPaint = new Paint(Color.BLACK);
+
+        //Initialize our alphabet array
+        alphabetImages = new Bitmap[26];
     }
 
     @Override
@@ -133,13 +143,45 @@ public class ScrabbleHumanPlayer extends GameHumanPlayer implements Animator {
         }
 
         //Initialize our bitmaps for drawing the board
+        BitmapFactory.Options opts = new BitmapFactory.Options();
+        opts.inSampleSize = 2;
         Context context = currentActivity.getApplicationContext();
-        normalSqr = BitmapFactory.decodeResource(context.getResources(), R.drawable.boardtile);
-        doubleWordSqr = BitmapFactory.decodeResource(context.getResources(), R.drawable.boardtile_dw);
-        tripleWordSqr = BitmapFactory.decodeResource(context.getResources(), R.drawable.boardtile_tw);
-        doubleLetterSqr = BitmapFactory.decodeResource(context.getResources(), R.drawable.boardtile_dl);
-        tripleLetterSqr = BitmapFactory.decodeResource(context.getResources(), R.drawable.boardtile_tl);
-        centerSqr = BitmapFactory.decodeResource(context.getResources(), R.drawable.boardtile_start);
+        normalSqr = BitmapFactory.decodeResource(context.getResources(), R.drawable.boardtile, opts);
+        doubleWordSqr = BitmapFactory.decodeResource(context.getResources(), R.drawable.boardtile_dw, opts);
+        tripleWordSqr = BitmapFactory.decodeResource(context.getResources(), R.drawable.boardtile_tw, opts);
+        doubleLetterSqr = BitmapFactory.decodeResource(context.getResources(), R.drawable.boardtile_dl, opts);
+        tripleLetterSqr = BitmapFactory.decodeResource(context.getResources(), R.drawable.boardtile_tl, opts);
+        centerSqr = BitmapFactory.decodeResource(context.getResources(), R.drawable.boardtile_start, opts);
+        endTurnButton = BitmapFactory.decodeResource(context.getResources(), R.drawable.endturnbutton);
+        handTileBorderMoving = BitmapFactory.decodeResource(context.getResources(), R.drawable.handtileborder_moving);
+
+        //Give our tiles their images
+        alphabetImages[0] = BitmapFactory.decodeResource(context.getResources(), R.drawable.scrabbletile_a);
+        alphabetImages[1] = BitmapFactory.decodeResource(context.getResources(), R.drawable.scrabbletile_b);
+        alphabetImages[2] = BitmapFactory.decodeResource(context.getResources(), R.drawable.scrabbletile_c);
+        alphabetImages[3] = BitmapFactory.decodeResource(context.getResources(), R.drawable.scrabbletile_d);
+        alphabetImages[4] = BitmapFactory.decodeResource(context.getResources(), R.drawable.scrabbletile_e);
+        alphabetImages[5] = BitmapFactory.decodeResource(context.getResources(), R.drawable.scrabbletile_f);
+        alphabetImages[6] = BitmapFactory.decodeResource(context.getResources(), R.drawable.scrabbletile_g);
+        alphabetImages[7] = BitmapFactory.decodeResource(context.getResources(), R.drawable.scrabbletile_h);
+        alphabetImages[8] = BitmapFactory.decodeResource(context.getResources(), R.drawable.scrabbletile_i);
+        alphabetImages[9] = BitmapFactory.decodeResource(context.getResources(), R.drawable.scrabbletile_j);
+        alphabetImages[10] = BitmapFactory.decodeResource(context.getResources(), R.drawable.scrabbletile_k);
+        alphabetImages[11] = BitmapFactory.decodeResource(context.getResources(), R.drawable.scrabbletile_l);
+        alphabetImages[12] = BitmapFactory.decodeResource(context.getResources(), R.drawable.scrabbletile_m);
+        alphabetImages[13] = BitmapFactory.decodeResource(context.getResources(), R.drawable.scrabbletile_n);
+        alphabetImages[14] = BitmapFactory.decodeResource(context.getResources(), R.drawable.scrabbletile_o);
+        alphabetImages[15] = BitmapFactory.decodeResource(context.getResources(), R.drawable.scrabbletile_p);
+        alphabetImages[16] = BitmapFactory.decodeResource(context.getResources(), R.drawable.scrabbletile_q);
+        alphabetImages[17] = BitmapFactory.decodeResource(context.getResources(), R.drawable.scrabbletile_r);
+        alphabetImages[18] = BitmapFactory.decodeResource(context.getResources(), R.drawable.scrabbletile_s);
+        alphabetImages[19] = BitmapFactory.decodeResource(context.getResources(), R.drawable.scrabbletile_t);
+        alphabetImages[20] = BitmapFactory.decodeResource(context.getResources(), R.drawable.scrabbletile_u);
+        alphabetImages[21] = BitmapFactory.decodeResource(context.getResources(), R.drawable.scrabbletile_v);
+        alphabetImages[22] = BitmapFactory.decodeResource(context.getResources(), R.drawable.scrabbletile_w);
+        alphabetImages[23] = BitmapFactory.decodeResource(context.getResources(), R.drawable.scrabbletile_x);
+        alphabetImages[24] = BitmapFactory.decodeResource(context.getResources(), R.drawable.scrabbletile_y);
+        alphabetImages[25] = BitmapFactory.decodeResource(context.getResources(), R.drawable.scrabbletile_z);
 
     }
 
@@ -234,7 +276,7 @@ public class ScrabbleHumanPlayer extends GameHumanPlayer implements Animator {
         /**Draw the Board**/
         //Create our board like a 2D Array
         for (int row = 0; row < 15; row++){
-            int xPos = 10 + (row * 75); //x_position for each tile
+            int xPos = 450 + (row * 75); //x_position for each tile
 
             for (int col = 0; col < 15; col++){
                 int yPos = 10 + col * 75; //y_position for each tile
@@ -280,6 +322,32 @@ public class ScrabbleHumanPlayer extends GameHumanPlayer implements Animator {
             }
         }
 
+        /**Draw our end turn button**/
+        canvas.drawBitmap(endTurnButton, 1600, 350, boardPaint);
+
+        /**Draw our hand**/
+        if (gameState != null){
+            ArrayList<ScrabbleTile> ourHand = gameState.getPlayerHand(0);
+            int i = 0;
+            for (ScrabbleTile handTile : ourHand){
+                //Get the char of the tile
+                char tileChar = handTile.getLetter();
+                int charIdx = tileChar - 97; //convert to index
+
+                //Draw a border indicating the tile is ready to move
+                if (handTile.isReadyToMove()){
+                    canvas.drawBitmap(handTileBorderMoving, 195, (100 * i) + 150 + (i * 25) - 5, boardPaint);
+
+                }
+                //Draw the tile
+                canvas.drawBitmap(alphabetImages[charIdx], 200, (100 * i) + 150 + (i * 25), boardPaint);
+
+                i++;
+            }
+
+        }
+
+
     }
 
     /**
@@ -291,7 +359,37 @@ public class ScrabbleHumanPlayer extends GameHumanPlayer implements Animator {
     @Override
     public void onTouch(MotionEvent event) {
 
+        float eventX = event.getX();
+        float eventY = event.getY();
+
+        if (eventX > 1600 && eventX < 1800 && eventY < 550 && eventY > 350){
+            //We're inside the endturnButton press, so end our turn
+            game.sendAction(new EndTurnAction(this, ""));
+        }
+        else if(eventX > 200 && eventX < 300 && eventY > 200 && eventY < 1300){
+            /** We touched a hand tile **/
+            //Find out which tile we touched
+            int tileTouched = (int) ((eventY - 150) / 120); // should be 0->8
+            if (tileTouched > 7){
+                tileTouched = 7;
+            }
+            if (tileTouched < 0){
+                tileTouched = 0;
+            }
+
+            ArrayList<ScrabbleTile> ourHand = gameState.getPlayerHand(0);
+            //Tell the tile that it's moving
+            ourHand.get(tileTouched).setReadyToMove(! ourHand.get(tileTouched).isReadyToMove());
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            gameState.setPlayerHand(0, ourHand);
+
+        }
 
 
     }
+
 }

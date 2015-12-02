@@ -3,5 +3,9 @@
     <color name="black">#000</color>
     <color name="green">#0F0</color>
     <color name="red">#ff0000</color>
-    
+
+    <color name="darkGreen">#ff1e561e</color>
+
+
+
 </resources>
