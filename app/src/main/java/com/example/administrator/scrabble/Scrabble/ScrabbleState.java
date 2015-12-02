@@ -173,6 +173,10 @@ public class ScrabbleState extends GameState {
 
     }
 
+    public boolean isTileThere(int x, int y) {
+        return scrabbleBoard.isTileThere(x, y);
+    }
+
     //get index of current player
     public int getCurrentPlayer() {
         return currentPlayer;

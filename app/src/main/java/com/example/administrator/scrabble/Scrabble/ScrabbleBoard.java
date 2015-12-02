@@ -323,7 +323,7 @@ public class ScrabbleBoard {
         //If we get here then the tile isn't on a bonus tile
         return NO_BONUS;
     }
-    
+
     /**
      * checkWord            Checks if a given word is a scrabble word.
      * @param word
