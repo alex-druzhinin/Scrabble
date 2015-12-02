@@ -27,6 +27,7 @@ public class ScrabbleComputerPlayer extends GameComputerPlayer {
     protected int maxBelow;
     protected int maxLeft;
     protected int maxRight;
+    ScrabbleTile target;
 
     //The minimum amount of time (ms) the AI waits to perform an action
     final int MIN_TIME = 5000;
@@ -57,15 +58,30 @@ public class ScrabbleComputerPlayer extends GameComputerPlayer {
         //get computer's hand
         boardTiles = currentState.getBoardTiles();
 
-        findPlace(currentState); //find place for word
+        findPlace(); //find place for word
 
         sleep(MIN_TIME); //delay for minimum time so changes do not look instantaneous to player
 
         game.sendAction(new EndTurnAction(this, word)); //end turn
     }
 
-    protected void checkSurroundingTarget(ScrabbleTile target) {
-        //checkbox
+    /**
+     * checkSurroundingTarget           Checks all spaces around the target tile to see if there
+     *                                  are tiles there.
+     *
+     */
+    protected void checkSurroundingTarget() {
+        int index = 0; //counters for surrounding indexes
+
+        //check all tiles around the target
+        for(int i = -1; i < 2; i++) {
+            for(int j = -1; j < 2; j++) {
+                if(i == 0 && j == 0) { continue; } //do not need to check if target is there
+                //assign true if there is a tile there and false if there is not
+                surrounding[index] = currentState.isTileThere(target.getXLocation()+i, target.getYLocation()+j);
+                ++index;
+            }
+        }
     }
 
     protected void getWord(int target, int length) {
@@ -74,9 +90,12 @@ public class ScrabbleComputerPlayer extends GameComputerPlayer {
         //set equal to 'word'
     }
 
-    protected void findPlace(ScrabbleState state) {
+    protected void findPlace() {
         //for loop check board tiles
-        //call checkSurrounding state.isTileThere()
+        for(ScrabbleTile boardTile: boardTiles) {
+            target = boardTile; //make target the boardTile
+            checkSurroundingTarget();
+        }
         //ifs to see if can place word: use max methods
         //add l&r, t&b
 
@@ -88,26 +107,107 @@ public class ScrabbleComputerPlayer extends GameComputerPlayer {
         //method to tally score, add word to board, and take tiles from bag
     }
 
-    //get maximum letters that can be placed above letter on board
+    /**
+     * maxLettersAbove                  Checks how many spaces above the target board tile
+     *                                  can be used for a word.
+     */
     protected void maxLettersAbove() {
-        //change maxAbove
-        //l & r above diagonal
+        boolean noSpace = true; //empty spaces to move to
+        boolean left = false; //space on top left diagonal to potential space is open
+        boolean right = false; //space on top right diagonal to potential space is open
+        boolean up = false; //space above potential space
+        int x = target.getXLocation(); //target x position
+        int y = target.getYLocation(); //target y position
+        maxAbove = 0; //init max spaces can move above as 0
+
+        for(int i = 1; !noSpace; i++) {
+            left = currentState.isTileThere(x-1, y-i-1); //check top left diagonal
+            right = currentState.isTileThere(x+1, y-i-1); //check top right diagonal
+            up = currentState.isTileThere(x, y-i-1); //check space above potential space
+
+            if(left == false && right == false && up == false) {
+                ++maxAbove; //increment number of tiles that can go above the target
+            }
+            else { noSpace = true; } //if there is a tile
+        }
     }
 
-    //get maximum letters that can be placed below letter on board
+    /**
+     * maxLettersBelow                  Checks how many spaces below the target board tile
+     *                                  can be used for a word.
+     */
     protected void maxLettersBelow() {
-        //change maxBelow
-        //l & r down diagonal
+        boolean noSpace = true; //empty spaces to move to
+        boolean left = false; //space on bottom left diagonal to potential space is open
+        boolean right = false; //space on bottom right diagonal to potential space is open
+        boolean down = false; //space below potential space
+        int x = target.getXLocation(); //target x position
+        int y = target.getYLocation();  //target y position
+        maxBelow = 0; //init max spaces can move below as 0
+
+        for(int i = 1; !noSpace; i++) {
+            left = currentState.isTileThere(x-1, y+i+1); //check bottom left diagonal
+            right = currentState.isTileThere(x+1, y+i+1); //check bottom right diagonal
+            down = currentState.isTileThere(x, y+i+1); //check space below potential space
+
+            if(left == false && right == false && down == false) {
+                ++maxBelow; //increment number of tiles that can go below the target
+            }
+            else { noSpace = true; } //if there is a tile
+        }
     }
 
+    /**
+     * maxLettersLeft                   Checks how many spaces to the left of the target board tile
+     *                                  can be used for a word.
+     */
     protected void maxLettersLeft() {
-        //change maxLeft
-        //left diagonals
+        boolean noSpace = true; //empty spaces to move to
+        boolean leftTop = false; //space on top left diagonal to potential space is open
+        boolean leftBottom = false; //space on bottom left diagonal to potential space is open
+        boolean left = false; //space to left of potential space
+        int x = target.getXLocation(); //target x position
+        int y = target.getYLocation(); //target y position
+        maxLeft = 0; //init max spaces can move to left as 0
+
+        for(int i = 1; !noSpace; i++) {
+            leftTop = currentState.isTileThere(x-i-1, y-1); //check top left diagonal
+            leftBottom = currentState.isTileThere(x-i-1, y+1); //check bottom left diagonal
+            left = currentState.isTileThere(x-i-1, y); //check spaces to left of potential space
+
+            //check if valid move
+            if(left == false && leftBottom == false && leftTop == false) {
+                ++maxLeft; //increment number of tiles that can go left of the target
+            }
+            else { noSpace = true; } //if there is a tile
+        }
     }
 
+    /**
+     * maxLettersRight              Checks how many spaces to the right of the target board tile
+     *                              can be used for a word.
+     */
     protected void maxLettersRight() {
-        //change maxRight
-        //right diagonals
+        boolean noSpace = true; //empty spaces to move to
+        boolean rightTop = false; //space on top right diagonal to potential space is open
+        boolean rightBottom = false; //space on bottom right diagonal to potential space is open
+        boolean right = false; //space to right of potential space
+        int x = target.getXLocation(); //target x position
+        int y = target.getYLocation(); //target y position
+        maxRight = 0; //init max spaces can move to right as 0
+
+        //check for valid tile placement to right until a right movement is not valid
+        for(int i = 1; !noSpace; i++) {
+            rightTop = currentState.isTileThere(x+i+1, y-1); //check top right diagonal
+            rightBottom = currentState.isTileThere(x+i+1, y+1); //check bottom right diagonal
+            right = currentState.isTileThere(x+i+1, y); //check spaces to right of potential space
+
+            //check if valid tile placement spot
+            if(right == false && rightBottom == false && rightTop == false) {
+                ++maxRight; //increment number of tiles that can go above the target
+            }
+            else { noSpace = true; } //if there is a tile
+        }
     }
 
 
