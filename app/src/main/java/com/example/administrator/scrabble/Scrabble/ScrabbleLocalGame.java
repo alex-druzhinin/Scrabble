@@ -162,7 +162,26 @@ public class ScrabbleLocalGame extends LocalGame{
 
             EndGameAction endGameAction = (EndGameAction) action; //cast action to EndGameAction
 
-            GameOverInfo over = new GameOverInfo("Gameover");
+            //Find out who won
+            int[] scores = masterState.getPlayerScores();
+            int maxIdx = 0;
+            for (int i = 0; i < scores.length; i++){
+                if (scores[i] > scores[maxIdx]){
+                    maxIdx = i;
+                }
+            }
+
+            GameOverInfo over;
+            if (scores[0] == scores[1]){
+                 over = new GameOverInfo("Game Over!\n" +
+                        "Tie game!");
+            }
+            else{
+                over = new GameOverInfo("Game Over!\n" +
+                        "Player " + maxIdx + " won with " + scores[maxIdx]
+                        + " points!");
+            }
+
 
             sendAllUpdatedState(); //sends every player the state
 

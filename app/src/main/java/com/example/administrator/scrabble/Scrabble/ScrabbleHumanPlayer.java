@@ -2,6 +2,7 @@ package com.example.administrator.scrabble.Scrabble;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -25,6 +26,8 @@ import com.example.administrator.scrabble.game.GameMainActivity;
 import com.example.administrator.scrabble.game.GamePlayer;
 import com.example.administrator.scrabble.game.actionMsg.GameAction;
 import com.example.administrator.scrabble.game.infoMsg.GameInfo;
+import com.example.administrator.scrabble.game.infoMsg.GameOverInfo;
+import com.example.administrator.scrabble.game.util.MessageBox;
 
 import java.util.ArrayList;
 
@@ -76,6 +79,9 @@ public class ScrabbleHumanPlayer extends GameHumanPlayer implements Animator {
             handTileBorderMoving,
             redoButton;
 
+    //The context of the game
+    Context context;
+
     //The paint we'll be using to draw on our canvas
     Paint boardPaint;
 
@@ -119,8 +125,6 @@ public class ScrabbleHumanPlayer extends GameHumanPlayer implements Animator {
         if (info instanceof ScrabbleState){
             this.gameState = (ScrabbleState) info;
         }
-        //We can receive all sorts of other information as well
-
 
     }
 
@@ -155,7 +159,7 @@ public class ScrabbleHumanPlayer extends GameHumanPlayer implements Animator {
         //Initialize our bitmaps for drawing the board
         BitmapFactory.Options opts = new BitmapFactory.Options();
         opts.inSampleSize = 2;
-        Context context = currentActivity.getApplicationContext();
+        context = currentActivity.getApplicationContext();
         normalSqr = BitmapFactory.decodeResource(context.getResources(), R.drawable.boardtile, opts);
         doubleWordSqr = BitmapFactory.decodeResource(context.getResources(), R.drawable.boardtile_dw, opts);
         tripleWordSqr = BitmapFactory.decodeResource(context.getResources(), R.drawable.boardtile_tw, opts);
@@ -299,7 +303,7 @@ public class ScrabbleHumanPlayer extends GameHumanPlayer implements Animator {
         /**Draw the Board**/
         //Create our board like a 2D Array
         for (int row = 0; row < 15; row++) {
-            int xPos = 450 + (row * 75); //x_position for each tile
+            int xPos = 350 + (row * 75); //x_position for each tile
 
             for (int col = 0; col < 15; col++) {
                 int yPos = 10 + col * 75; //y_position for each tile
@@ -338,15 +342,15 @@ public class ScrabbleHumanPlayer extends GameHumanPlayer implements Animator {
             synchronized (this) {
                 for (ScrabbleTile tile : boardTiles) {
                     if (tile.isOnBoard()) {
-                        canvas.drawBitmap(alphabetImages[tile.getLetter() - 97], 449 + (tile.getXLocation() * 75), (tile.getYLocation() * 75) + 9, boardPaint);
+                        canvas.drawBitmap(alphabetImages[tile.getLetter() - 97], 349 + (tile.getXLocation() * 75), (tile.getYLocation() * 75) + 9, boardPaint);
                     }
                 }
             }
         }
 
         /**Draw our end turn and redo buttons**/
-        canvas.drawBitmap(endTurnButton, 1600, 350, boardPaint);
-        canvas.drawBitmap(redoButton, 1600, 50, boardPaint);
+        canvas.drawBitmap(endTurnButton, 1500, 350, boardPaint);
+        canvas.drawBitmap(redoButton, 1500, 50, boardPaint);
 
         /**Draw our hand**/
         if (gameState != null) {
@@ -387,7 +391,7 @@ public class ScrabbleHumanPlayer extends GameHumanPlayer implements Animator {
         float eventX = event.getX();
         float eventY = event.getY();
 
-        if (eventX > 1600 && eventX < 1800 && eventY < 750 && eventY > 350){
+        if (eventX > 1500 && eventX < 1700 && eventY < 750 && eventY > 350){
             /** We touched the end turn button **/
             this.endTurn();
         }
@@ -420,10 +424,10 @@ public class ScrabbleHumanPlayer extends GameHumanPlayer implements Animator {
 
             gameState.setPlayerHand(0, ourHand);
         }
-        else if (eventX >= 450 && eventX <= 1575 && eventY >= 10 && eventY <= 1100){
+        else if (eventX >= 350 && eventX <= 1475 && eventY >= 10 && eventY <= 1100){
             /** We touched a spot on the board **/
             //Find the (x,y) on the board that we touched, each tile is ~80px wide
-            int tileX = (int) ((eventX - 450) / 75);
+            int tileX = (int) ((eventX - 350) / 75);
             int tileY = (int) ((eventY - 10) / 75);
             //Log.i("Location: ", "(" + tileX + ", " + tileY + ")");
 
@@ -461,7 +465,7 @@ public class ScrabbleHumanPlayer extends GameHumanPlayer implements Animator {
                 }
             }
         }
-        else if (eventX > 1600 && eventX < 1700 && eventY > 50 && eventY < 315){
+        else if (eventX > 1500 && eventX < 1600 && eventY > 50 && eventY < 315){
             /** We touched the redo button **/
             //Push all of the tiles on the board back into the player's hand
             ArrayList<ScrabbleTile> ourHand = gameState.getPlayerHand(0);
