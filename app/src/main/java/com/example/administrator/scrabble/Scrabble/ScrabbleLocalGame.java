@@ -112,26 +112,49 @@ public class ScrabbleLocalGame extends LocalGame{
 
         }
         else if (action instanceof EndTurnAction){
-            /**
-             * This is where we need to check if the word the player wants to submit is correct
-             * or not...
-             * We need to:
-             *  1) Grab the tiles the player wants to submit
-             *      a) If they don't want to submit tiles, prompt them ensuring this
-             *  2) Place them on a temporary board
-             *  3) Determine the words the player would be creating from that temp board
-             *  4) Query our database for the words created
-             *      a) If the words they create aren't in the database, prompt them
-             *          and do not allow them to end their turn.
-             *  5) Tally up the points for each word placed and add it to the player's score
-             *  6) Set the temp board as the new board in the masterstate
-             *  7) Give this player more tiles
-             *  8) Rotate the current player
-             */
 
+            EndTurnAction endTurnAction = (EndTurnAction) action; //cast to EndTurnAction
 
+            //get player hand
+            ArrayList<ScrabbleTile> playerHand = masterState.getPlayerHand(getPlayerIdx(endTurnAction.getPlayer()));
+            ScrabbleBoard board =  masterState.getScrabbleBoard(); //state
+            ArrayList<ScrabbleTile> wordTiles = endTurnAction.getWordTiles(); //tiles placed on board in turn
+            ArrayList<String> words = board.getWords(wordTiles); //get all words made on board
+            ArrayList<ScrabbleTile> boardTiles = board.getBoardTiles(); //get board tiles
+            int playerID = getPlayerIdx(endTurnAction.getPlayer());
 
+            //go through all the strings that are made on the board
+            for(String word: words) {
+                //check if word is not valid
+                if (! board.checkWord(word)) {
+                    return false; //if there is a word that is not valid
+                }
+            }
 
+            //go through all tiles the player placed down
+            for(ScrabbleTile wordTile: wordTiles) {
+                boardTiles.add(wordTile); //add tiles to board
+                playerHand.remove(wordTile); //remove tiles from player hand
+            }
+
+            board.setBoard(boardTiles); //update board tiles
+
+            //go through all words that are made by newly placed tiles
+            for(String word: words) {
+                masterState.setPlayerScore(masterState.tallyWordScore(word)); //tally points from each word
+            }
+
+            masterState.drawTiles(playerHand); //give player a new hand
+
+            //next player's turn
+            if(playerID == 1) {
+                masterState.setCurrentPlayer(0);
+            }
+            else {
+                masterState.setCurrentPlayer(1);
+            }
+
+            return true; //word was successfully placed and player's turn is over
         }
         else if (action instanceof EndGameAction){
 

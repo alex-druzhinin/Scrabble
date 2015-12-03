@@ -99,6 +99,18 @@ public class ScrabbleState extends GameState {
 
     }
 
+    public void setCurrentPlayer(int player) {
+        currentPlayer = player;
+    }
+
+    public void setPlayerScore(int points) {
+        playerScores[currentPlayer] += points; //adds points to current player
+    }
+
+    public void setBagTiles(ArrayList<ScrabbleTile> updatedBagTiles) {
+        bagTiles = updatedBagTiles; //update bag tiles
+    }
+
     /**
      * Copy Constructor: Copies previous game state into a new game state.
      * @param currentState
@@ -125,8 +137,10 @@ public class ScrabbleState extends GameState {
         this.currentPlayer = currentState.getCurrentPlayer();
     }
 
-    
 
+    public ScrabbleBoard getScrabbleBoard() {
+        return scrabbleBoard;
+    }
 
 
     public boolean isTileThere(int x, int y) {
@@ -140,13 +154,6 @@ public class ScrabbleState extends GameState {
 
     //get tiles left in bag
     public ArrayList<ScrabbleTile> getBagTiles() { return bagTiles; }
-
-    /**
-     * Rotate the current player who's turn it is to the next player
-     */
-    private void setCurrentPlayer(int theNextPlayer){
-        this.currentPlayer = theNextPlayer;
-    }
 
     /**
      * Tallies the score for a given word

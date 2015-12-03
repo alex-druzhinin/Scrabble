@@ -1,9 +1,15 @@
 package com.example.administrator.scrabble.Scrabble;
 
+import android.content.res.Resources;
+
 import com.example.administrator.scrabble.game.GameComputerPlayer;
 import com.example.administrator.scrabble.game.actionMsg.GameAction;
 import com.example.administrator.scrabble.game.infoMsg.GameInfo;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
@@ -21,6 +27,7 @@ public class ScrabbleComputerPlayer extends GameComputerPlayer {
     //The current board, will be used to scan for possible words
     public ScrabbleBoard board;
     protected ArrayList<ScrabbleTile> boardTiles;
+    protected ArrayList<ScrabbleTile> wordTiles;
     protected ScrabbleState currentState;
     protected String word;
     protected boolean[] surrounding;
@@ -69,7 +76,7 @@ public class ScrabbleComputerPlayer extends GameComputerPlayer {
 
         sleep(MIN_TIME); //delay for minimum time so changes do not look instantaneous to player
 
-        game.sendAction(new EndTurnAction(this, word)); //end turn
+        game.sendAction(new EndTurnAction(this, wordTiles)); //end turn
     }
 
     /**
@@ -92,10 +99,52 @@ public class ScrabbleComputerPlayer extends GameComputerPlayer {
     }
 
     protected boolean getWord(int targetIndex, int length) {
-        //go through dictionary and find word with parameters
-        //check if all letters are in bag and if not then keep looking
-        //set equal to 'word'
-        return false;
+        ArrayList<ScrabbleTile> bagTiles = currentState.getBagTiles(); //get tiles in bag
+        boolean isValid = true; //tells is word found is valid word
+
+        try { //context.getAssets().getLocales()[0])
+            BufferedReader br = new BufferedReader(new FileReader(Resources.getSystem().getAssets().getLocales()[0]));
+            String line = br.readLine();
+
+            while (line != null) {
+                if(line.length() == length && line.charAt(targetIndex) == target.getLetter()) {
+                    boolean[] letterCheck = new boolean[line.length()]; //check which letters are in bag
+
+                    Arrays.fill(letterCheck, false); //assume none of tiles with matching letters are in bag
+
+                    //check if tiles with matching letters are in bag
+                    for(int i = 0; i < line.length(); i++) {
+                        for (ScrabbleTile bagTile : bagTiles) {
+                            if(bagTile.getLetter() == line.charAt(i)) {
+                                letterCheck[i] = true; //tile with matching letter exists
+                                bagTiles.remove(bagTile); //remove bagTile so do not double count
+                                break;
+                            }
+                        }
+                    }
+
+                    for(int i = 0; i < letterCheck.length; i++) {
+                        if(letterCheck[i] == false) { isValid = false; }
+                    }
+
+                    if(isValid) { //if all the letters in the word are in the bag
+                        word = line; //set the word to the line that was found
+                        br.close(); //close the buffered reader
+                        return true; //return that the word is valid
+                    }
+                }
+            }
+
+            br.close(); //close buffered reader
+        }
+        catch (FileNotFoundException fnfe) {
+            System.out.print("Dictionary not found");
+        }
+        catch (IOException e) {
+            System.out.print("IO exception");
+        }
+
+        return false; //word could not be found with given parameters
     }
 
     protected void findPlace() {
@@ -170,7 +219,7 @@ public class ScrabbleComputerPlayer extends GameComputerPlayer {
             if(getWord(targetIndex, wordLength)) break;
         }
 
-        //get tiles
+        //get tiles in bag
         ArrayList<ScrabbleTile> bagTiles = currentState.getBagTiles();
 
         //remove tiles in word from bag
@@ -179,10 +228,13 @@ public class ScrabbleComputerPlayer extends GameComputerPlayer {
             for (ScrabbleTile bagTile : bagTiles) {
                 if(bagTile.getLetter() == word.charAt(i)) {
                     bagTiles.remove(bagTile);
+                    wordTiles.add(bagTile);
                     break; //break out of inner loop
                 }
             }
         }
+
+        currentState.setBagTiles(bagTiles); //take tiles from word from the bag
     }
 
     protected void getWordLength() {
@@ -327,6 +379,6 @@ public class ScrabbleComputerPlayer extends GameComputerPlayer {
      *      An EndTurnAction containing this player
      */
     public GameAction endTurn(){
-        return new EndTurnAction(this, word);
+        return new EndTurnAction(this, wordTiles);
     }
 }

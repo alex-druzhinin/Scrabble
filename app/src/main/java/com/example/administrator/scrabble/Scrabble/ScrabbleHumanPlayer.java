@@ -58,6 +58,8 @@ public class ScrabbleHumanPlayer extends GameHumanPlayer implements Animator {
     //The surface we are going to draw on
     private AnimationSurface animationSurface;
 
+    private int playerID;
+
     //A "lock" for other actions, used to indicate that the player is currently
     //exchanging tiles
     Boolean isExchanging;
@@ -89,7 +91,7 @@ public class ScrabbleHumanPlayer extends GameHumanPlayer implements Animator {
      * @param name
      *      The name of the player
      */
-    public ScrabbleHumanPlayer(String name) {
+    public ScrabbleHumanPlayer(String name, int playerID) {
         super(name);
 
         //Initialize our array lists
@@ -104,6 +106,8 @@ public class ScrabbleHumanPlayer extends GameHumanPlayer implements Animator {
 
         //Tell our player that no tiles have been touched
         tileTouched = -1;
+
+        this.playerID = playerID; //set playerID
     }
 
     @Override
@@ -332,7 +336,7 @@ public class ScrabbleHumanPlayer extends GameHumanPlayer implements Animator {
 
         /**Draw our hand**/
         if (gameState != null) {
-            ArrayList<ScrabbleTile> ourHand = gameState.getPlayerHand(0);
+            ArrayList<ScrabbleTile> ourHand = gameState.getPlayerHand(playerID);
             int i = 0;
             for (ScrabbleTile handTile : ourHand) {
                 //Get the char of the tile
