@@ -193,6 +193,13 @@ public class ScrabbleState extends GameState {
         scrabbleBoard.setBoard(boardTiles);
     }
 
+    public void addBoardTile(ScrabbleTile tileToAdd){
+        ArrayList<ScrabbleTile> boardTiles = scrabbleBoard.getBoardTiles();
+        boardTiles.add(tileToAdd);
+        scrabbleBoard.setBoard(boardTiles);
+    }
+
+
     public ArrayList<ScrabbleTile> getBoardTiles() { return scrabbleBoard.getBoardTiles(); }
 
     /**

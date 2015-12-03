@@ -50,7 +50,7 @@ public class ScrabbleHumanPlayer extends GameHumanPlayer implements Animator {
 
     ArrayList<TextView> playerScoreViews; //each player's score views
     ArrayList<ScrabbleTile> tilesToExchange; //tiles a player wants to exchange
-    String word;
+    String wordToPlace;
 
     //The current activity we are looking at
     private Activity currentActivity;
@@ -165,35 +165,36 @@ public class ScrabbleHumanPlayer extends GameHumanPlayer implements Animator {
         tripleLetterSqr = BitmapFactory.decodeResource(context.getResources(), R.drawable.boardtile_tl, opts);
         centerSqr = BitmapFactory.decodeResource(context.getResources(), R.drawable.boardtile_start, opts);
         endTurnButton = BitmapFactory.decodeResource(context.getResources(), R.drawable.endturnbutton);
-        handTileBorderMoving = BitmapFactory.decodeResource(context.getResources(), R.drawable.handtileborder_moving);
+        handTileBorderMoving = BitmapFactory.decodeResource(context.getResources(), R.drawable.handtileborder_moving, opts);
         redoButton = BitmapFactory.decodeResource(context.getResources(), R.drawable.redobutton);
         //Give our tiles their images
-        alphabetImages[0] = BitmapFactory.decodeResource(context.getResources(), R.drawable.scrabbletile_a);
-        alphabetImages[1] = BitmapFactory.decodeResource(context.getResources(), R.drawable.scrabbletile_b);
-        alphabetImages[2] = BitmapFactory.decodeResource(context.getResources(), R.drawable.scrabbletile_c);
-        alphabetImages[3] = BitmapFactory.decodeResource(context.getResources(), R.drawable.scrabbletile_d);
-        alphabetImages[4] = BitmapFactory.decodeResource(context.getResources(), R.drawable.scrabbletile_e);
-        alphabetImages[5] = BitmapFactory.decodeResource(context.getResources(), R.drawable.scrabbletile_f);
-        alphabetImages[6] = BitmapFactory.decodeResource(context.getResources(), R.drawable.scrabbletile_g);
-        alphabetImages[7] = BitmapFactory.decodeResource(context.getResources(), R.drawable.scrabbletile_h);
-        alphabetImages[8] = BitmapFactory.decodeResource(context.getResources(), R.drawable.scrabbletile_i);
-        alphabetImages[9] = BitmapFactory.decodeResource(context.getResources(), R.drawable.scrabbletile_j);
-        alphabetImages[10] = BitmapFactory.decodeResource(context.getResources(), R.drawable.scrabbletile_k);
-        alphabetImages[11] = BitmapFactory.decodeResource(context.getResources(), R.drawable.scrabbletile_l);
-        alphabetImages[12] = BitmapFactory.decodeResource(context.getResources(), R.drawable.scrabbletile_m);
-        alphabetImages[13] = BitmapFactory.decodeResource(context.getResources(), R.drawable.scrabbletile_n);
-        alphabetImages[14] = BitmapFactory.decodeResource(context.getResources(), R.drawable.scrabbletile_o);
-        alphabetImages[15] = BitmapFactory.decodeResource(context.getResources(), R.drawable.scrabbletile_p);
-        alphabetImages[16] = BitmapFactory.decodeResource(context.getResources(), R.drawable.scrabbletile_q);
-        alphabetImages[17] = BitmapFactory.decodeResource(context.getResources(), R.drawable.scrabbletile_r);
-        alphabetImages[18] = BitmapFactory.decodeResource(context.getResources(), R.drawable.scrabbletile_s);
-        alphabetImages[19] = BitmapFactory.decodeResource(context.getResources(), R.drawable.scrabbletile_t);
-        alphabetImages[20] = BitmapFactory.decodeResource(context.getResources(), R.drawable.scrabbletile_u);
-        alphabetImages[21] = BitmapFactory.decodeResource(context.getResources(), R.drawable.scrabbletile_v);
-        alphabetImages[22] = BitmapFactory.decodeResource(context.getResources(), R.drawable.scrabbletile_w);
-        alphabetImages[23] = BitmapFactory.decodeResource(context.getResources(), R.drawable.scrabbletile_x);
-        alphabetImages[24] = BitmapFactory.decodeResource(context.getResources(), R.drawable.scrabbletile_y);
-        alphabetImages[25] = BitmapFactory.decodeResource(context.getResources(), R.drawable.scrabbletile_z);
+        opts.inSampleSize = 2;
+        alphabetImages[0] = BitmapFactory.decodeResource(context.getResources(), R.drawable.scrabbletile_a, opts);
+        alphabetImages[1] = BitmapFactory.decodeResource(context.getResources(), R.drawable.scrabbletile_b, opts);
+        alphabetImages[2] = BitmapFactory.decodeResource(context.getResources(), R.drawable.scrabbletile_c, opts);
+        alphabetImages[3] = BitmapFactory.decodeResource(context.getResources(), R.drawable.scrabbletile_d, opts);
+        alphabetImages[4] = BitmapFactory.decodeResource(context.getResources(), R.drawable.scrabbletile_e, opts);
+        alphabetImages[5] = BitmapFactory.decodeResource(context.getResources(), R.drawable.scrabbletile_f, opts);
+        alphabetImages[6] = BitmapFactory.decodeResource(context.getResources(), R.drawable.scrabbletile_g, opts);
+        alphabetImages[7] = BitmapFactory.decodeResource(context.getResources(), R.drawable.scrabbletile_h, opts);
+        alphabetImages[8] = BitmapFactory.decodeResource(context.getResources(), R.drawable.scrabbletile_i, opts);
+        alphabetImages[9] = BitmapFactory.decodeResource(context.getResources(), R.drawable.scrabbletile_j, opts);
+        alphabetImages[10] = BitmapFactory.decodeResource(context.getResources(), R.drawable.scrabbletile_k, opts);
+        alphabetImages[11] = BitmapFactory.decodeResource(context.getResources(), R.drawable.scrabbletile_l, opts);
+        alphabetImages[12] = BitmapFactory.decodeResource(context.getResources(), R.drawable.scrabbletile_m, opts);
+        alphabetImages[13] = BitmapFactory.decodeResource(context.getResources(), R.drawable.scrabbletile_n, opts);
+        alphabetImages[14] = BitmapFactory.decodeResource(context.getResources(), R.drawable.scrabbletile_o, opts);
+        alphabetImages[15] = BitmapFactory.decodeResource(context.getResources(), R.drawable.scrabbletile_p, opts);
+        alphabetImages[16] = BitmapFactory.decodeResource(context.getResources(), R.drawable.scrabbletile_q, opts);
+        alphabetImages[17] = BitmapFactory.decodeResource(context.getResources(), R.drawable.scrabbletile_r, opts);
+        alphabetImages[18] = BitmapFactory.decodeResource(context.getResources(), R.drawable.scrabbletile_s, opts);
+        alphabetImages[19] = BitmapFactory.decodeResource(context.getResources(), R.drawable.scrabbletile_t, opts);
+        alphabetImages[20] = BitmapFactory.decodeResource(context.getResources(), R.drawable.scrabbletile_u, opts);
+        alphabetImages[21] = BitmapFactory.decodeResource(context.getResources(), R.drawable.scrabbletile_v, opts);
+        alphabetImages[22] = BitmapFactory.decodeResource(context.getResources(), R.drawable.scrabbletile_w, opts);
+        alphabetImages[23] = BitmapFactory.decodeResource(context.getResources(), R.drawable.scrabbletile_x, opts);
+        alphabetImages[24] = BitmapFactory.decodeResource(context.getResources(), R.drawable.scrabbletile_y, opts);
+        alphabetImages[25] = BitmapFactory.decodeResource(context.getResources(), R.drawable.scrabbletile_z, opts);
 
     }
 
@@ -239,8 +240,20 @@ public class ScrabbleHumanPlayer extends GameHumanPlayer implements Animator {
      * @return
      *      An EndTurnAction containing this player
      */
-    public GameAction endTurn(){
-        return new EndTurnAction(this, word);
+    public void endTurn(){
+        wordToPlace = "";
+        //Get my hand
+        ArrayList<ScrabbleTile> myHand = gameState.getPlayerHand(0);
+        ArrayList<ScrabbleTile> tilesToPlace = new ArrayList<>();
+        for (ScrabbleTile handTile : myHand){
+            if (handTile.isOnBoard()){
+                tilesToPlace.add(handTile);
+            }
+        }
+
+        //Send the game the tiles we want to place down
+        game.sendAction(new EndTurnAction(this, tilesToPlace));
+
     }
 
     public Boolean getHasExchanged() {
@@ -324,10 +337,13 @@ public class ScrabbleHumanPlayer extends GameHumanPlayer implements Animator {
         if (gameState != null) {
 
             ArrayList<ScrabbleTile> boardTiles = gameState.getBoardTiles();
-            for (ScrabbleTile tile : boardTiles) {
-                canvas.drawBitmap(tile.getTileImage(), (tile.getXLocation() * 75) + 10, (tile.getYLocation() * 75) + 10, boardPaint);
+            synchronized (this) {
+                for (ScrabbleTile tile : boardTiles) {
+                    if (tile.isOnBoard()) {
+                        canvas.drawBitmap(alphabetImages[tile.getLetter() - 97], 449 + (tile.getXLocation() * 75), (tile.getYLocation() * 75) + 9, boardPaint);
+                    }
+                }
             }
-
         }
 
         /**Draw our end turn and redo buttons**/
@@ -343,19 +359,19 @@ public class ScrabbleHumanPlayer extends GameHumanPlayer implements Animator {
                 char tileChar = handTile.getLetter();
                 int charIdx = tileChar - 97; //convert to index
 
-                //Draw a border indicating the tile is ready to move
-                if (handTile.isReadyToMove()) {
-                    canvas.drawBitmap(handTileBorderMoving, 195, (100 * i) + 150 + (i * 25) - 5, boardPaint);
+                if (handTile.isOnBoard() == false) {//only draw it if it's still in the hand
+                    //Draw a border indicating the tile is ready to move
+                    if (handTile.isReadyToMove()) {
+                        canvas.drawBitmap(handTileBorderMoving, 195, (100 * i) + 150 + (i * 25) - 5, boardPaint);
 
+                    }
+                    //Draw the tile
+                    canvas.drawBitmap(alphabetImages[charIdx], 200, (100 * i) + 150 + (i * 25), boardPaint);
                 }
-                //Draw the tile
-                canvas.drawBitmap(alphabetImages[charIdx], 200, (100 * i) + 150 + (i * 25), boardPaint);
-
                 i++;
             }
 
         }
-
 
 
 
@@ -373,9 +389,9 @@ public class ScrabbleHumanPlayer extends GameHumanPlayer implements Animator {
         float eventX = event.getX();
         float eventY = event.getY();
 
-        if (eventX > 1600 && eventX < 1800 && eventY < 550 && eventY > 350){
-            //We're inside the endturnButton press, so end our turn
-            game.sendAction(new EndTurnAction(this, ""));
+        if (eventX > 1600 && eventX < 1800 && eventY < 750 && eventY > 350){
+            /** We touched the end turn button **/
+            this.endTurn();
         }
         else if(eventX > 200 && eventX < 300 && eventY > 200 && eventY < 1300){
             /** We touched a hand tile **/
@@ -411,12 +427,6 @@ public class ScrabbleHumanPlayer extends GameHumanPlayer implements Animator {
             //Find the (x,y) on the board that we touched, each tile is ~80px wide
             int tileX = (int) ((eventX - 450) / 75);
             int tileY = (int) ((eventY - 10) / 75);
-            //Sleep so we don't pick up multiple touches
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
             //Log.i("Location: ", "(" + tileX + ", " + tileY + ")");
 
             //Set the board x,y of the tile selected if one is selected
@@ -432,14 +442,37 @@ public class ScrabbleHumanPlayer extends GameHumanPlayer implements Animator {
             if (isTileReadyToMove){
                 if (tileTouched != -1){ //we've marked a tile ready to move
                     //Put the tile on the board and update it's location
-                    ourHand.get(tileTouched).setLocation(tileX, tileY);
-                    ourHand.get(tileTouched).setOnBoard(true);
+
+                    //Add the tile to the board if there isn't a tile with that location already
+                    //on the board
+                    synchronized (this) {
+                        boolean canPlace = true;
+                        for (ScrabbleTile boardTile : gameState.getBoardTiles()){
+                            if (tileX == boardTile.getXLocation() && tileY == boardTile.getYLocation()){
+                                canPlace = false;
+                                break;
+                            }
+                        }
+                        if (canPlace){
+                            ourHand.get(tileTouched).setLocation(tileX, tileY);
+                            ourHand.get(tileTouched).setOnBoard(true);
+                            gameState.addBoardTile(ourHand.get(tileTouched));
+                        }
+
+                    }
                 }
             }
-
+        }
+        else if (eventX > 1600 && eventX < 1700 && eventY > 50 && eventY < 315){
+            /** We touched the redo button **/
+            //Push all of the tiles on the board back into the player's hand
+            ArrayList<ScrabbleTile> ourHand = gameState.getPlayerHand(0);
+            for (ScrabbleTile tile : ourHand){
+                tile.setOnBoard(false);
+                gameState.getBoardTiles().remove(tile);
+            }
 
         }
-
 
     }
 

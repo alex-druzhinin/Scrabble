@@ -24,6 +24,7 @@ public class ScrabbleLocalGame extends LocalGame{
     public ScrabbleLocalGame(){
         super();
         masterState = new ScrabbleState();
+
     }
 
     /**
