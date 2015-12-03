@@ -91,7 +91,7 @@ public class ScrabbleHumanPlayer extends GameHumanPlayer implements Animator {
      * @param name
      *      The name of the player
      */
-    public ScrabbleHumanPlayer(String name, int playerID) {
+    public ScrabbleHumanPlayer(String name) {
         super(name);
 
         //Initialize our array lists

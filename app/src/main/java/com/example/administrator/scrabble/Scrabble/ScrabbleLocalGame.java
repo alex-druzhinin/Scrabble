@@ -5,6 +5,7 @@ import android.graphics.Point;
 import com.example.administrator.scrabble.game.GamePlayer;
 import com.example.administrator.scrabble.game.LocalGame;
 import com.example.administrator.scrabble.game.actionMsg.GameAction;
+import com.example.administrator.scrabble.game.infoMsg.GameOverInfo;
 
 import java.util.ArrayList;
 
@@ -24,7 +25,6 @@ public class ScrabbleLocalGame extends LocalGame{
     public ScrabbleLocalGame(){
         super();
         masterState = new ScrabbleState();
-
     }
 
     /**
@@ -110,6 +110,7 @@ public class ScrabbleLocalGame extends LocalGame{
             //Set the flag that says our player has exchanged for this turn
             ScrabbleHumanPlayer player = (ScrabbleHumanPlayer) action.getPlayer();
             player.setHasExchanged(true);
+            return true; //tiles have been exchanged
 
         }
         else if (action instanceof EndTurnAction){
@@ -159,17 +160,18 @@ public class ScrabbleLocalGame extends LocalGame{
         }
         else if (action instanceof EndGameAction){
 
+            EndGameAction endGameAction = (EndGameAction) action; //cast action to EndGameAction
 
+            GameOverInfo over = new GameOverInfo("Gameover");
 
+            sendAllUpdatedState(); //sends every player the state
 
-
+            for (GamePlayer p : this.players){
+                p.sendInfo(over);
+            }
         }
 
-
-
-
-
-        return false;
+        return false; //could not complete action
     }
 
 
