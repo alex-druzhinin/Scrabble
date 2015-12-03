@@ -69,7 +69,7 @@ public class ScrabbleComputerPlayer extends GameComputerPlayer {
 
         sleep(MIN_TIME); //delay for minimum time so changes do not look instantaneous to player
 
-        game.sendAction(new EndTurnAction(this, word)); //end turn
+        //game.sendAction(new EndTurnAction(this, word)); //end turn
     }
 
     /**
@@ -326,7 +326,7 @@ public class ScrabbleComputerPlayer extends GameComputerPlayer {
      * @return
      *      An EndTurnAction containing this player
      */
-    public GameAction endTurn(){
-        return new EndTurnAction(this, word);
-    }
+//    public GameAction endTurn(){
+//        return new EndTurnAction(this, word);
+//    }
 }

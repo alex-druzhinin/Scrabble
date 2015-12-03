@@ -20,14 +20,14 @@ public class ScrabbleBoardTest extends TestCase {
 
         //Generate a temp board
         tempBoardTiles.add(new ScrabbleTile('a', 0, 0, 0));
-        tempBoardTiles.add(new ScrabbleTile('b', 0, 0, 1));
-        tempBoardTiles.add(new ScrabbleTile('c', 0, 0, 2));
-        tempBoardTiles.add(new ScrabbleTile('d', 0, 0, 3));
+        tempBoardTiles.add(new ScrabbleTile('o', 0, 0, 1));
+        tempBoardTiles.add(new ScrabbleTile('u', 0, 0, 2));
+        tempBoardTiles.add(new ScrabbleTile('i', 0, 0, 3));
         testBoard.setBoard(tempBoardTiles);
 
         //Test some words against it
-        prospectiveWord.add(new ScrabbleTile('1', 0, 0, 4));
-        prospectiveWord.add(new ScrabbleTile('2', 0, 1, 4));
+        prospectiveWord.add(new ScrabbleTile('b', 0, 0, 4));
+        prospectiveWord.add(new ScrabbleTile('n', 0, 1, 4));
         for (ScrabbleTile tile : prospectiveWord){
             tempBoardTiles.add(tile);
         }

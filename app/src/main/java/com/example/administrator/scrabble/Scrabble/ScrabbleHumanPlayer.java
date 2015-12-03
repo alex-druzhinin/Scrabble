@@ -50,7 +50,7 @@ public class ScrabbleHumanPlayer extends GameHumanPlayer implements Animator {
 
     ArrayList<TextView> playerScoreViews; //each player's score views
     ArrayList<ScrabbleTile> tilesToExchange; //tiles a player wants to exchange
-    String word;
+    String wordToPlace;
 
     //The current activity we are looking at
     private Activity currentActivity;
@@ -236,8 +236,20 @@ public class ScrabbleHumanPlayer extends GameHumanPlayer implements Animator {
      * @return
      *      An EndTurnAction containing this player
      */
-    public GameAction endTurn(){
-        return new EndTurnAction(this, word);
+    public void endTurn(){
+        wordToPlace = "";
+        //Get my hand
+        ArrayList<ScrabbleTile> myHand = gameState.getPlayerHand(0);
+        ArrayList<ScrabbleTile> tilesToPlace = new ArrayList<>();
+        for (ScrabbleTile handTile : myHand){
+            if (handTile.isOnBoard()){
+                tilesToPlace.add(handTile);
+            }
+        }
+
+        //Send the game the tiles we want to place down
+        game.sendAction(new EndTurnAction(this, tilesToPlace));
+
     }
 
     public Boolean getHasExchanged() {
@@ -324,7 +336,7 @@ public class ScrabbleHumanPlayer extends GameHumanPlayer implements Animator {
             synchronized (this) {
                 for (ScrabbleTile tile : boardTiles) {
                     if (tile.isOnBoard()) {
-                        canvas.drawBitmap(alphabetImages[tile.getLetter() - 97], 450 + (tile.getXLocation() * 75), (tile.getYLocation() * 75) + 10, boardPaint);
+                        canvas.drawBitmap(alphabetImages[tile.getLetter() - 97], 449 + (tile.getXLocation() * 75), (tile.getYLocation() * 75) + 9, boardPaint);
                     }
                 }
             }
@@ -373,9 +385,9 @@ public class ScrabbleHumanPlayer extends GameHumanPlayer implements Animator {
         float eventX = event.getX();
         float eventY = event.getY();
 
-        if (eventX > 1600 && eventX < 1800 && eventY < 550 && eventY > 350){
+        if (eventX > 1600 && eventX < 1800 && eventY < 750 && eventY > 350){
             /** We touched the end turn button **/
-            game.sendAction(new EndTurnAction(this, ""));
+            this.endTurn();
         }
         else if(eventX > 200 && eventX < 300 && eventY > 200 && eventY < 1300){
             /** We touched a hand tile **/
@@ -411,12 +423,6 @@ public class ScrabbleHumanPlayer extends GameHumanPlayer implements Animator {
             //Find the (x,y) on the board that we touched, each tile is ~80px wide
             int tileX = (int) ((eventX - 450) / 75);
             int tileY = (int) ((eventY - 10) / 75);
-            //Sleep so we don't pick up multiple touches
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
             //Log.i("Location: ", "(" + tileX + ", " + tileY + ")");
 
             //Set the board x,y of the tile selected if one is selected
@@ -446,7 +452,7 @@ public class ScrabbleHumanPlayer extends GameHumanPlayer implements Animator {
                         if (canPlace){
                             ourHand.get(tileTouched).setLocation(tileX, tileY);
                             ourHand.get(tileTouched).setOnBoard(true);
-                            gameState.addBoardTile(ourHand.get(tileTouched), this);
+                            gameState.addBoardTile(ourHand.get(tileTouched));
                         }
 
                     }
@@ -459,6 +465,7 @@ public class ScrabbleHumanPlayer extends GameHumanPlayer implements Animator {
             ArrayList<ScrabbleTile> ourHand = gameState.getPlayerHand(0);
             for (ScrabbleTile tile : ourHand){
                 tile.setOnBoard(false);
+                gameState.getBoardTiles().remove(tile);
             }
 
         }
