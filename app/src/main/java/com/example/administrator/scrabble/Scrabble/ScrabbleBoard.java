@@ -37,6 +37,8 @@ public class ScrabbleBoard {
 
     ScrabbleTile temp;
 
+
+
     //The size of the tiles in pixels, used for drawing each bitmap
     private final int TILE_SIZE = 75;
 

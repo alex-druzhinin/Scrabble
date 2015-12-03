@@ -106,8 +106,6 @@ public class ScrabbleHumanPlayer extends GameHumanPlayer implements Animator {
 
         //Tell our player that no tiles have been touched
         tileTouched = -1;
-
-        this.playerID = playerID; //set playerID
     }
 
     @Override
