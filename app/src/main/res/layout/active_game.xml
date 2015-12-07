@@ -4,13 +4,15 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".midgameScreenshot"
-    android:orientation="vertical">
+    android:orientation="horizontal"
+    android:weightSum="1">
 
     <com.example.administrator.scrabble.Scrabble.ScrabbleSurfaceView
-        android:layout_width="903dp"
-        android:layout_height="574dp"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
         android:id="@+id/board_surfaceview"
         android:layout_gravity="center"
-        android:backgroundTint="#fff8f8f8" />
+        android:backgroundTint="#fff8f8f8"
+        android:layout_weight="1.72" />
 
 </LinearLayout>

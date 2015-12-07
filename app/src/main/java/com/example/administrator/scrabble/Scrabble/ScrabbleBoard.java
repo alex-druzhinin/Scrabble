@@ -16,6 +16,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 
 /**
@@ -112,19 +113,31 @@ public class ScrabbleBoard {
             }
         }
 
-        //Purge our list of any "" words
-        boolean[] badWords = new boolean[wordsMade.size()];
+        //Purge our list of any duplicates, blanks, etc.
+        ArrayList<String> badWords = new ArrayList<>();
         //Mark each word we need to remove
         for (String word : wordsMade){
+
+            //Remove the word if it is blank
             if (word.equals("")){
-                badWords[wordsMade.indexOf(word)] = true;
+                badWords.add(word);
+            }
+
+            //Remove the word if it is a single letter copy of one we placed,
+            //but only if we placed more than one tile
+            if (prospectiveTiles.size() > 1) {
+                for (ScrabbleTile tile : prospectiveTiles) {
+                    if (word.equals("" + tile.getLetter())) {
+                        badWords.add(word);
+                    }
+
+                }
             }
         }
+
         //Remove each word as per badWords array
-        for (int i = 0; i < badWords.length; i++){
-            if (badWords[i]){
-                wordsMade.remove(i);
-            }
+        for (String wordToRemove: badWords){
+            wordsMade.remove(wordToRemove);
         }
 
 
@@ -324,49 +337,6 @@ public class ScrabbleBoard {
 
         //If we get here then the tile isn't on a bonus tile
         return NO_BONUS;
-    }
-
-    /**
-     * checkWord            Checks if a given word is a scrabble word.
-     * @param word
-     * @return              True if word is a scrabble word. False if not.
-     */
-    public boolean checkWord(String word) {
-        try { //context.getAssets().getLocales()[0])
-            BufferedReader br = new BufferedReader(new FileReader(Resources.getSystem().getAssets().getLocales()[0]));
-            String line = br.readLine();
-
-            while (line != null) {
-                if(word.equalsIgnoreCase(line)) {
-                    br.close();
-                    return true;
-                }
-            }
-
-            br.close();
-        }
-        catch (FileNotFoundException fnfe) {
-            System.out.print("Dictionary not found");
-        }
-        catch (IOException e) {
-            System.out.print("IO exception");
-        }
-
-
-        /*//allows dictionary to be searched
-        Scanner scanner = new Scanner("scrabbleDict.txt");
-
-        //go through the scrabble dictionary
-        while (scanner.hasNextLine()) {
-            System.out.println(scanner.nextLine());
-            //check if word is a scrabble word
-            if(word.equalsIgnoreCase(scanner.nextLine())) {
-                return true; //if word is in scrabble dictionary
-            }
-        }
-
-        scanner.close(); //close scanner*/
-        return false; //if word is not in scrabble dictionary
     }
 
     // ----- Getters ----- //
