@@ -41,6 +41,7 @@ public class ScrabbleComputerPlayer extends GameComputerPlayer {
     protected int wordLength;
     protected boolean hard;
     protected int thresholdLength = 4;
+    protected int playerID;
 
     //The minimum amount of time (ms) the AI waits to perform an action
     final int MIN_TIME = 5000;
@@ -50,11 +51,12 @@ public class ScrabbleComputerPlayer extends GameComputerPlayer {
      *
      * @param name the player's name (e.g., "John")
      */
-    public ScrabbleComputerPlayer(String name, boolean hard) {
+    public ScrabbleComputerPlayer(String name, boolean hard, int playerID) {
         super(name);
         surrounding = new boolean[8];
         this.hard = hard;
         Arrays.fill(surrounding, false); //initialize as false
+        this.playerID = playerID;
 
         //assume can't place tiles in any direction
         maxAbove = 0;
@@ -77,6 +79,10 @@ public class ScrabbleComputerPlayer extends GameComputerPlayer {
         sleep(MIN_TIME); //delay for minimum time so changes do not look instantaneous to player
 
         game.sendAction(new EndTurnAction(this, wordTiles)); //end turn
+    }
+
+    public void setPlayerID(int playerID) {
+        this.playerID = playerID;
     }
 
     /**

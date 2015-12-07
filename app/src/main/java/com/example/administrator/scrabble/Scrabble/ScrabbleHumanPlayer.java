@@ -208,8 +208,8 @@ public class ScrabbleHumanPlayer extends GameHumanPlayer implements Animator {
         endTurnButton = BitmapFactory.decodeResource(currentResources, R.drawable.endturnbutton);
         handTileBorderMoving = BitmapFactory.decodeResource(currentResources, R.drawable.handtileborder_moving, opts);
         redoButton = BitmapFactory.decodeResource(currentResources, R.drawable.redobutton);
-        playerScoreBorder = BitmapFactory.decodeResource(currentResources, R.drawable.playerscoreborder);
-        currentPlayerIcon = BitmapFactory.decodeResource(currentResources, R.drawable.curr_player_icon);
+        //playerScoreBorder = BitmapFactory.decodeResource(currentResources, R.drawable.playerscoreborder);
+        //currentPlayerIcon = BitmapFactory.decodeResource(currentResources, R.drawable.curr_player_icon);
 
         //Give our tiles their images
         opts.inSampleSize = 2;

@@ -42,16 +42,16 @@ public class ScrabbleMainActivity extends GameMainActivity{
         });
 
         //The easy AI
-        availTypes.add(new GamePlayerType("Computer (Engineer)") {
+        availTypes.add(new GamePlayerType("Computer (Easy)") {
             public GamePlayer createPlayer(String name) {
-                return new ScrabbleComputerPlayer(name, false);
+                return new ScrabbleComputerPlayer(name, false, 1);
             }
         });
 
         //The hard AI
-        availTypes.add(new GamePlayerType("Computer (English Major)") {
+        availTypes.add(new GamePlayerType("Computer (Hard)") {
             public GamePlayer createPlayer(String name) {
-                return new ScrabbleComputerPlayer(name, true);
+                return new ScrabbleComputerPlayer(name, true, 1);
             }
         });
 
