@@ -158,19 +158,56 @@ public class ScrabbleState extends GameState {
     /**
      * Tallies the score for a given word
      *
-     * @param word the word we want to tally
+     * @param wordTiles     tiles that make up the newly placed word on the board
      * @return the value of the word, or 0 if the word was empty
      */
-    public int tallyWordScore(String word){
+    public int tallyWordScore(ArrayList<ScrabbleTile> wordTiles){
 
         int wordScore = 0;
+        boolean doubleWord = false;
+        boolean tripleWord = false;
 
-        //Convert the word to lower case
-        char wordChars[] = word.toLowerCase().toCharArray();
+        for (ScrabbleTile tile: wordTiles) {
+            tile.setBonusValue(scrabbleBoard.checkBonus(tile));
+        }
 
         //Look at each value in word and add it to wordScore
-        for (char c : wordChars){
-            wordScore += TILE_VAL[(int) c - 97];
+        for (ScrabbleTile tile : wordTiles){
+            if(ScrabbleBoard.NO_BONUS == tile.getBonusValue()) {
+                wordScore += TILE_VAL[(int) tile.getLetter() - 97];
+            }
+            else if(ScrabbleBoard.DOUBLE_LETTER == tile.getBonusValue()) {
+                wordScore += TILE_VAL[(int) tile.getLetter() - 97]*2;
+            }
+            else if(ScrabbleBoard.DOUBLE_WORD == tile.getBonusValue()) {
+                doubleWord = true;
+            }
+            else if(ScrabbleBoard.TRIPLE_LETTER == tile.getBonusValue()) {
+                wordScore += TILE_VAL[(int) tile.getLetter() - 97]*3;
+            }
+            else if(ScrabbleBoard.TRIPLE_WORD == tile.getBonusValue()) {
+                tripleWord = true;
+            }
+        }
+
+        if(doubleWord) {
+            wordScore = wordScore*2;
+        }
+
+        if(tripleWord) {
+            wordScore =    wordScore*3;
+        }
+
+        return wordScore;
+    }
+
+    public int tallyWordScore(String word){
+        int wordScore = 0;
+        char[] wordLetters = word.toCharArray();
+
+        //Look at each value in word and add it to wordScore
+        for (char letter: wordLetters){
+            wordScore += TILE_VAL[(int) letter - 97];
         }
 
         return wordScore;
@@ -357,6 +394,10 @@ public class ScrabbleState extends GameState {
                 return null;
         }
 
+    }
+
+    public void setBoardTiles(ArrayList<ScrabbleTile> newBoardTiles) {
+        scrabbleBoard.setBoard(newBoardTiles);
     }
 
     /**

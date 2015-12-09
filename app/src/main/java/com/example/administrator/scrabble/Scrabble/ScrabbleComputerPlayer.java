@@ -1,8 +1,12 @@
 package com.example.administrator.scrabble.Scrabble;
 
+import android.app.Activity;
+import android.content.Context;
 import android.content.res.Resources;
+import android.util.Log;
 
 import com.example.administrator.scrabble.game.GameComputerPlayer;
+import com.example.administrator.scrabble.game.GameMainActivity;
 import com.example.administrator.scrabble.game.actionMsg.GameAction;
 import com.example.administrator.scrabble.game.infoMsg.GameInfo;
 
@@ -10,6 +14,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
@@ -42,6 +47,11 @@ public class ScrabbleComputerPlayer extends GameComputerPlayer {
     protected boolean hard;
     protected int thresholdLength = 4;
     protected int playerID;
+    //get tiles in bag
+    protected ArrayList<ScrabbleTile> bagTiles;
+    protected boolean horizontalWord;
+    protected Activity currentActivity;
+    protected Context context;
 
     //The minimum amount of time (ms) the AI waits to perform an action
     final int MIN_TIME = 5000;
@@ -51,12 +61,17 @@ public class ScrabbleComputerPlayer extends GameComputerPlayer {
      *
      * @param name the player's name (e.g., "John")
      */
-    public ScrabbleComputerPlayer(String name, boolean hard, int playerID) {
+    public ScrabbleComputerPlayer(String name, boolean hard, int playerID, Activity activity) {
         super(name);
         surrounding = new boolean[8];
         this.hard = hard;
         Arrays.fill(surrounding, false); //initialize as false
         this.playerID = playerID;
+        wordTiles = new ArrayList<>();
+        boardTiles = new ArrayList<>();
+        bagTiles = new ArrayList<>();
+        horizontalWord = false;
+        this.currentActivity = activity;
 
         //assume can't place tiles in any direction
         maxAbove = 0;
@@ -70,6 +85,8 @@ public class ScrabbleComputerPlayer extends GameComputerPlayer {
         if( !(info instanceof ScrabbleState)) return; //not computer's turn if not scrabblestate
 
         currentState = (ScrabbleState) info; //cast to scrabblestate
+
+        bagTiles = currentState.getBagTiles();
 
         //get computer's hand
         boardTiles = currentState.getBoardTiles();
@@ -107,12 +124,13 @@ public class ScrabbleComputerPlayer extends GameComputerPlayer {
     protected boolean getWord(int targetIndex, int length) {
         ArrayList<ScrabbleTile> bagTiles = currentState.getBagTiles(); //get tiles in bag
         boolean isValid = true; //tells is word found is valid word
+        context = currentActivity.getApplicationContext();
+        try {
+            BufferedReader br = new BufferedReader(
+                    new InputStreamReader(context.getAssets().open("scrabbleDict.txt")));
+            String line;
 
-        try { //context.getAssets().getLocales()[0])
-            BufferedReader br = new BufferedReader(new FileReader(Resources.getSystem().getAssets().getLocales()[0]));
-            String line = br.readLine();
-
-            while (line != null) {
+            while ((line = br.readLine())!= null) {
                 if(line.length() == length && line.charAt(targetIndex) == target.getLetter()) {
                     boolean[] letterCheck = new boolean[line.length()]; //check which letters are in bag
 
@@ -198,7 +216,11 @@ public class ScrabbleComputerPlayer extends GameComputerPlayer {
                 targetIndex = maxAbove; //use all the valid spaces above the target in the word
             }
 
-            if(getWord(targetIndex, wordLength)) break; //have word so do not need to keep looking
+            if(getWord(targetIndex, wordLength)) {
+                horizontalWord = false;
+                placeWord(targetIndex, word);
+                break; //have word so do not need to keep looking
+            }
 
             //determine maxes in either horizontal direction
             if (!surrounding[0] && !surrounding[1] && !surrounding[2]) {
@@ -222,21 +244,10 @@ public class ScrabbleComputerPlayer extends GameComputerPlayer {
             } else if (maxLeft != 0 && maxRight != 0)
                 targetIndex = maxLeft; //use all open spaces to left of target on board up to max value
 
-            if(getWord(targetIndex, wordLength)) break;
-        }
-
-        //get tiles in bag
-        ArrayList<ScrabbleTile> bagTiles = currentState.getBagTiles();
-
-        //remove tiles in word from bag
-        for(int i = 0; i < wordLength; i++) {
-            //search through all tiles in the bag
-            for (ScrabbleTile bagTile : bagTiles) {
-                if(bagTile.getLetter() == word.charAt(i)) {
-                    bagTiles.remove(bagTile);
-                    wordTiles.add(bagTile);
-                    break; //break out of inner loop
-                }
+            if(getWord(targetIndex, wordLength)) {
+                horizontalWord = true;
+                placeWord(targetIndex, word);
+                break;
             }
         }
 
@@ -259,6 +270,31 @@ public class ScrabbleComputerPlayer extends GameComputerPlayer {
             if (availableSpaces > 1)
                 //random word length between or including 2 and 4
                 wordLength = r.nextInt(availableSpaces - 2) + 2;
+        }
+    }
+
+    protected void placeWord(int targetIndex, String word) {
+
+        //remove tiles in word from bag
+        for(int i = 0; i < wordLength; i++) {
+            System.out.print(word);
+            //search through all tiles in the bag
+            for (ScrabbleTile bagTile : bagTiles) {
+                if(bagTile.getLetter() == word.charAt(i)) {
+                    if(horizontalWord) {
+                        bagTile.setLocation(target.getXLocation()-targetIndex+i, target.getYLocation());
+                    }
+                    else {
+                        bagTile.setLocation(target.getXLocation(), target.getYLocation()-targetIndex+i);
+                    }
+
+                    if(i == targetIndex) { break; }
+
+                    bagTiles.remove(bagTile);
+                    wordTiles.add(bagTile);
+                    break; //break out of inner loop
+                }
+            }
         }
     }
 

@@ -132,6 +132,13 @@ public class ScrabbleLocalGame extends LocalGame{
             ArrayList<ScrabbleTile> wordTiles = endTurnAction.getWordTiles();
             ArrayList<ScrabbleTile> playerHand = masterState.getPlayerHand(getPlayerIdx(endTurnAction.getPlayer()));
             ArrayList<String> wordsMade = endTurnAction.getWordsMade();
+            ArrayList<ScrabbleTile> boardTiles = masterState.getBoardTiles();
+
+
+            String mainWord = "";
+            for (ScrabbleTile tile: wordTiles){
+                mainWord += tile.getLetter();
+            }
 
             //Remove the tiles from the player's hand
             for(ScrabbleTile wordTile: wordTiles) {
@@ -140,7 +147,12 @@ public class ScrabbleLocalGame extends LocalGame{
 
             //go through all words that are made by newly placed tiles
             for(String word: wordsMade) {
-                masterState.setPlayerScore(masterState.tallyWordScore(word)); //tally points from each word
+                if (word.equals(mainWord)){
+                    masterState.setPlayerScore(masterState.tallyWordScore(wordTiles)); //tally points from each word
+                }
+                else{
+                    masterState.setPlayerScore(masterState.tallyWordScore(word)); //tally points from each word
+                }
             }
 
             masterState.drawTiles(playerHand); //give player a new hand
@@ -154,9 +166,16 @@ public class ScrabbleLocalGame extends LocalGame{
                 masterState.setCurrentPlayer(1);
             }
 
+            if(getPlayerIdx(endTurnAction.getPlayer()) == 1) {
+                for(ScrabbleTile tile: wordTiles) {
+                    boardTiles.add(tile);
+                }
+
+                masterState.setBoardTiles(boardTiles);
+            }
+
             //Send the new state to each player
             this.sendAllUpdatedState();
-
 
             return true; //word was successfully placed and player's turn is over
         }

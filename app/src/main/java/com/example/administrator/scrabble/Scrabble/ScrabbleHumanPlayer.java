@@ -208,8 +208,8 @@ public class ScrabbleHumanPlayer extends GameHumanPlayer implements Animator {
         endTurnButton = BitmapFactory.decodeResource(currentResources, R.drawable.endturnbutton);
         handTileBorderMoving = BitmapFactory.decodeResource(currentResources, R.drawable.handtileborder_moving, opts);
         redoButton = BitmapFactory.decodeResource(currentResources, R.drawable.redobutton);
-        //playerScoreBorder = BitmapFactory.decodeResource(currentResources, R.drawable.playerscoreborder);
-        //currentPlayerIcon = BitmapFactory.decodeResource(currentResources, R.drawable.curr_player_icon);
+        playerScoreBorder = BitmapFactory.decodeResource(currentResources, R.drawable.playerscoreborder);
+        currentPlayerIcon = BitmapFactory.decodeResource(currentResources, R.drawable.curr_player_icon);
 
         //Give our tiles their images
         opts.inSampleSize = 2;
@@ -462,11 +462,12 @@ public class ScrabbleHumanPlayer extends GameHumanPlayer implements Animator {
             for(String word: words) {
                 //check if word is not valid
                 if (! this.checkWord(word)) {
+                    //The word was invalid, so let us know and stop doing stuff
+                    this.sendInfo(new IllegalMoveInfo());
+
                     //Reset our hand
                     this.resetHand();
 
-                    //The word was invalid, so let us know and stop doing stuff
-                    this.sendInfo(new IllegalMoveInfo());
                     return;
                 }
             }

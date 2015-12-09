@@ -1,6 +1,7 @@
 package com.example.administrator.scrabble.Scrabble;
 
 import android.annotation.TargetApi;
+import android.app.Activity;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
@@ -28,6 +29,7 @@ import java.util.ArrayList;
 public class ScrabbleMainActivity extends GameMainActivity{
 
     private final int PORT_NUM = 1337;
+    private Activity thisActivity = this;
 
     @Override
     public GameConfig createDefaultConfig() {
@@ -44,14 +46,14 @@ public class ScrabbleMainActivity extends GameMainActivity{
         //The easy AI
         availTypes.add(new GamePlayerType("Computer (Easy)") {
             public GamePlayer createPlayer(String name) {
-                return new ScrabbleComputerPlayer(name, false, 1);
+                return new ScrabbleComputerPlayer(name, false, 1, thisActivity);
             }
         });
 
         //The hard AI
         availTypes.add(new GamePlayerType("Computer (Hard)") {
             public GamePlayer createPlayer(String name) {
-                return new ScrabbleComputerPlayer(name, true, 1);
+                return new ScrabbleComputerPlayer(name, true, 1, thisActivity);
             }
         });
 
