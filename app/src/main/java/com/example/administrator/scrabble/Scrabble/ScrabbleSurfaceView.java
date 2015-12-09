@@ -28,4 +28,5 @@ public class ScrabbleSurfaceView extends AnimationSurface {
     public ScrabbleSurfaceView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
+
 }
