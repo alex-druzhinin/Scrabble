@@ -432,63 +432,49 @@ public class ScrabbleHumanPlayer extends GameHumanPlayer implements Animator {
      */
     @Override
     public void onTouch(MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+
             float eventX = event.getX();
             float eventY = event.getY();
 
             if (eventX > 1500 && eventX < 1700 && eventY < 750 && eventY > 350) {
                 /** We touched the end turn button **/
-
-                //We can't place 0 tiles
-                if (this.getTilesToPlace().size() == 0) {
-                    Toast.makeText(currentActivity.getApplicationContext(),
-                            "You must place at least one tile", Toast.LENGTH_SHORT).show();
-                    try {
-                        Thread.sleep(Toast.LENGTH_SHORT);
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    return;
-                }
-
-
-                //get player hand
-                gameState.getPlayerHand(this.playerID);
-
-                //Get the current board and the tiles wanted to be placed this turn
-                ScrabbleBoard board = gameState.getScrabbleBoard();
-                ArrayList<ScrabbleTile> boardTiles = board.getBoardTiles(); //get board tiles
-                ArrayList<ScrabbleTile> tilesToPlace = this.getTilesToPlace();
-
-                //We can't not make a word
-                ArrayList<String> words = board.getWords(tilesToPlace);
-//            if (words.size() == 0){
-//                this.sendInfo(new IllegalMoveInfo());
-//                return;
-//            }
-
-
-                //go through all the strings that are made on the board
-                for (String word : words) {
-                    //check if word is not valid
-                    if (!this.checkWord(word)) {
-                        //Reset our hand
-                        this.resetHand();
-
-                        //The word was invalid, so let us know and stop doing stuff
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    //We can't place 0 tiles
+                    if (this.getTilesToPlace().size() == 0) {
                         Toast.makeText(currentActivity.getApplicationContext(),
-                                "Sorry, the word you made is not a valid word",
-                                Toast.LENGTH_SHORT).show();
-                        try {
-                            Thread.sleep(Toast.LENGTH_SHORT);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
+                                "You must place at least one tile", Toast.LENGTH_SHORT).show();
                         return;
                     }
-                }
 
-                this.endTurn(tilesToPlace, words);
+
+                    //get player hand
+                    gameState.getPlayerHand(this.playerID);
+
+                    //Get the current board and the tiles wanted to be placed this turn
+                    ScrabbleBoard board = gameState.getScrabbleBoard();
+                    ArrayList<ScrabbleTile> boardTiles = board.getBoardTiles(); //get board tiles
+                    ArrayList<ScrabbleTile> tilesToPlace = this.getTilesToPlace();
+
+                    //We can't not make a word
+                    ArrayList<String> words = board.getWords(tilesToPlace);
+
+                    //go through all the strings that are made on the board
+                    for (String word : words) {
+                        //check if word is not valid
+                        if (!this.checkWord(word)) {
+                            //Reset our hand
+                            this.resetHand();
+
+                            //The word was invalid, so let us know and stop doing stuff
+                            Toast.makeText(currentActivity.getApplicationContext(),
+                                    "Sorry, the word you made is not a valid word",
+                                    Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+                    }
+
+                    this.endTurn(tilesToPlace, words);
+                }
             } else if (eventX > 200 && eventX < 300 && eventY > 135 && eventY < 1300) {
                 /** We touched a hand tile **/
                 //Find out which tile we touched
@@ -560,7 +546,7 @@ public class ScrabbleHumanPlayer extends GameHumanPlayer implements Animator {
             } else if (eventX > 1500 && eventX < 1600 && eventY > 50 && eventY < 315) {
                 this.resetHand();
             }
-        }
+
     }
 
     /**
