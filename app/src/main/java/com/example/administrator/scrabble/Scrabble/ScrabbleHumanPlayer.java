@@ -154,7 +154,7 @@ public class ScrabbleHumanPlayer extends GameHumanPlayer implements Animator {
         if (info instanceof IllegalMoveInfo){
 
             if (getTilesToPlace().size() == 0){
-                Toast.makeText(currentActivity.getApplicationContext(), "You must place at least one tile", Toast.LENGTH_SHORT).show();
+
             }
             else{
                 Toast.makeText(currentActivity.getApplicationContext(),
@@ -208,8 +208,8 @@ public class ScrabbleHumanPlayer extends GameHumanPlayer implements Animator {
         endTurnButton = BitmapFactory.decodeResource(currentResources, R.drawable.endturnbutton);
         handTileBorderMoving = BitmapFactory.decodeResource(currentResources, R.drawable.handtileborder_moving, opts);
         redoButton = BitmapFactory.decodeResource(currentResources, R.drawable.redobutton);
-        //playerScoreBorder = BitmapFactory.decodeResource(currentResources, R.drawable.playerscoreborder);
-        //currentPlayerIcon = BitmapFactory.decodeResource(currentResources, R.drawable.curr_player_icon);
+        playerScoreBorder = BitmapFactory.decodeResource(currentResources, R.drawable.playerscoreborder);
+        currentPlayerIcon = BitmapFactory.decodeResource(currentResources, R.drawable.curr_player_icon);
 
         //Give our tiles their images
         opts.inSampleSize = 2;
@@ -411,12 +411,16 @@ public class ScrabbleHumanPlayer extends GameHumanPlayer implements Animator {
         }
 
         /** Draw the player scores **/
-        int[] playerScores = gameState.getPlayerScores();
         canvas.drawBitmap(playerScoreBorder, 550, 1150, boardPaint);
         canvas.drawBitmap(playerScoreBorder, 950, 1150, boardPaint);
-        canvas.drawText("Player 1: " + playerScores[0], 600, 1200, playerScorePaint);
-        canvas.drawText("Player 2: " + playerScores[1], 1000, 1200, playerScorePaint);
-        canvas.drawBitmap(currentPlayerIcon, 675 + (gameState.getCurrentPlayer() * 400), 1230, boardPaint);
+        if (gameState != null) {
+            int[] playerScores = gameState.getPlayerScores();
+            canvas.drawText("Player 1: " + playerScores[0], 600, 1200, playerScorePaint);
+            canvas.drawText("Player 2: " + playerScores[1], 1000, 1200, playerScorePaint);
+            canvas.drawBitmap(currentPlayerIcon, 675 + (gameState.getCurrentPlayer() * 400), 1230, boardPaint);
+        }
+
+
 
     }
 
@@ -428,123 +432,134 @@ public class ScrabbleHumanPlayer extends GameHumanPlayer implements Animator {
      */
     @Override
     public void onTouch(MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            float eventX = event.getX();
+            float eventY = event.getY();
 
-        float eventX = event.getX();
-        float eventY = event.getY();
+            if (eventX > 1500 && eventX < 1700 && eventY < 750 && eventY > 350) {
+                /** We touched the end turn button **/
 
-        if (eventX > 1500 && eventX < 1700 && eventY < 750 && eventY > 350){
-            /** We touched the end turn button **/
-
-            //We can't place 0 tiles
-            if (this.getTilesToPlace().size() == 0){
-                this.sendInfo(new IllegalMoveInfo());
-                return;
-            }
-
-
-            //get player hand
-            gameState.getPlayerHand(this.playerID);
-
-            //Get the current board and the tiles wanted to be placed this turn
-            ScrabbleBoard board = gameState.getScrabbleBoard();
-            ArrayList<ScrabbleTile> boardTiles = board.getBoardTiles(); //get board tiles
-            ArrayList<ScrabbleTile> tilesToPlace = this.getTilesToPlace();
-
-            //We can't not make a word
-            ArrayList<String> words = board.getWords(tilesToPlace);
-            if (words.size() == 0){
-                this.sendInfo(new IllegalMoveInfo());
-                return;
-            }
-
-
-            //go through all the strings that are made on the board
-            for(String word: words) {
-                //check if word is not valid
-                if (! this.checkWord(word)) {
-                    //Reset our hand
-                    this.resetHand();
-
-                    //The word was invalid, so let us know and stop doing stuff
-                    this.sendInfo(new IllegalMoveInfo());
+                //We can't place 0 tiles
+                if (this.getTilesToPlace().size() == 0) {
+                    Toast.makeText(currentActivity.getApplicationContext(),
+                            "You must place at least one tile", Toast.LENGTH_SHORT).show();
+                    try {
+                        Thread.sleep(Toast.LENGTH_SHORT);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                     return;
                 }
-            }
 
-            this.endTurn(tilesToPlace, words);
-        }
-        else if(eventX > 200 && eventX < 300 && eventY > 200 && eventY < 1300){
-            /** We touched a hand tile **/
-            //Find out which tile we touched
-            tileTouched = (int) ((eventY - 150) / 120); // should be 0->6
-            if (tileTouched > 6){
-                tileTouched = 6;
-            }
-            if (tileTouched < 0){
-                tileTouched = 0;
-            }
 
-            ArrayList<ScrabbleTile> ourHand = gameState.getPlayerHand(this.playerID);
-            //Unmark every tile that might be marked
-            for (ScrabbleTile tile : ourHand){
-                if (tile.isReadyToMove()){
-                    tile.setReadyToMove(false);
-                }
-            }
+                //get player hand
+                gameState.getPlayerHand(this.playerID);
 
-            //Tell the tile that it's moving
-            ourHand.get(tileTouched).setReadyToMove(! ourHand.get(tileTouched).isReadyToMove());
-            try {
-                Thread.sleep(50);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+                //Get the current board and the tiles wanted to be placed this turn
+                ScrabbleBoard board = gameState.getScrabbleBoard();
+                ArrayList<ScrabbleTile> boardTiles = board.getBoardTiles(); //get board tiles
+                ArrayList<ScrabbleTile> tilesToPlace = this.getTilesToPlace();
 
-            gameState.setPlayerHand(this.playerID, ourHand);
-        }
-        else if (eventX >= 350 && eventX <= 1475 && eventY >= 10 && eventY <= 1100){
-            /** We touched a spot on the board **/
-            //Find the (x,y) on the board that we touched, each tile is ~80px wide
-            int tileX = (int) ((eventX - 350) / 75);
-            int tileY = (int) ((eventY - 10) / 75);
-            //Log.i("Location: ", "(" + tileX + ", " + tileY + ")");
+                //We can't not make a word
+                ArrayList<String> words = board.getWords(tilesToPlace);
+//            if (words.size() == 0){
+//                this.sendInfo(new IllegalMoveInfo());
+//                return;
+//            }
 
-            //Set the board x,y of the tile selected if one is selected
-            Boolean isTileReadyToMove = false;
-            ArrayList<ScrabbleTile> ourHand = gameState.getPlayerHand(this.playerID);
-            for (ScrabbleTile tile : ourHand){
-                if (tile.isReadyToMove()){
-                    isTileReadyToMove = true;
-                    break;
-                }
-            }
 
-            if (isTileReadyToMove){
-                if (tileTouched != -1){ //we've marked a tile ready to move
-                    //Put the tile on the board and update it's location
+                //go through all the strings that are made on the board
+                for (String word : words) {
+                    //check if word is not valid
+                    if (!this.checkWord(word)) {
+                        //Reset our hand
+                        this.resetHand();
 
-                    //Add the tile to the board if there isn't a tile with that location already
-                    //on the board
-                    synchronized (this) {
-                        boolean canPlace = true;
-                        for (ScrabbleTile boardTile : gameState.getBoardTiles()){
-                            if (tileX == boardTile.getXLocation() && tileY == boardTile.getYLocation()){
-                                canPlace = false;
-                                break;
-                            }
+                        //The word was invalid, so let us know and stop doing stuff
+                        Toast.makeText(currentActivity.getApplicationContext(),
+                                "Sorry, the word you made is not a valid word",
+                                Toast.LENGTH_SHORT).show();
+                        try {
+                            Thread.sleep(Toast.LENGTH_SHORT);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
                         }
-                        if (canPlace){
-                            ourHand.get(tileTouched).setLocation(tileX, tileY);
-                            ourHand.get(tileTouched).setOnBoard(true);
-                            gameState.addBoardTile(ourHand.get(tileTouched));
-                        }
-
+                        return;
                     }
                 }
+
+                this.endTurn(tilesToPlace, words);
+            } else if (eventX > 200 && eventX < 300 && eventY > 135 && eventY < 1300) {
+                /** We touched a hand tile **/
+                //Find out which tile we touched
+                tileTouched = (int) ((eventY - 150) / 120); // should be 0->6
+                if (tileTouched > 6) {
+                    tileTouched = 6;
+                }
+                if (tileTouched < 0) {
+                    tileTouched = 0;
+                }
+
+                ArrayList<ScrabbleTile> ourHand = gameState.getPlayerHand(this.playerID);
+                //Unmark every tile that might be marked
+                for (ScrabbleTile tile : ourHand) {
+                    if (tile.isReadyToMove()) {
+                        tile.setReadyToMove(false);
+                    }
+                }
+
+                //Tell the tile that it's moving
+                ourHand.get(tileTouched).setReadyToMove(!ourHand.get(tileTouched).isReadyToMove());
+                try {
+                    Thread.sleep(50);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                gameState.setPlayerHand(this.playerID, ourHand);
+            } else if (eventX >= 350 && eventX <= 1475 && eventY >= 10 && eventY <= 1100) {
+                /** We touched a spot on the board **/
+                //Find the (x,y) on the board that we touched, each tile is ~80px wide
+                int tileX = (int) ((eventX - 350) / 75);
+                int tileY = (int) ((eventY - 10) / 75);
+                //Log.i("Location: ", "(" + tileX + ", " + tileY + ")");
+
+                //Set the board x,y of the tile selected if one is selected
+                Boolean isTileReadyToMove = false;
+                ArrayList<ScrabbleTile> ourHand = gameState.getPlayerHand(this.playerID);
+                for (ScrabbleTile tile : ourHand) {
+                    if (tile.isReadyToMove()) {
+                        isTileReadyToMove = true;
+                        break;
+                    }
+                }
+
+                if (isTileReadyToMove) {
+                    if (tileTouched != -1) { //we've marked a tile ready to move
+                        //Put the tile on the board and update it's location
+
+                        //Add the tile to the board if there isn't a tile with that location already
+                        //on the board
+                        synchronized (this) {
+                            boolean canPlace = true;
+                            for (ScrabbleTile boardTile : gameState.getBoardTiles()) {
+                                if (tileX == boardTile.getXLocation() && tileY == boardTile.getYLocation()) {
+                                    canPlace = false;
+                                    break;
+                                }
+                            }
+                            if (canPlace) {
+                                ourHand.get(tileTouched).setLocation(tileX, tileY);
+                                ourHand.get(tileTouched).setOnBoard(true);
+                                gameState.addBoardTile(ourHand.get(tileTouched));
+                            }
+
+                        }
+                    }
+                }
+            } else if (eventX > 1500 && eventX < 1600 && eventY > 50 && eventY < 315) {
+                this.resetHand();
             }
-        }
-        else if (eventX > 1500 && eventX < 1600 && eventY > 50 && eventY < 315){
-            this.resetHand();
         }
     }
 
