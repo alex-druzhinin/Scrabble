@@ -50,8 +50,8 @@ public class ScrabbleComputerPlayer extends GameComputerPlayer {
     //get tiles in bag
     protected ArrayList<ScrabbleTile> bagTiles;
     protected boolean horizontalWord;
-    protected Activity currentActivity;
     protected Context context;
+    protected Activity currentActivity;
 
     //The minimum amount of time (ms) the AI waits to perform an action
     final int MIN_TIME = 5000;
@@ -71,7 +71,7 @@ public class ScrabbleComputerPlayer extends GameComputerPlayer {
         boardTiles = new ArrayList<>();
         bagTiles = new ArrayList<>();
         horizontalWord = false;
-        this.currentActivity = activity;
+        currentActivity = activity;
 
         //assume can't place tiles in any direction
         maxAbove = 0;
@@ -93,10 +93,16 @@ public class ScrabbleComputerPlayer extends GameComputerPlayer {
 
         findPlace(); //find place for word
 
-        sleep(MIN_TIME); //delay for minimum time so changes do not look instantaneous to player
+        sleep(30000); //delay for minimum time so changes do not look instantaneous to player
 
         game.sendAction(new EndTurnAction(this, wordTiles)); //end turn
     }
+
+    /*@Override
+    public void setAsGui(GameMainActivity activity) {
+        context = activity.getApplicationContext();
+    }
+    */
 
     public void setPlayerID(int playerID) {
         this.playerID = playerID;
@@ -125,6 +131,7 @@ public class ScrabbleComputerPlayer extends GameComputerPlayer {
         ArrayList<ScrabbleTile> bagTiles = currentState.getBagTiles(); //get tiles in bag
         boolean isValid = true; //tells is word found is valid word
         context = currentActivity.getApplicationContext();
+        //length = 4;
         try {
             BufferedReader br = new BufferedReader(
                     new InputStreamReader(context.getAssets().open("scrabbleDict.txt")));
@@ -207,19 +214,20 @@ public class ScrabbleComputerPlayer extends GameComputerPlayer {
 
             getWordLength(); //get length of word
 
-            //determine targetIndex of vertical word:
-            if (maxAbove == 0 && maxBelow != 0) {
-                targetIndex = 0; //target board tile is first in word
-            } else if (maxBelow == 0 && maxAbove != 0) {
-                targetIndex = wordLength-1; //target board tile is last in word
-            } else if ((maxAbove != 0) && (maxBelow != 0)) {
-                targetIndex = maxAbove; //use all the valid spaces above the target in the word
-            }
+            if(wordLength > 0) {
+                //determine targetIndex of vertical word:
+                if (maxAbove == 0 && maxBelow != 0) {
+                    targetIndex = 0; //target board tile is first in word
+                } else if (maxBelow == 0 && maxAbove != 0) {
+                    targetIndex = wordLength - 1; //target board tile is last in word
+                } else if ((maxAbove != 0) && (maxBelow != 0)) {
+                    targetIndex = 1; //use all the valid spaces above the target in the word
+                }
 
-            if(getWord(targetIndex, wordLength)) {
-                horizontalWord = false;
-                placeWord(targetIndex, word);
-                break; //have word so do not need to keep looking
+                if (getWord(targetIndex, wordLength)) {
+                    horizontalWord = false;
+                    break; //have word so do not need to keep looking
+                }
             }
 
             //determine maxes in either horizontal direction
@@ -236,21 +244,23 @@ public class ScrabbleComputerPlayer extends GameComputerPlayer {
 
             getWordLength(); //get length of word
 
-            //determine targetIndex:
-            if (maxLeft == 0) {
-                targetIndex = 0; //make target board tile the first letter
-            } else if (maxRight == 0) {
-                targetIndex = wordLength-1; //make target board tile the last letter
-            } else if (maxLeft != 0 && maxRight != 0)
-                targetIndex = maxLeft; //use all open spaces to left of target on board up to max value
+            if(wordLength > 0) {
+                //determine targetIndex:
+                if (maxLeft == 0) {
+                    targetIndex = 0; //make target board tile the first letter
+                } else if (maxRight == 0) {
+                    targetIndex = wordLength - 1; //make target board tile the last letter
+                } else if (maxLeft != 0 && maxRight != 0)
+                    targetIndex = 1; //use all open spaces to left of target on board up to max value
 
-            if(getWord(targetIndex, wordLength)) {
-                horizontalWord = true;
-                placeWord(targetIndex, word);
-                break;
+                if (getWord(targetIndex, wordLength)) {
+                    horizontalWord = true;
+                    break;
+                }
             }
         }
 
+        placeWord(targetIndex, word);
         currentState.setBagTiles(bagTiles); //take tiles from word from the bag
     }
 
@@ -267,9 +277,10 @@ public class ScrabbleComputerPlayer extends GameComputerPlayer {
         else {
             if (availableSpaces > thresholdLength) availableSpaces = thresholdLength;
             //go to checking horizontally;
-            if (availableSpaces > 1)
+            if (availableSpaces > 1) {
                 //random word length between or including 2 and 4
                 wordLength = r.nextInt(availableSpaces - 2) + 2;
+            }
         }
     }
 
@@ -277,9 +288,11 @@ public class ScrabbleComputerPlayer extends GameComputerPlayer {
 
         //remove tiles in word from bag
         for(int i = 0; i < wordLength; i++) {
-            System.out.print(word);
             //search through all tiles in the bag
             for (ScrabbleTile bagTile : bagTiles) {
+
+                if(i == targetIndex) { break; }
+
                 if(bagTile.getLetter() == word.charAt(i)) {
                     if(horizontalWord) {
                         bagTile.setLocation(target.getXLocation()-targetIndex+i, target.getYLocation());
@@ -287,8 +300,6 @@ public class ScrabbleComputerPlayer extends GameComputerPlayer {
                     else {
                         bagTile.setLocation(target.getXLocation(), target.getYLocation()-targetIndex+i);
                     }
-
-                    if(i == targetIndex) { break; }
 
                     bagTiles.remove(bagTile);
                     wordTiles.add(bagTile);
@@ -303,7 +314,7 @@ public class ScrabbleComputerPlayer extends GameComputerPlayer {
      *                                  can be used for a word.
      */
     protected void maxLettersAbove() {
-        boolean noSpace = true; //empty spaces to move to
+        boolean noSpace = false; //empty spaces to move to
         boolean left = false; //space on top left diagonal to potential space is open
         boolean right = false; //space on top right diagonal to potential space is open
         boolean up = false; //space above potential space
@@ -311,7 +322,7 @@ public class ScrabbleComputerPlayer extends GameComputerPlayer {
         int y = target.getYLocation(); //target y position
         maxAbove = 0; //init max spaces can move above as 0
 
-        for(int i = 1; !noSpace; i++) {
+        for(int i = 1; !noSpace && i < 8; i++) {
             left = currentState.isTileThere(x-1, y-i-1); //check top left diagonal
             right = currentState.isTileThere(x+1, y-i-1); //check top right diagonal
             up = currentState.isTileThere(x, y-i-1); //check space above potential space
@@ -328,7 +339,7 @@ public class ScrabbleComputerPlayer extends GameComputerPlayer {
      *                                  can be used for a word.
      */
     protected void maxLettersBelow() {
-        boolean noSpace = true; //empty spaces to move to
+        boolean noSpace = false; //empty spaces to move to
         boolean left = false; //space on bottom left diagonal to potential space is open
         boolean right = false; //space on bottom right diagonal to potential space is open
         boolean down = false; //space below potential space
@@ -336,7 +347,7 @@ public class ScrabbleComputerPlayer extends GameComputerPlayer {
         int y = target.getYLocation();  //target y position
         maxBelow = 0; //init max spaces can move below as 0
 
-        for(int i = 1; !noSpace; i++) {
+        for(int i = 1; !noSpace && i < 8; i++) {
             left = currentState.isTileThere(x-1, y+i+1); //check bottom left diagonal
             right = currentState.isTileThere(x+1, y+i+1); //check bottom right diagonal
             down = currentState.isTileThere(x, y+i+1); //check space below potential space
@@ -353,7 +364,7 @@ public class ScrabbleComputerPlayer extends GameComputerPlayer {
      *                                  can be used for a word.
      */
     protected void maxLettersLeft() {
-        boolean noSpace = true; //empty spaces to move to
+        boolean noSpace = false; //empty spaces to move to
         boolean leftTop = false; //space on top left diagonal to potential space is open
         boolean leftBottom = false; //space on bottom left diagonal to potential space is open
         boolean left = false; //space to left of potential space
@@ -361,7 +372,7 @@ public class ScrabbleComputerPlayer extends GameComputerPlayer {
         int y = target.getYLocation(); //target y position
         maxLeft = 0; //init max spaces can move to left as 0
 
-        for(int i = 1; !noSpace; i++) {
+        for(int i = 1; !noSpace && i < 8; i++) {
             leftTop = currentState.isTileThere(x-i-1, y-1); //check top left diagonal
             leftBottom = currentState.isTileThere(x-i-1, y+1); //check bottom left diagonal
             left = currentState.isTileThere(x-i-1, y); //check spaces to left of potential space
@@ -379,7 +390,7 @@ public class ScrabbleComputerPlayer extends GameComputerPlayer {
      *                              can be used for a word.
      */
     protected void maxLettersRight() {
-        boolean noSpace = true; //empty spaces to move to
+        boolean noSpace = false; //empty spaces to move to
         boolean rightTop = false; //space on top right diagonal to potential space is open
         boolean rightBottom = false; //space on bottom right diagonal to potential space is open
         boolean right = false; //space to right of potential space
@@ -388,7 +399,7 @@ public class ScrabbleComputerPlayer extends GameComputerPlayer {
         maxRight = 0; //init max spaces can move to right as 0
 
         //check for valid tile placement to right until a right movement is not valid
-        for(int i = 1; !noSpace; i++) {
+        for(int i = 1; !noSpace && i < 8; i++) {
             rightTop = currentState.isTileThere(x+i+1, y-1); //check top right diagonal
             rightBottom = currentState.isTileThere(x+i+1, y+1); //check bottom right diagonal
             right = currentState.isTileThere(x+i+1, y); //check spaces to right of potential space

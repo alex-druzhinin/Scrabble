@@ -29,7 +29,7 @@ import java.util.ArrayList;
 public class ScrabbleMainActivity extends GameMainActivity{
 
     private final int PORT_NUM = 1337;
-    private Activity thisActivity = this;
+    private Activity activity = this;
 
     @Override
     public GameConfig createDefaultConfig() {
@@ -46,14 +46,14 @@ public class ScrabbleMainActivity extends GameMainActivity{
         //The easy AI
         availTypes.add(new GamePlayerType("Computer (Easy)") {
             public GamePlayer createPlayer(String name) {
-                return new ScrabbleComputerPlayer(name, false, 1, thisActivity);
+                return new ScrabbleComputerPlayer(name, false, 1, activity);
             }
         });
 
         //The hard AI
         availTypes.add(new GamePlayerType("Computer (Hard)") {
             public GamePlayer createPlayer(String name) {
-                return new ScrabbleComputerPlayer(name, true, 1, thisActivity);
+                return new ScrabbleComputerPlayer(name, true, 1, activity);
             }
         });
 

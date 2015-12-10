@@ -1,5 +1,7 @@
 package com.example.administrator.scrabble.Scrabble;
 
+import android.app.Activity;
+import android.content.Context;
 import android.graphics.Point;
 import android.view.View;
 
@@ -29,6 +31,8 @@ public class ScrabbleState extends GameState {
 
     //Our random number generator
     private Random rand = new Random();
+
+    private Context currentContext;
 
     // The arrays that hold the tiles in the bag and on the board
     private ArrayList<ScrabbleTile> bagTiles;
