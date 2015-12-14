@@ -9,6 +9,7 @@ import com.example.administrator.scrabble.game.GameComputerPlayer;
 import com.example.administrator.scrabble.game.GameMainActivity;
 import com.example.administrator.scrabble.game.actionMsg.GameAction;
 import com.example.administrator.scrabble.game.infoMsg.GameInfo;
+import com.example.administrator.scrabble.game.infoMsg.NotYourTurnInfo;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -47,8 +48,6 @@ public class ScrabbleComputerPlayer extends GameComputerPlayer {
     protected boolean hard;
     protected int thresholdLength = 4;
     protected int playerID;
-    //get tiles in bag
-    protected ArrayList<ScrabbleTile> bagTiles;
     protected boolean horizontalWord;
     protected Context context;
     protected Activity currentActivity;
@@ -69,7 +68,6 @@ public class ScrabbleComputerPlayer extends GameComputerPlayer {
         this.playerID = playerID;
         wordTiles = new ArrayList<>();
         boardTiles = new ArrayList<>();
-        bagTiles = new ArrayList<>();
         horizontalWord = false;
         currentActivity = activity;
 
@@ -82,11 +80,11 @@ public class ScrabbleComputerPlayer extends GameComputerPlayer {
 
     @Override
     protected void receiveInfo(GameInfo info) {
-        if( !(info instanceof ScrabbleState)) return; //not computer's turn if not scrabblestate
+        if( !(info instanceof ScrabbleState)) return; //return if not scrabblestate
 
         currentState = (ScrabbleState) info; //cast to scrabblestate
 
-        bagTiles = currentState.getBagTiles();
+        if(currentState.getCurrentPlayer() != 1) return; //return if not computer's turn
 
         //get computer's hand
         boardTiles = currentState.getBoardTiles();
@@ -95,14 +93,9 @@ public class ScrabbleComputerPlayer extends GameComputerPlayer {
 
         sleep(30000); //delay for minimum time so changes do not look instantaneous to player
 
+
         game.sendAction(new EndTurnAction(this, wordTiles)); //end turn
     }
-
-    /*@Override
-    public void setAsGui(GameMainActivity activity) {
-        context = activity.getApplicationContext();
-    }
-    */
 
     public void setPlayerID(int playerID) {
         this.playerID = playerID;
@@ -120,6 +113,7 @@ public class ScrabbleComputerPlayer extends GameComputerPlayer {
         for(int i = -1; i < 2; i++) {
             for(int j = -1; j < 2; j++) {
                 if(i == 0 && j == 0) { continue; } //do not need to check if target is there
+
                 //assign true if there is a tile there and false if there is not
                 surrounding[index] = currentState.isTileThere(target.getXLocation()+i, target.getYLocation()+j);
                 ++index;
@@ -200,11 +194,9 @@ public class ScrabbleComputerPlayer extends GameComputerPlayer {
             }
 
             //determine maxes in either vertical direction
-            if (!surrounding[0] && !surrounding[3] && !surrounding[5]) {
+            if (!surrounding[0] && !surrounding[3] && !surrounding[5] &&
+                    !surrounding[2] && !surrounding[4] && !surrounding[7]) {
                 this.maxLettersAbove(); //find the max number of valid spaces above target
-            }
-
-            if (!surrounding[2] && !surrounding[4] && !surrounding[7]) {
                 this.maxLettersBelow(); //find the max number of valid spaces below target
             }
 
@@ -231,11 +223,10 @@ public class ScrabbleComputerPlayer extends GameComputerPlayer {
             }
 
             //determine maxes in either horizontal direction
-            if (!surrounding[0] && !surrounding[1] && !surrounding[2]) {
+            if (!surrounding[0] && !surrounding[1] && !surrounding[2] &&
+                    !surrounding[5] && !surrounding[6] && !surrounding[7]) {
                 maxLettersLeft();
-            }
-            if (!surrounding[5] && !surrounding[6] && !surrounding[7]) {
-                this.maxLettersRight();
+                maxLettersRight();
             }
 
             if(maxLeft > thresholdLength) maxLeft = thresholdLength; //limit maximum spaces to left
@@ -261,7 +252,6 @@ public class ScrabbleComputerPlayer extends GameComputerPlayer {
         }
 
         placeWord(targetIndex, word);
-        currentState.setBagTiles(bagTiles); //take tiles from word from the bag
     }
 
     protected void getWordLength() {
@@ -285,6 +275,7 @@ public class ScrabbleComputerPlayer extends GameComputerPlayer {
     }
 
     protected void placeWord(int targetIndex, String word) {
+        ArrayList<ScrabbleTile> bagTiles = currentState.getBagTiles(); //get bag tiles
 
         //remove tiles in word from bag
         for(int i = 0; i < wordLength; i++) {
@@ -307,6 +298,8 @@ public class ScrabbleComputerPlayer extends GameComputerPlayer {
                 }
             }
         }
+
+        currentState.setBagTiles(bagTiles); //update bag tiles
     }
 
     /**

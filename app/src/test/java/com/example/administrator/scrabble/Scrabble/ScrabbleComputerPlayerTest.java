@@ -1,5 +1,9 @@
 package com.example.administrator.scrabble.Scrabble;
 
+import android.app.Activity;
+
+import com.example.administrator.scrabble.game.infoMsg.GameInfo;
+
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -8,6 +12,13 @@ import static org.junit.Assert.*;
  * Created by chunm18 on 12/2/2015.
  */
 public class ScrabbleComputerPlayerTest {
+
+    @Test
+    public void testComputerPlayer() throws Exception {
+        Activity activity = new Activity();
+        ScrabbleComputerPlayer player = new ScrabbleComputerPlayer("Hi", false, 1, activity);
+        assertNotNull(player);
+    }
 
     @Test
     public void testReceiveInfo() throws Exception {

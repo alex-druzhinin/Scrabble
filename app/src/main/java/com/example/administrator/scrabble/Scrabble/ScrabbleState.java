@@ -74,7 +74,8 @@ public class ScrabbleState extends GameState {
         player4Hand = new ArrayList<>();
 
         //initialize player scores
-        playerScores = new int[4];
+        playerScores = new int[2];
+        currentPlayer = 0; //first player is human player
 
         //initialize arraylists for tiles
         bagTiles = new ArrayList<>();
@@ -103,18 +104,6 @@ public class ScrabbleState extends GameState {
 
     }
 
-    public void setCurrentPlayer(int player) {
-        currentPlayer = player;
-    }
-
-    public void setPlayerScore(int points) {
-        playerScores[currentPlayer] += points; //adds points to current player
-    }
-
-    public void setBagTiles(ArrayList<ScrabbleTile> updatedBagTiles) {
-        bagTiles = updatedBagTiles; //update bag tiles
-    }
-
     /**
      * Copy Constructor: Copies previous game state into a new game state.
      * @param currentState
@@ -139,6 +128,18 @@ public class ScrabbleState extends GameState {
 
         //initialize current player
         this.currentPlayer = currentState.getCurrentPlayer();
+    }
+
+    public void setCurrentPlayer(int player) {
+        currentPlayer = player;
+    }
+
+    public void setPlayerScore(int points) {
+        playerScores[currentPlayer] += points; //adds points to current player
+    }
+
+    public void setBagTiles(ArrayList<ScrabbleTile> updatedBagTiles) {
+        bagTiles = updatedBagTiles; //update bag tiles
     }
 
 
@@ -385,18 +386,9 @@ public class ScrabbleState extends GameState {
      */
     public ArrayList<ScrabbleTile> getPlayerHand(int playerId){
 
-        switch (playerId){
-            case 0:
-                return player1Hand;
-            case 1:
-                return player2Hand;
-            case 2:
-                return player3Hand;
-            case 3:
-                return player4Hand;
-            default:
-                return null;
-        }
+        if(playerId != 0) { return null; } //only human player has a hand
+
+        return player1Hand;
 
     }
 
@@ -415,17 +407,8 @@ public class ScrabbleState extends GameState {
      */
     public void setPlayerHand(int playerId, ArrayList<ScrabbleTile> newHand){
 
-        switch (playerId){
-            case 0:
-                player1Hand = newHand;
-            case 1:
-                player2Hand = newHand;
-            case 2:
-                player3Hand = newHand;
-            case 3:
-                player4Hand = newHand;
-            default:
-                return;
+        if(playerId == 0) {
+            player1Hand = newHand;
         }
 
     }
