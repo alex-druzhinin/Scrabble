@@ -53,7 +53,7 @@ public class ScrabbleComputerPlayer extends GameComputerPlayer {
     protected Activity currentActivity;
 
     //The minimum amount of time (ms) the AI waits to perform an action
-    final int MIN_TIME = 5000;
+    final int MIN_TIME = 1000;
 
     /**
      * constructor
@@ -91,7 +91,7 @@ public class ScrabbleComputerPlayer extends GameComputerPlayer {
 
         findPlace(); //find place for word
 
-        sleep(30000); //delay for minimum time so changes do not look instantaneous to player
+        sleep(MIN_TIME); //delay for minimum time so changes do not look instantaneous to player
 
 
         game.sendAction(new EndTurnAction(this, wordTiles)); //end turn
@@ -323,6 +323,10 @@ public class ScrabbleComputerPlayer extends GameComputerPlayer {
             if(left == false && right == false && up == false) {
                 ++maxAbove; //increment number of tiles that can go above the target
             }
+            else if(!left && !right && up) {
+                ++maxAbove;
+                break;
+            }
             else { noSpace = true; } //if there is a tile
         }
     }
@@ -347,6 +351,10 @@ public class ScrabbleComputerPlayer extends GameComputerPlayer {
 
             if(left == false && right == false && down == false) {
                 ++maxBelow; //increment number of tiles that can go below the target
+            }
+            else if(!left && !right && down) {
+                ++maxBelow;
+                break;
             }
             else { noSpace = true; } //if there is a tile
         }
@@ -374,6 +382,10 @@ public class ScrabbleComputerPlayer extends GameComputerPlayer {
             if(left == false && leftBottom == false && leftTop == false) {
                 ++maxLeft; //increment number of tiles that can go left of the target
             }
+            else if(!leftBottom && !leftTop && left) {
+                ++maxLeft;
+                break;
+            }
             else { noSpace = true; } //if there is a tile
         }
     }
@@ -400,6 +412,10 @@ public class ScrabbleComputerPlayer extends GameComputerPlayer {
             //check if valid tile placement spot
             if(right == false && rightBottom == false && rightTop == false) {
                 ++maxRight; //increment number of tiles that can go above the target
+            }
+            else if(!rightBottom && !rightTop && right) {
+                ++maxRight;
+                break;
             }
             else { noSpace = true; } //if there is a tile
         }
