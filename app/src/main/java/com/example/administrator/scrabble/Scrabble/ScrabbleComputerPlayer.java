@@ -91,10 +91,25 @@ public class ScrabbleComputerPlayer extends GameComputerPlayer {
 
         findPlace(); //find place for word
 
+        updateBoardTiles(); //updates tiles on board
+
+        //set computer player's score
+        currentState.setPlayerScore(currentState.tallyWordScore(wordTiles)+target.getValue());
+
         sleep(MIN_TIME); //delay for minimum time so changes do not look instantaneous to player
 
-
         game.sendAction(new EndTurnAction(this, wordTiles)); //end turn
+    }
+
+    private void updateBoardTiles() {
+
+        //add word tiles to the board
+        for(ScrabbleTile tile: wordTiles) {
+            boardTiles.add(tile);
+        }
+
+        //update board tiles
+        currentState.setBoardTiles(boardTiles);
     }
 
     public void setPlayerID(int playerID) {

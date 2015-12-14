@@ -123,55 +123,58 @@ public class ScrabbleLocalGame extends LocalGame{
 
             EndTurnAction endTurnAction = (EndTurnAction) action; //cast to EndTurnAction
 
-            // ------
-            // At this point, the tiles the user placed down have been verified,
-            // so we can tally the score, remove the tiles from the player's hand, etc.
-            // ------
+            if(getPlayerIdx(endTurnAction.getPlayer()) == 0) {
 
-            //Get the tiles the player wanted to place and our player's hand
-            ArrayList<ScrabbleTile> wordTiles = endTurnAction.getWordTiles();
-            ArrayList<ScrabbleTile> playerHand = masterState.getPlayerHand(getPlayerIdx(endTurnAction.getPlayer()));
-            ArrayList<String> wordsMade = endTurnAction.getWordsMade();
-            ArrayList<ScrabbleTile> boardTiles = masterState.getBoardTiles();
+                // ------
+                // At this point, the tiles the user placed down have been verified,
+                // so we can tally the score, remove the tiles from the player's hand, etc.
+                // ------
+
+                //Get the tiles the player wanted to place and our player's hand
+                ArrayList<ScrabbleTile> wordTiles = endTurnAction.getWordTiles();
+                ArrayList<ScrabbleTile> playerHand = masterState.getPlayerHand(getPlayerIdx(endTurnAction.getPlayer()));
+                ArrayList<String> wordsMade = endTurnAction.getWordsMade();
+                ArrayList<ScrabbleTile> boardTiles = masterState.getBoardTiles();
 
 
-            String mainWord = "";
-            for (ScrabbleTile tile: wordTiles){
-                mainWord += tile.getLetter();
-            }
-
-            //Remove the tiles from the player's hand
-            for(ScrabbleTile wordTile: wordTiles) {
-                playerHand.remove(wordTile); //remove tiles from player hand
-            }
-
-            //go through all words that are made by newly placed tiles
-            for(String word: wordsMade) {
-                if (word.equals(mainWord)){
-                    masterState.setPlayerScore(masterState.tallyWordScore(wordTiles)); //tally points from each word
+                String mainWord = "";
+                for (ScrabbleTile tile : wordTiles) {
+                    mainWord += tile.getLetter();
                 }
-                else{
-                    masterState.setPlayerScore(masterState.tallyWordScore(word)); //tally points from each word
+
+                //Remove the tiles from the player's hand
+                for (ScrabbleTile wordTile : wordTiles) {
+                    playerHand.remove(wordTile); //remove tiles from player hand
                 }
-            }
 
-            masterState.drawTiles(playerHand); //give player a new hand
-            masterState.setPlayerHand(getPlayerIdx(action.getPlayer()), playerHand);
+                //go through all words that are made by newly placed tiles
+                for (String word : wordsMade) {
+                    if (word.equals(mainWord)) {
+                        masterState.setPlayerScore(masterState.tallyWordScore(wordTiles)); //tally points from each word
+                    } else {
+                        masterState.setPlayerScore(masterState.tallyWordScore(word)); //tally points from each word
+                    }
+                }
 
-            //next player's turn
-            if(masterState.getCurrentPlayer() == 1) {
-                masterState.setCurrentPlayer(0);
-            }
-            else {
+                masterState.drawTiles(playerHand); //give player a new hand
+                masterState.setPlayerHand(getPlayerIdx(action.getPlayer()), playerHand);
+
+
+                //set computer player's turn
                 masterState.setCurrentPlayer(1);
-            }
 
-            if(getPlayerIdx(endTurnAction.getPlayer()) == 1) {
+            /*if(getPlayerIdx(endTurnAction.getPlayer()) == 1) {
                 for(ScrabbleTile tile: wordTiles) {
                     boardTiles.add(tile);
                 }
 
                 masterState.setBoardTiles(boardTiles);
+            }
+                */
+            }
+            else
+            {
+                masterState.setCurrentPlayer(0); //set human player's turn
             }
 
             //Send the new state to each player
