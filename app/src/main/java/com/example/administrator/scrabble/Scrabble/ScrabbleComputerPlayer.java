@@ -308,6 +308,7 @@ public class ScrabbleComputerPlayer extends GameComputerPlayer {
                     }
 
                     bagTiles.remove(bagTile);
+                    bagTile.setOnBoard(true);
                     wordTiles.add(bagTile);
                     break; //break out of inner loop
                 }
