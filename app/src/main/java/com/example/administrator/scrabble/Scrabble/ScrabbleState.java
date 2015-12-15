@@ -32,6 +32,9 @@ public class ScrabbleState extends GameState {
     //Our random number generator
     private Random rand = new Random();
 
+    //The number of turns passed
+    private int numTurns = 0;
+
     private Context currentContext;
 
     // The arrays that hold the tiles in the bag and on the board
@@ -411,5 +414,13 @@ public class ScrabbleState extends GameState {
             player1Hand = newHand;
         }
 
+    }
+
+    public int getNumTurns() {
+        return numTurns;
+    }
+
+    public void setNumTurns(int numTurns) {
+        this.numTurns = numTurns;
     }
 }

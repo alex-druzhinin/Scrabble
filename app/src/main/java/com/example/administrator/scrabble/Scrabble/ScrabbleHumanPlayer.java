@@ -463,6 +463,24 @@ public class ScrabbleHumanPlayer extends GameHumanPlayer implements Animator {
                     ArrayList<ScrabbleTile> boardTiles = board.getBoardTiles(); //get board tiles
                     ArrayList<ScrabbleTile> tilesToPlace = this.getTilesToPlace();
 
+                    if (gameState.getNumTurns() == 0) {
+                        boolean placedTileOnCenter = false;
+                        for (ScrabbleTile tile : tilesToPlace) {
+                            if (tile.getXLocation() == 7 && tile.getYLocation() == 7){
+                                placedTileOnCenter = true;
+                            }
+                        }
+
+                        if (! placedTileOnCenter){
+                            Toast.makeText(currentActivity.getApplicationContext(),
+                                    "You must place a tile in the center square",
+                                    Toast.LENGTH_SHORT).show();
+                            this.resetHand();
+                            return;
+                        }
+                    }
+
+
                     //We can't not make a word
                     ArrayList<String> words = board.getWords(tilesToPlace);
 

@@ -209,7 +209,7 @@ public class ScrabbleLocalGame extends LocalGame{
                         + " points!");
             }
 
-
+            masterState.setNumTurns(masterState.getNumTurns() + 1); //Update the current turn
             sendAllUpdatedState(); //sends every player the state
 
             for (GamePlayer p : this.players){
