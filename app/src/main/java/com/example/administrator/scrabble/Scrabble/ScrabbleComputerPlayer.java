@@ -309,6 +309,7 @@ public class ScrabbleComputerPlayer extends GameComputerPlayer {
 
                     bagTiles.remove(bagTile);
                     wordTiles.add(bagTile);
+                    bagTile.setOnBoard(true); //tell the tile it's on the board
                     break; //break out of inner loop
                 }
             }
@@ -458,4 +459,6 @@ public class ScrabbleComputerPlayer extends GameComputerPlayer {
     public GameAction endTurn(){
         return new EndTurnAction(this, wordTiles);
     }
+
+    public ScrabbleState getComputerPlayerState() {return this.currentState;}
 }

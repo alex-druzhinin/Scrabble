@@ -446,9 +446,17 @@ public class ScrabbleHumanPlayer extends GameHumanPlayer implements Animator {
                         return;
                     }
 
+                    //Remove duplicated tiles from the board
+                    ArrayList<ScrabbleTile> newBoardTiles = new ArrayList<>();
+                    for (ScrabbleTile tile : gameState.getBoardTiles()){
+                        if (! newBoardTiles.contains(tile)){
+                            newBoardTiles.add(tile);
+                        }
+                    }
+                    gameState.setBoardTiles(newBoardTiles);
 
                     //get player hand
-                    gameState.getPlayerHand(this.playerID);
+                    ArrayList<ScrabbleTile> playerHand = gameState.getPlayerHand(this.playerID);
 
                     //Get the current board and the tiles wanted to be placed this turn
                     ScrabbleBoard board = gameState.getScrabbleBoard();
@@ -464,7 +472,6 @@ public class ScrabbleHumanPlayer extends GameHumanPlayer implements Animator {
                         if (!this.checkWord(word)) {
                             //Reset our hand
                             this.resetHand();
-
                             //The word was invalid, so let us know and stop doing stuff
                             Toast.makeText(currentActivity.getApplicationContext(),
                                     "Sorry, the word you made is not a valid word",
@@ -524,12 +531,11 @@ public class ScrabbleHumanPlayer extends GameHumanPlayer implements Animator {
                     if (tileTouched != -1) { //we've marked a tile ready to move
                         //Put the tile on the board and update it's location
 
-                        //Add the tile to the board if there isn't a tile with that location already
-                        //on the board
+                        //Add the tile to the board if that tile isn't already on the board
                         synchronized (this) {
                             boolean canPlace = true;
                             for (ScrabbleTile boardTile : gameState.getBoardTiles()) {
-                                if (tileX == boardTile.getXLocation() && tileY == boardTile.getYLocation()) {
+                                if (boardTile.getXLocation() == tileX && boardTile.getYLocation() == tileY) {
                                     canPlace = false;
                                     break;
                                 }
@@ -537,7 +543,7 @@ public class ScrabbleHumanPlayer extends GameHumanPlayer implements Animator {
                             if (canPlace) {
                                 ourHand.get(tileTouched).setLocation(tileX, tileY);
                                 ourHand.get(tileTouched).setOnBoard(true);
-                                gameState.addBoardTile(ourHand.get(tileTouched));
+                                gameState.getBoardTiles().add(ourHand.get(tileTouched));
                             }
 
                         }
@@ -557,10 +563,12 @@ public class ScrabbleHumanPlayer extends GameHumanPlayer implements Animator {
         /** We touched the redo button **/
         //Push all of the tiles on the board back into the player's hand
         ArrayList<ScrabbleTile> ourHand = gameState.getPlayerHand(this.playerID);
-        for (ScrabbleTile tile : ourHand){
-            tile.setOnBoard(false);
-            tile.setReadyToMove(false);
-            gameState.getBoardTiles().remove(tile);
+        synchronized (this) {
+            for (ScrabbleTile tile : ourHand) {
+                tile.setOnBoard(false);
+                tile.setReadyToMove(false);
+                gameState.getBoardTiles().remove(tile);
+            }
         }
     }
 

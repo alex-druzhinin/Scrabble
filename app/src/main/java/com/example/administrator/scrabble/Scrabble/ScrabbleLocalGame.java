@@ -8,6 +8,7 @@ import com.example.administrator.scrabble.game.actionMsg.GameAction;
 import com.example.administrator.scrabble.game.infoMsg.GameOverInfo;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * @author Alexa Carr, Morgan Webber, Nalani (Megan Chun)
@@ -74,9 +75,9 @@ public class ScrabbleLocalGame extends LocalGame{
             return null;
         }
 
-        //Bag is empty, so check each player's hand
+        //Bag is empty, so check human player's hand
         for (GamePlayer player : this.players){
-            if (masterState.getPlayerHand(getPlayerIdx(player)).size() == 0){
+            if (masterState.getPlayerHand(0).size() == 0){
                 //This player's hand is empty and the bag is empty, so he/she won
                 return "Player " + getPlayerIdx(player) + " wins!";
             }
@@ -174,7 +175,9 @@ public class ScrabbleLocalGame extends LocalGame{
             }
             else
             {
+                //this.masterState = ((ScrabbleComputerPlayer) endTurnAction.getPlayer()).getComputerPlayerState();
                 masterState.setCurrentPlayer(0); //set human player's turn
+
             }
 
             //Send the new state to each player

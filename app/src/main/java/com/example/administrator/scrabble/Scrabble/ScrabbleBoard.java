@@ -122,15 +122,15 @@ public class ScrabbleBoard {
             }
 
             //Remove the word if it is a single letter copy of one we placed,
-            //but only if we placed more than one tile
-            if (prospectiveTiles.size() > 1) {
+            //but only if we placed more than one tile and there are no other tiles on the board
+            if (boardTiles.size() - prospectiveTiles.size() == 0 || (prospectiveTiles.size() == 1 && boardTiles.size() != 0) || prospectiveTiles.size() > 1) {
                 for (ScrabbleTile tile : prospectiveTiles) {
                     if (word.equals("" + tile.getLetter())) {
                         badWords.add(word);
                     }
-
                 }
             }
+
         }
 
         //Remove each word as per badWords array
