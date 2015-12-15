@@ -59,6 +59,8 @@ public class ScrabbleHumanPlayer extends GameHumanPlayer implements Animator {
     //The SurfaceView we'll be drawing on
     ScrabbleSurfaceView screenView;
 
+    boolean firstTurn = true;
+
     ArrayList<TextView> playerScoreViews; //each player's score views
     ArrayList<ScrabbleTile> tilesToExchange; //tiles a player wants to exchange
     String wordToPlace;
@@ -463,7 +465,7 @@ public class ScrabbleHumanPlayer extends GameHumanPlayer implements Animator {
                     ArrayList<ScrabbleTile> boardTiles = board.getBoardTiles(); //get board tiles
                     ArrayList<ScrabbleTile> tilesToPlace = this.getTilesToPlace();
 
-                    if (gameState.getNumTurns() == 0) {
+                    if (firstTurn) {
                         boolean placedTileOnCenter = false;
                         for (ScrabbleTile tile : tilesToPlace) {
                             if (tile.getXLocation() == 7 && tile.getYLocation() == 7){
@@ -498,6 +500,7 @@ public class ScrabbleHumanPlayer extends GameHumanPlayer implements Animator {
                         }
                     }
 
+                    firstTurn = false;
                     this.endTurn(tilesToPlace, words);
                 }
             } else if (eventX > 200 && eventX < 300 && eventY > 135 && eventY < 1300) {
