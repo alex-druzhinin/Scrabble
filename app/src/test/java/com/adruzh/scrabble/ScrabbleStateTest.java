@@ -1,4 +1,4 @@
-package com.example.administrator.scrabble.Scrabble;
+package com.adruzh.scrabble.Scrabble;
 
 import org.junit.Test;
 

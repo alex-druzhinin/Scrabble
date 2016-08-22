@@ -1,8 +1,6 @@
-package com.example.administrator.scrabble.Scrabble;
+package com.adruzh.scrabble.Scrabble;
 
 import android.app.Activity;
-
-import com.example.administrator.scrabble.game.infoMsg.GameInfo;
 
 import org.junit.Test;
 
