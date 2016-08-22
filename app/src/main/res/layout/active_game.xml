@@ -7,7 +7,7 @@
     android:orientation="horizontal"
     android:weightSum="1">
 
-    <com.example.administrator.scrabble.Scrabble.ScrabbleSurfaceView
+    <com.adruzh.scrabble.Scrabble.ScrabbleSurfaceView
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:id="@+id/board_surfaceview"
