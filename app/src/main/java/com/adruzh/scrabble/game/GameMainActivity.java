@@ -440,13 +440,13 @@ View.OnClickListener {
 		this.setTitle(config.getGameName() + " Configuration");
 
 		// place the pages in the tabbed dialog
-		initTabs();
+//		initTabs();
 
 		// Insert a row for each player in the current config
 		initTableRows();
 
 		// Set the remote widget data
-		initRemoteWidgets();
+//		initRemoteWidgets();
 
 		// Set myself as the listener for the buttons
 		View v = findViewById(R.id.addPlayerButton);
@@ -603,8 +603,8 @@ View.OnClickListener {
 			// leaves out the last item (network player)
 			adapter2.add(availTypes[j].getTypeName());
 		}
-		Spinner remoteTypeSpinner = (Spinner)findViewById(R.id.remote_player_spinner);
-		remoteTypeSpinner.setAdapter(adapter2);
+//		Spinner remoteTypeSpinner = (Spinner)findViewById(R.id.remote_player_spinner);
+//		remoteTypeSpinner.setAdapter(adapter2);
 
 		// set myself up as the button listener for the button
 		ImageButton delButton = (ImageButton) row
@@ -630,8 +630,9 @@ View.OnClickListener {
 		GameConfig result = config.copyWithoutPlayers();
 
 		// Set remote/local
-		TabHost tabHost = (TabHost)findViewById(R.id.tabHost);
-		result.setLocal(tabHost.getCurrentTab() == 0);
+//		TabHost tabHost = (TabHost)findViewById(R.id.tabHost);
+//		result.setLocal(tabHost.getCurrentTab() == 0);
+		result.setLocal(true);
 
 		// Retrieve the info for each player and add to the config
 		for (TableRow row : this.tableRows) {
@@ -649,6 +650,7 @@ View.OnClickListener {
 			result.addPlayer(name, selIndex);
 		}//for
 
+        /*
 		//Set the remote name
 		EditText remoteNameEditText = (EditText)findViewById(R.id.remoteNameEditText);
 		String remoteName = remoteNameEditText.getText().toString();
@@ -663,6 +665,7 @@ View.OnClickListener {
 		EditText ipCodeEditText = (EditText)findViewById(R.id.remoteIPCodeEditText);
 		String ipCode = ipCodeEditText.getText().toString();
 		result.setIpCode(ipCode);
+*/
 
 		return result;
 	}// scrapeData

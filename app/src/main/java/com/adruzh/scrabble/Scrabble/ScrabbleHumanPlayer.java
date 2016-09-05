@@ -10,8 +10,10 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.support.annotation.NonNull;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,9 +40,8 @@ import java.util.ArrayList;
  */
 @TargetApi(21)
 public class ScrabbleHumanPlayer extends GameHumanPlayer implements Animator {
-    public static final int HAND_LEFT = 50;
-    public static final int HAND_TOP = 150;
-    public static final int HAND_CELL_SIZE = 35;
+    public int HAND_LEFT = 50;
+    public static final int HAND_TOP = 10;
 
     // ----- Instance variables ----- //
 
@@ -101,11 +102,15 @@ public class ScrabbleHumanPlayer extends GameHumanPlayer implements Animator {
 
     //A flag to tell us to stop listening to touch events
     private boolean ignoreTouchEvents = false;
-    public static final int CELL_SIZE = 30;
+    public int CELL_SIZE = 30;
     private Rect endTurnRect;
     private Rect redoRect;
     private Rect handRect;
     private Rect boardRect;
+    private int viewWidth;
+    private int viewHeight;
+    private int letterWidth;
+    private int letterHeight;
 
 
     /**
@@ -187,6 +192,20 @@ public class ScrabbleHumanPlayer extends GameHumanPlayer implements Animator {
         animationSurface = (AnimationSurface) currentActivity.findViewById(R.id.board_surfaceview);
         animationSurface.setAnimator(this);
 
+        ViewTreeObserver viewTreeObserver = animationSurface.getViewTreeObserver();
+        if (viewTreeObserver.isAlive()) {
+            viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    animationSurface.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    viewWidth = animationSurface.getWidth();
+                    viewHeight = animationSurface.getHeight();
+
+                    CELL_SIZE = viewHeight / 15;
+                }
+            });
+        }
+
         //Update our game state if we have it
         if (gameState != null){
             receiveInfo(gameState);
@@ -237,6 +256,9 @@ public class ScrabbleHumanPlayer extends GameHumanPlayer implements Animator {
         alphabetImages[23] = BitmapFactory.decodeResource(currentResources, R.drawable.scrabbletile_x, opts);
         alphabetImages[24] = BitmapFactory.decodeResource(currentResources, R.drawable.scrabbletile_y, opts);
         alphabetImages[25] = BitmapFactory.decodeResource(currentResources, R.drawable.scrabbletile_z, opts);
+
+        letterWidth = alphabetImages[0].getWidth();
+        letterHeight = alphabetImages[0].getHeight();
 
     }
 
@@ -332,37 +354,44 @@ public class ScrabbleHumanPlayer extends GameHumanPlayer implements Animator {
      */
     @Override
     public void tick(Canvas canvas) {
+        if (viewHeight == 0 ||
+                viewWidth == 0) {
+            return;
+        }
 
-        boardRect = new Rect(HAND_LEFT + 50, 10, HAND_LEFT + 50 + (15 * CELL_SIZE), 10 + (15 * CELL_SIZE));
+        int boardSize = 15 * CELL_SIZE;
+        int boardLeft = (viewWidth - boardSize) / 2;
+
+        boardRect = new Rect(boardLeft, 0, boardLeft + boardSize, boardSize);
         /**Draw the Board**/
         //Create our board like a 2D Array
         for (int row = 0; row < 15; row++) {
-            int xPos = HAND_LEFT + 50 + (row * CELL_SIZE); //x_position for each tile
+            int xPos = boardLeft + (row * CELL_SIZE); //x_position for each tile
 
             for (int col = 0; col < 15; col++) {
-                int yPos = 10 + col * CELL_SIZE; //y_position for each tile
+                int yPos = col * CELL_SIZE; //y_position for each tile
 
                 //Draw each square depending on where it is on the board
                 if (row == 7 && col == 7) {
                     //Starting Square
-                    canvas.drawBitmap(centerSqr, xPos, yPos, boardPaint);
+                    canvas.drawBitmap(centerSqr, bitmapRect(centerSqr), cellRect(xPos, yPos), boardPaint);
                 } else if ((row == 0 || row == 7 || row == 14) && (col == 0 || col == 7 || col == 14)) {
                     //Triple Word Squares
-                    canvas.drawBitmap(tripleWordSqr, xPos, yPos, boardPaint);
+                    canvas.drawBitmap(tripleWordSqr, bitmapRect(tripleWordSqr), cellRect(xPos, yPos), boardPaint);
                 } else if (((row == 0 || row == 14) && (col == 3 || col == 11)) || ((row == 2 || row == 12) && (col == 6 || col == 8)) || ((row == 3 || row == 11) && (col == 0 || col == 7 || col == 14)) ||
                         ((row == 6 || row == 8) && (col == 2 || col == 6 || col == 8 || col == 12)) || (row == 7 && (col == 3 || col == 11))) {
                     //Double Letter Squares
-                    canvas.drawBitmap(doubleLetterSqr, xPos, yPos, boardPaint);
+                    canvas.drawBitmap(doubleLetterSqr, bitmapRect(doubleLetterSqr), cellRect(xPos, yPos), boardPaint);
                 } else if (((row == col || row == 14 - col) && ((row > 0 && row < 5) || row > 9 && row < 14))) {
                     //Double Word Squares
-                    canvas.drawBitmap(doubleWordSqr, xPos, yPos, boardPaint);
+                    canvas.drawBitmap(doubleWordSqr, bitmapRect(doubleWordSqr), cellRect(xPos, yPos), boardPaint);
                 } else if (((row == 5 || row == 9) && (col == 1 || col == 5 || col == 9 || col == 13)) ||
                         (row == 1 || row == 13) && (col == 5 || col == 9)) {
                     //Triple Letter Squares
-                    canvas.drawBitmap(tripleLetterSqr, xPos, yPos, boardPaint);
+                    canvas.drawBitmap(tripleLetterSqr, bitmapRect(tripleLetterSqr), cellRect(xPos, yPos), boardPaint);
                 } else {
                     //Generic Squares
-                    canvas.drawBitmap(normalSqr, xPos, yPos, boardPaint);
+                    canvas.drawBitmap(normalSqr, bitmapRect(normalSqr), cellRect(xPos, yPos), boardPaint);
                 }
             }
 
@@ -376,24 +405,25 @@ public class ScrabbleHumanPlayer extends GameHumanPlayer implements Animator {
             synchronized (this) {
                 for (ScrabbleTile tile : boardTiles) {
                     if (tile.isOnBoard()) {
-                        canvas.drawBitmap(alphabetImages[tile.getLetter() - 97], HAND_LEFT + 49 + (tile.getXLocation() * CELL_SIZE), (tile.getYLocation() * CELL_SIZE) + 9, boardPaint);
+                        canvas.drawBitmap(alphabetImages[tile.getLetter() - 97], bitmapRect(alphabetImages[0]), cellRect(boardLeft + (tile.getXLocation() * CELL_SIZE), (tile.getYLocation() * CELL_SIZE)), boardPaint);
                     }
                 }
             }
         }
 
         /**Draw our end turn and redo buttons**/
-        endTurnRect = new Rect(HAND_LEFT + 100 + (14 * CELL_SIZE), 250,
-                HAND_LEFT + 100 + (14 * CELL_SIZE) + endTurnButton.getWidth(), 250 + endTurnButton.getHeight());
-        canvas.drawBitmap(endTurnButton, HAND_LEFT + 100 + (14 * CELL_SIZE), 250, boardPaint);
-        redoRect = new Rect(HAND_LEFT + 100 + (14 * CELL_SIZE), 50,
-                HAND_LEFT + 100 + (14 * CELL_SIZE) + endTurnButton.getWidth(), 50 + endTurnButton.getHeight());
-        canvas.drawBitmap(redoButton, HAND_LEFT + 100 + (14 * CELL_SIZE), 50, boardPaint);
+        int buttonsLeft = boardLeft + 50 + boardSize;
+        redoRect = new Rect(buttonsLeft, 50,
+                buttonsLeft + endTurnButton.getWidth(), 50 + endTurnButton.getHeight());
+        canvas.drawBitmap(redoButton, buttonsLeft, 50, boardPaint);
+        endTurnRect = new Rect(buttonsLeft, 250,
+                buttonsLeft + endTurnButton.getWidth(), 250 + endTurnButton.getHeight());
+        canvas.drawBitmap(endTurnButton, buttonsLeft, 250, boardPaint);
 
         /**Draw our hand**/
         if (gameState != null) {
             ArrayList<ScrabbleTile> ourHand = gameState.getPlayerHand(playerID);
-            handRect = new Rect(HAND_LEFT, 150, HAND_LEFT + alphabetImages[0].getWidth(), HAND_TOP + (ourHand.size() * 35));
+            handRect = new Rect(HAND_LEFT, HAND_TOP, HAND_LEFT + letterWidth, HAND_TOP + (ourHand.size() * letterHeight));
             int i = 0;
             for (ScrabbleTile handTile : ourHand) {
                 //Get the char of the tile
@@ -403,11 +433,11 @@ public class ScrabbleHumanPlayer extends GameHumanPlayer implements Animator {
                 if (handTile.isOnBoard() == false) {//only draw it if it's still in the hand
                     //Draw a border indicating the tile is ready to move
                     if (handTile.isReadyToMove()) {
-                        canvas.drawBitmap(handTileBorderMoving, HAND_LEFT - 5, HAND_TOP + (i * HAND_CELL_SIZE) - 5, boardPaint);
+                        canvas.drawBitmap(handTileBorderMoving, HAND_LEFT - 5, HAND_TOP + (i * letterHeight) - 5, boardPaint);
 
                     }
                     //Draw the tile
-                    canvas.drawBitmap(alphabetImages[charIdx], HAND_LEFT, HAND_TOP + (i * HAND_CELL_SIZE), boardPaint);
+                    canvas.drawBitmap(alphabetImages[charIdx], HAND_LEFT, HAND_TOP + (i * letterHeight), boardPaint);
                 }
                 i++;
             }
@@ -415,17 +445,24 @@ public class ScrabbleHumanPlayer extends GameHumanPlayer implements Animator {
         }
 
         /** Draw the player scores **/
-        canvas.drawBitmap(playerScoreBorder, 250, 50 + 14 * CELL_SIZE, boardPaint);
-        canvas.drawBitmap(playerScoreBorder, 450, 50 + 14 * CELL_SIZE, boardPaint);
+        canvas.drawBitmap(playerScoreBorder, viewWidth - 100, 50, boardPaint);
+        canvas.drawBitmap(playerScoreBorder, viewWidth - 100, 150, boardPaint);
         if (gameState != null) {
             int[] playerScores = gameState.getPlayerScores();
-            canvas.drawText("Player 1: " + playerScores[0], 255, 75 + 14 * CELL_SIZE, playerScorePaint);
-            canvas.drawText("Player 2: " + playerScores[1], 455, 75 + 14 * CELL_SIZE, playerScorePaint);
-            canvas.drawBitmap(currentPlayerIcon, HAND_LEFT + (gameState.getCurrentPlayer() * 200), 50 + 14 * CELL_SIZE, boardPaint);
+            canvas.drawText("Player 1: " + playerScores[0], viewWidth - 100, 50, playerScorePaint);
+            canvas.drawText("Player 2: " + playerScores[1], viewWidth - 100, 150, playerScorePaint);
+            canvas.drawBitmap(currentPlayerIcon, viewWidth - 100, 50 + (gameState.getCurrentPlayer() * 100), boardPaint);
         }
 
 
+    }
 
+    private Rect cellRect(int xPos, int yPos) {
+        return new Rect(xPos, yPos, xPos + CELL_SIZE, yPos + CELL_SIZE);
+    }
+
+    private Rect bitmapRect(@NonNull Bitmap bitmap) {
+        return new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
     }
 
     /**
@@ -479,10 +516,11 @@ public class ScrabbleHumanPlayer extends GameHumanPlayer implements Animator {
 
                     this.endTurn(tilesToPlace, words);
                 }
-            } else if (handRect.contains((int)eventX, (int)eventY)) {
+            } else if (handRect.contains((int) eventX, (int) eventY) &&
+                    letterHeight > 0) {
                 /** We touched a hand tile **/
                 //Find out which tile we touched
-                tileTouched = (int) ((eventY - HAND_TOP) / HAND_CELL_SIZE); // should be 0->6
+                tileTouched = (int) ((eventY - HAND_TOP) / letterHeight); // should be 0->6
                 if (tileTouched > 6) {
                     tileTouched = 6;
                 }
@@ -510,8 +548,8 @@ public class ScrabbleHumanPlayer extends GameHumanPlayer implements Animator {
             } else if (boardRect.contains((int)eventX, (int)eventY)) {
                 /** We touched a spot on the board **/
                 //Find the (x,y) on the board that we touched, each tile is ~80px wide
-                int tileX = (int) ((eventX - HAND_LEFT - 50) / CELL_SIZE);
-                int tileY = (int) ((eventY - 10) / CELL_SIZE);
+                int tileX = (int) ((eventX - boardRect.left) / CELL_SIZE);
+                int tileY = (int) ((eventY - boardRect.top) / CELL_SIZE);
                 //Log.i("Location: ", "(" + tileX + ", " + tileY + ")");
 
                 //Set the board x,y of the tile selected if one is selected
